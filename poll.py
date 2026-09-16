@@ -31,20 +31,21 @@ URL serves a copy that can be up to ~15 minutes old, and polling that URL faster
 — measured here on 2026-09-16, nine polls fifteen seconds apart returned `cf-cache-status: HIT` every
 time, an `Age` that simply counted up in lockstep with the wall clock, and not one changed `version`.
 
-`max-age` applies per CACHE KEY, though, and the key includes the query string. `sports/33/markets/
-straight` and `sports/33/markets/straight?withSpecials=false` are therefore two separate cached objects
-on two independently phased clocks: sampled together they read Age 578 and Age 326. Taking the fresher
-reading of the two roughly halves expected staleness, from ~7.5 min to ~5 min.
+`max-age` applies per CACHE KEY, though, and the key includes the query string. So four spellings of the
+same endpoint are four separate cached objects on four independently phased clocks — sampled in one
+breath they read Age 58, 425, 709 and 852. Keeping the freshest reading per matchup makes staleness the
+minimum of four draws on [0,905] rather than one, an expected ~181s instead of ~452s.
 
-Two is all that exists, and it was worth establishing rather than assuming:
-  ?brandId=0 and ?withSpecials=false&brandId=0   valid on the matchup LIST, but 204 No Content here
+Four is all there is, and each boundary was established rather than assumed:
+  ?primaryOnly=false                             normalises to the bare URL — same Age, same versions
+  ?brandId=0, ?withSpecials=false&brandId=0      valid on the matchup LIST, but 204 No Content here
   any unrecognised parameter (?z=1)              204 No Content, so cache keys cannot be minted freely
   Accept-Encoding: gzip / identity / deflate     `Vary` advertises it, but Cloudflare normalises it and
                                                  all six spellings returned one identical Age
   Cache-Control: no-cache on the request         still HIT
   ?_=<timestamp>                                 204 No Content
-So ~5 minutes is the floor for this endpoint, which is also why the workflow beside this file polls at
-five minutes and no faster. A faster cron would spend runs re-reading the same cached bytes.
+~3 minutes is therefore the floor, which is why the workflow beside this file polls at five minutes and
+no faster: a faster cron would mostly re-read bytes it already has.
 
 "Fresher" is decided by `version`, not by `Age`. `version` is a monotonic counter Pinnacle stamps on
 each market row, so the higher of two readings is the later one exactly, whereas `Age` is a property of
@@ -82,20 +83,28 @@ ARCHIVE_DIR = os.path.join(BOARD, "archive")
 # may not have run since.
 ARCHIVE_AFTER_DAYS = 2
 
-# The list endpoint, richest variant first. These carry the names, league and start time; the bulk
-# market endpoint carries none of that, only matchupId and prices. Measured 2026-09-16: the bare URL
-# returns 130 entries against 100 for `?withSpecials=false&brandId=0`, and is a strict superset of it —
-# 15 extra pre-match matchups, none missing. The book's own poller was reading the narrowest of the
-# three, which is why fixtures sometimes appeared later here than on the site.
+# The list endpoint carries the names, league and start time; the bulk market endpoint carries none of
+# that, only matchupId and prices. Measured 2026-09-16: the bare URL is a strict SUPERSET of the other
+# two — of a 58-matchup union it misses none, `?withSpecials=false` misses 2 and
+# `?withSpecials=false&brandId=0` misses 3. The book's own poller was reading that last, narrowest one,
+# which is why fixtures sometimes appeared later here than on the site.
+#
+# All three are kept anyway, for coverage rather than freshness: a matchup is worth having from whichever
+# variant answers, and if the bare URL times out the other two still carry 55 of the 58. `?primaryOnly`
+# is 403 on this path, though it is valid on the market path below.
 LIST_VARIANTS = [
     f"sports/{SPORT_TENNIS}/matchups",
     f"sports/{SPORT_TENNIS}/matchups?withSpecials=false",
+    f"sports/{SPORT_TENNIS}/matchups?withSpecials=false&brandId=0",
 ]
 
-# The two independently cached market variants. See the module docstring for why there are exactly two.
+# The four independently cached market variants. See the module docstring for why there are exactly four
+# and why no fifth can be minted.
 MARKET_VARIANTS = [
     f"sports/{SPORT_TENNIS}/markets/straight",
+    f"sports/{SPORT_TENNIS}/markets/straight?primaryOnly=true",
     f"sports/{SPORT_TENNIS}/markets/straight?withSpecials=false",
+    f"sports/{SPORT_TENNIS}/markets/straight?primaryOnly=true&withSpecials=false",
 ]
 
 OPEN_COLS = ["pair", "k1", "k2", "name1", "name2", "league", "start_time",
