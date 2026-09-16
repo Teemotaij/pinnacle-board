@@ -1,0 +1,63 @@
+name: poll
+
+# Every five minutes, which is both the floor GitHub allows and the floor the upstream allows.
+#
+# Pinnacle sits behind Cloudflare with max-age ~902s, so any single URL serves a copy up to ~15 minutes
+# old and polling it faster returns the same cached bytes — measured in poll.py's docstring: nine polls
+# fifteen seconds apart, cf-cache-status HIT every time, zero changed versions. Fetching the two
+# independently-phased query-string variants and keeping the higher `version` per matchup brings
+# expected staleness to roughly five minutes. A faster cron would buy nothing.
+#
+# This repository is public, so Actions minutes are unlimited and this costs nothing. That is the entire
+# reason it is a separate repository from the book that consumes it: the book is private and bills.
+#
+# GitHub disables schedules in repositories with 60 days of no activity. This commits on most runs, so
+# that clock never starts.
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+# The whole job is a read-modify-write of CSV files in git. Two at once would race on the push and, worse,
+# the loser would rebase away a tick. Queue instead of cancelling: a cancelled run is one that already
+# fetched a price and threw it away.
+concurrency:
+  group: board
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Shallow: the history is one commit every five minutes and none of it is needed to append to it.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # No actions/setup-python and no pip. poll.py is standard library only, ubuntu-latest ships
+      # python3, and skipping both steps is what keeps the job under a minute.
+      - name: Poll
+        run: python3 poll.py
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name  "board-poller"
+          git config user.email "board-poller@users.noreply.github.com"
+          if git diff --quiet -- board; then
+            echo "no change"; exit 0
+          fi
+          git add board
+          git commit -q -m "board $(date -u +%Y-%m-%dT%H:%MZ)"
+          # Retry rather than fail. The concurrency group above makes a collision unlikely rather than
+          # impossible — a manual dispatch can still overlap a scheduled run.
+          for i in 1 2 3; do
+            git pull --rebase --autostash -q && git push -q && exit 0
+            echo "push attempt $i failed, retrying"; sleep $((i * 5))
+          done
+          exit 1
