@@ -1,0 +1,502 @@
+/* Kickstarter Serve — an operations ledger.
+   The subject is a betting book measured in probability points, so the design is built around one thing:
+   numbers that line up down a column and can be compared at a glance. Figures are set in Plex Mono with
+   tabular figures; prose is Plex Sans. Colour carries sign and nothing else — green is toward you, clay
+   red is against you. There is one accent, amber, reserved entirely for the monitoring flags, so that when
+   it appears it means something. */
+
+:root {
+  --bg:        #151a21;
+  --surface:   #1d242e;
+  --surface-2: #232c38;
+  --line:      #2b3441;
+  --line-soft: #232b36;
+  --ink:       #e4e9ef;
+  --ink-dim:   #9aa7b8;
+  --ink-faint: #6b7889;
+  --toward:    #4fb286;
+  --against:   #d2645a;
+  --flag:      #e0a458;
+  --sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+  font-feature-settings: "tnum" 1;
+}
+
+a { color: inherit; }
+
+/* ---------- chrome ---------- */
+
+.masthead {
+  display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap;
+  padding: .85rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  position: sticky; top: 0; z-index: 20;
+}
+.masthead h1 {
+  margin: 0; font-size: 1rem; font-weight: 600; letter-spacing: -0.01em;
+}
+.masthead .state { margin-left: auto; font-size: .78rem; color: var(--ink-faint); font-family: var(--mono); }
+.masthead .runnow { margin: 0; }
+.masthead .runnow button { font-size: .76rem; padding: .25rem .6rem; }
+.masthead .runnow button:disabled { color: var(--flag); border-color: var(--flag); cursor: default; }
+
+nav.tabs { display: flex; gap: .2rem; overflow-x: auto; border-bottom: 1px solid var(--line);
+           background: var(--surface); padding: 0 .6rem; scrollbar-width: none; }
+nav.tabs::-webkit-scrollbar { display: none; }
+nav.tabs a {
+  padding: .55rem .75rem; text-decoration: none; color: var(--ink-dim);
+  font-size: .86rem; white-space: nowrap; border-bottom: 2px solid transparent;
+}
+nav.tabs a:hover { color: var(--ink); }
+nav.tabs a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--toward); }
+
+main { padding: 1.1rem; max-width: 1180px; }
+
+/* The slate is nineteen columns by design — every price you might rest at, side by side. Capping it at
+   the reading width pushed the ROI columns off-screen behind a horizontal scroll, which is where the
+   decision actually lives. Prose keeps its own max-width, so only the table takes the extra room.
+
+   The book is the same argument and the worse offender: its columns are input boxes, and an input you
+   have to scroll sideways to reach is an input you mistype. 1180px was leaving a third of a wide screen
+   empty while the Result and Save columns sat off the right edge. */
+main.slate, main.book { max-width: none; }
+
+h2 { font-size: 1.02rem; font-weight: 600; margin: 2rem 0 .5rem; letter-spacing: -0.01em; }
+h2:first-child { margin-top: 0; }
+h3 { font-size: .88rem; font-weight: 600; color: var(--ink-dim); margin: 1.4rem 0 .45rem; }
+
+p.note { color: var(--ink-dim); font-size: .85rem; max-width: 68ch; margin: .35rem 0 1rem; }
+p.note b { color: var(--ink); font-weight: 600; }
+
+/* ---------- the post instruction: the one loud element on the site ---------- */
+
+.post {
+  border: 1px solid var(--line); border-left: 3px solid var(--toward);
+  background: var(--surface); padding: .95rem 1.1rem; margin-bottom: .6rem;
+}
+.post.against { border-left-color: var(--against); }
+.post .who { font-size: 1.12rem; font-weight: 600; letter-spacing: -0.01em; }
+.post .who small { font-weight: 400; color: var(--ink-dim); font-size: .8rem; margin-left: .4rem; }
+.post .where { color: var(--ink-faint); font-size: .8rem; margin-bottom: .55rem; }
+.post .price { display: flex; align-items: baseline; gap: .5rem; margin: .5rem 0 .2rem; }
+.post .price .big { font-family: var(--mono); font-size: 2rem; font-weight: 600; letter-spacing: -0.03em; }
+.post .price .unit { color: var(--ink-dim); font-size: .82rem; }
+.post .facts { display: flex; flex-wrap: wrap; gap: .2rem 1.3rem; font-size: .8rem;
+               color: var(--ink-dim); font-family: var(--mono); margin-top: .5rem; }
+.post .facts b { color: var(--ink); font-weight: 500; }
+
+/* ---------- empty states are instructions, not decoration ---------- */
+
+.flash {
+  border: 1px solid var(--line); border-left: 3px solid var(--against);
+  background: var(--surface); padding: .7rem .85rem; margin-bottom: 1rem;
+  font-size: .87rem; max-width: 68ch;
+}
+
+.empty { border: 1px dashed var(--line); padding: 1.4rem 1.2rem; background: var(--surface); }
+.empty strong { display: block; font-size: 1.05rem; margin-bottom: .35rem; }
+.empty p { margin: 0; color: var(--ink-dim); font-size: .87rem; max-width: 62ch; }
+
+/* ---------- tables ---------- */
+
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+table { border-collapse: collapse; width: 100%; font-size: .84rem; }
+th, td { padding: .42rem .6rem; text-align: left; border-bottom: 1px solid var(--line-soft); white-space: nowrap; }
+th { color: var(--ink-faint); font-weight: 500; font-size: .74rem; border-bottom-color: var(--line); }
+tbody tr:hover { background: var(--surface); }
+td.n, th.n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+td.name { white-space: normal; min-width: 11rem; }
+tr.total td { border-top: 1px solid var(--line); border-bottom: none; font-weight: 600; background: var(--surface); }
+/* The one row in a comparison table that is not hypothetical. Used on the CLV band panel, where eight of
+   the nine cells are counterfactual floors and exactly one is the rule the book actually runs — without a
+   mark the reader has to remember which, and the looser floors read as if they were on offer. */
+tr.live td { background: var(--surface); font-weight: 600; }
+tr.live td:first-child { box-shadow: inset 3px 0 0 var(--toward); }
+
+.up { color: var(--toward); }
+.down { color: var(--against); }
+.dim { color: var(--ink-faint); }
+
+/* ---------- the slate ---------- */
+
+.slatebar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .6rem 1rem;
+            padding: 0 0 .8rem; }
+.slatebar form { display: flex; flex-wrap: wrap; gap: .6rem; align-items: flex-end; }
+.slatebar label { font-size: .74rem; color: var(--ink-dim); display: flex; flex-direction: column; gap: .15rem; }
+/* The picks-only checkbox sits IN the control row, so it lays out sideways and rides the same
+   baseline as the selects beside it. */
+.slatebar label.ck { flex-direction: row; align-items: center; gap: .35rem; padding-bottom: .45rem; white-space: nowrap; }
+/* A min/max pair: still one labelled control in the row, with the two ends side by side under the label.
+   Narrow on purpose — four of these have to fit beside the selects without pushing the count onto a second
+   line — and the spinners are hidden because a 0.01 step is not something anyone clicks their way to. */
+.slatebar label.band > span { display: flex; gap: .25rem; }
+.slatebar label.band input { width: 4.1rem; font-family: var(--mono); }
+.slatebar label.band input::-webkit-outer-spin-button,
+.slatebar label.band input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.slatebar label.band input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+.slatebar .count { margin-left: auto; font-family: var(--mono); font-size: .76rem; color: var(--ink-faint); }
+
+/* Tight enough that fifteen columns clear a laptop screen. The two text columns are the only ones that
+   can grow without bound, so they are the two that get capped and clipped; every numeric column is a
+   fixed handful of characters and is left alone. */
+table.slate { font-size: .8rem; }
+table.slate th, table.slate td { padding: .38rem .45rem; }
+table.slate td.name, table.slate td.event {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 15rem; min-width: 0;
+}
+table.slate td.event { max-width: 11rem; }
+table.slate td.name b { font-weight: 600; }
+/* The start time is the clock you read the card by, so the hour is plain and the date sits under it in
+   the faint style the name cell used to carry. Monospaced and nowrap so the times form a column your eye
+   can run down; the time zone is not repeated per row because it is stated once in the header. */
+table.slate td.when, table.slate th.when { white-space: nowrap; font-family: var(--mono); }
+table.slate td.when { color: var(--ink-dim); }
+table.slate tr.grp th { border-bottom: none; padding-bottom: 0; color: var(--ink-faint); font-size: .7rem; }
+table.slate tr.grp th:empty { border-bottom: none; }
+
+table.slate th a { text-decoration: none; color: inherit; display: block; }
+table.slate th a:hover { color: var(--ink); }
+table.slate th.sorted { color: var(--ink); }
+table.slate th .arrow { margin-left: .2rem; color: var(--toward); }
+table.slate .rnd { opacity: .65; }
+table.slate td.sep, table.slate th.sep { border-left: 1px solid var(--line); }
+
+/* A row the frozen rule fires on. The only row-level colour on the site, because it is the only
+   row-level fact that matters: everything else on the slate is context for this. */
+tr.bet > td { background: #17241e; }
+tr.bet:hover > td { background: #1b2c24; }
+tr.bet > td:first-child { box-shadow: inset 3px 0 0 var(--toward); }
+.yes { color: var(--toward); font-size: .78rem; letter-spacing: .04em; }
+
+/* The provisional-open asterisk and the "waiting" it explains. The asterisk was amber, on the argument
+   that the row is early rather than wrong. TJ asked for red on 2026-09-14, and he is right: amber reads
+   as a monitoring note you skim past, and on a day when the feed published nothing it was sitting on
+   every row of the board. It is not a footnote — it says Fair and quote are NOT the feed's open but a
+   Pinnacle price we substituted, and every number to their right is built on that substitute. Red is the
+   honest weight. "waiting" stays amber: that one really is a timing note, not a claim about the numbers.
+   Superscripted so it never widens the Fair column, which is what a real extra column would have cost. */
+.prov { color: var(--against); font-weight: 700; vertical-align: super; font-size: .7rem;
+        margin-left: .1rem; cursor: help; }
+.wait { color: #c9a961; font-size: .78rem; letter-spacing: .04em; cursor: help; }
+/* The dagger next to YES: the pick stands on the slate, but the trader refused the money — a 6+ point
+   first-hour move re-scored the row below its floor at order time (kt_skips 'rescore_dropped'). Red,
+   same argument as .prov: it is a claim about the bet, not a footnote. Distinct glyph because * already
+   means "Pinnacle-substituted open" and the two can appear on the same row. */
+.dropmark { color: var(--against); font-weight: 700; vertical-align: super; font-size: .7rem;
+            margin-left: .1rem; cursor: help; }
+/* Collapsed retry history on the Kalshi tracker: one pick that took three API attempts is one row
+   with a "3 tries" badge, the reasons living in its tooltip. */
+.tries { color: #c9a961; border: 1px solid #4a4130; border-radius: 8px; padding: 0 .38em;
+         font-size: .68rem; white-space: nowrap; cursor: help; }
+
+button.placed { background: transparent; border-color: var(--toward); color: var(--toward); }
+
+/* ---------- book ---------- */
+
+nav.subtabs { display: flex; gap: .2rem; margin-bottom: .7rem; }
+nav.subtabs a { padding: .3rem .6rem; text-decoration: none; color: var(--ink-dim); font-size: .82rem;
+                border: 1px solid var(--line); border-radius: 2px; }
+nav.subtabs a[aria-current="page"] { color: var(--ink); border-color: var(--ink-faint); background: var(--surface); }
+nav.subtabs i { font-style: normal; color: var(--ink-faint); font-family: var(--mono); font-size: .74rem;
+                margin-left: .3rem; }
+
+/* A date and its start time in one cell. The time sits under the date rather than beside it so the
+   column does not widen — the Book is already eighteen columns and has no horizontal room to sell. */
+td.nw { white-space: nowrap; }
+.tod { display: block; font-size: .68rem; color: var(--ink-faint); font-family: var(--mono); }
+
+.wl { font-family: var(--mono); font-size: .85rem; }
+.wl.w { color: var(--toward); }
+.wl.l { color: var(--against); }
+tr.won > td:first-child { box-shadow: inset 3px 0 0 var(--toward); }
+tr.lost > td:first-child { box-shadow: inset 3px 0 0 var(--against); }
+
+details > summary { cursor: pointer; color: var(--ink-dim); font-size: .8rem; list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary:hover { color: var(--ink); }
+details[open] > summary { color: var(--ink); }
+
+input.derived { color: var(--ink-faint); background: var(--surface-2); }
+
+/* The fill form is now one empty element per row holding only hidden inputs; the visible controls sit in
+   the cells and reach it by form=. Hiding it stops an empty flex box from opening a gap under the table —
+   display:none does not stop a form from submitting, and its hidden inputs still go with it. */
+form.fill { display: none; }
+
+/* Everything editable inline in the row, so nothing needs opening and scrolling to find a button. That
+   costs width, which is paid for with tighter cells and narrow fixed-width boxes rather than a sideways
+   scroll on every visit. */
+table.inline th, table.inline td { padding: .3rem .32rem; vertical-align: middle; }
+table.inline input[type="text"], table.inline select {
+  padding: .22rem .3rem; font-size: .8rem; border-radius: 2px;
+}
+table.inline select { font-size: .76rem; }
+table.inline input.w3 { width: 2.6rem; text-align: right; }
+table.inline input.w4 { width: 3.6rem; text-align: right; }
+table.inline input.w8 { width: 7rem; font-family: var(--sans); }
+/* By far the widest cell, and the only one that can be shortened without losing the row: a long pair of
+   names plus the event underneath was setting the width of the whole table on its own. Truncating it is
+   what keeps eighteen columns inside the window rather than behind a sideways scroll, and the cell
+   carries a title so the full text is one hover away. Each new column is paid for here rather than by
+   letting the table grow: 15rem bought the cashout box. */
+table.inline td.name { min-width: 11rem; max-width: 13rem; overflow: hidden; text-overflow: ellipsis; }
+table.inline td.name .sub { display: block; font-size: .72rem; overflow: hidden; text-overflow: ellipsis; }
+table.inline td.acts { white-space: nowrap; }
+table.inline td.acts button { padding: .24rem .45rem; font-size: .74rem; margin-left: .15rem; }
+table.inline td.acts button:first-child { margin-left: 0; }
+
+/* The only feedback that a row was written, so it has to be legible without being loud. Reserving the
+   width stops the row from jittering sideways every time a save lands. */
+.savemark { display: inline-block; min-width: 3.2rem; margin-left: .35rem;
+            font-size: .72rem; font-family: var(--mono); color: var(--ink-faint); }
+.savemark.busy { color: var(--ink-faint); }
+.savemark.ok { color: var(--toward); }
+.savemark.bad { color: var(--against); font-family: var(--sans); }
+
+/* ---------- performance filters ---------- */
+
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; margin-bottom: 1rem; }
+.filters .flabel { font-size: .72rem; color: var(--ink-faint); margin-left: .7rem; }
+.filters .flabel:first-child { margin-left: 0; }
+.chip { font-size: .78rem; padding: .2rem .55rem; border: 1px solid var(--line); border-radius: 2px;
+        text-decoration: none; color: var(--ink-dim); }
+.chip:hover { color: var(--ink); border-color: var(--ink-faint); }
+.chip.on { color: var(--ink); border-color: var(--toward); background: var(--surface); }
+
+.filters form.range { display: inline-flex; align-items: center; gap: .3rem; margin: 0; }
+.filters form.range input { font-size: .78rem; padding: .15rem .35rem; width: 3.4rem; }
+.filters form.range button { font-size: .76rem; padding: .18rem .5rem; }
+.filters form.range .dim { font-size: .74rem; }
+
+/* ---------- run history match picker ---------- */
+
+.picker { display: grid; gap: .35rem; grid-template-columns: 1fr; margin-bottom: 1.2rem;
+          max-height: 21rem; overflow-y: auto; }
+@media (min-width: 760px) { .picker { grid-template-columns: 1fr 1fr; } }
+.mcard { display: block; padding: .45rem .65rem; border: 1px solid var(--line); background: var(--surface);
+         text-decoration: none; font-size: .85rem; }
+.mcard:hover { border-color: var(--ink-faint); }
+.mcard .meta { display: block; font-size: .73rem; color: var(--ink-faint); font-family: var(--mono); }
+.mcard .meta i { font-style: normal; color: var(--toward); }
+.mcard.was-pick { border-left: 3px solid var(--toward); }
+.mcard.on { background: var(--surface-2); border-color: var(--ink-faint); }
+
+/* ---------- the two-cut accounting grid ---------- */
+
+.cuts { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+@media (min-width: 860px) { .cuts { grid-template-columns: 1fr 1fr; } }
+
+.cut { border: 1px solid var(--line); background: var(--surface); }
+.cut > header { padding: .7rem .9rem; border-bottom: 1px solid var(--line); }
+.cut > header b { font-size: .92rem; }
+.cut > header span { display: block; color: var(--ink-faint); font-size: .78rem; margin-top: .15rem; }
+.cut table { font-size: .86rem; }
+.cut td, .cut th { padding: .5rem .9rem; }
+
+.units { font-family: var(--mono); font-size: 1.15rem; font-weight: 600; letter-spacing: -0.02em; }
+
+/* ---------- monitoring flags: the only place amber appears ---------- */
+
+.flags { display: grid; gap: .55rem; grid-template-columns: 1fr; margin: .5rem 0 0; }
+@media (min-width: 700px) { .flags { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .flags { grid-template-columns: repeat(4, 1fr); } }
+
+.gauge { border: 1px solid var(--line); background: var(--surface); padding: .65rem .8rem; }
+.gauge .label { font-size: .76rem; color: var(--ink-dim); }
+.gauge .value { font-family: var(--mono); font-size: 1.3rem; font-weight: 600; letter-spacing: -0.02em; margin: .1rem 0; }
+.gauge .expect { font-size: .73rem; color: var(--ink-faint); }
+.gauge[data-flag="INVESTIGATE"] { border-color: var(--flag); }
+.gauge[data-flag="INVESTIGATE"] .value { color: var(--flag); }
+.gauge[data-flag="STOP"] { border-color: var(--against); background: #26191a; }
+.gauge[data-flag="STOP"] .value { color: var(--against); }
+.gauge[data-flag="building"] .value { color: var(--ink-dim); }
+
+.banner { border: 1px solid var(--flag); border-left-width: 3px; background: #241f18;
+          padding: .7rem .9rem; margin-bottom: .6rem; font-size: .86rem; }
+.banner b { color: var(--flag); }
+.banner.bad { border-color: var(--against); background: #26191a; }
+.banner.bad b { color: var(--against); }
+
+/* ---------- fill logging: built for a thumb ---------- */
+
+.logrow { border: 1px solid var(--line); background: var(--surface); margin-bottom: .5rem; }
+.logrow > .head { display: flex; gap: .6rem; align-items: baseline; padding: .6rem .8rem;
+                  border-bottom: 1px solid var(--line-soft); flex-wrap: wrap; }
+.logrow .head b { font-size: .95rem; }
+.logrow .head .meta { color: var(--ink-faint); font-size: .77rem; font-family: var(--mono); margin-left: auto; }
+
+form.fill { display: flex; flex-wrap: wrap; gap: .45rem; align-items: center; padding: .6rem .8rem; }
+form.fill label { font-size: .76rem; color: var(--ink-dim); display: flex; flex-direction: column; gap: .15rem; }
+
+input[type="text"], input[type="password"], input[type="number"], select, textarea {
+  background: var(--bg); border: 1px solid var(--line); color: var(--ink);
+  padding: .42rem .5rem; font-family: var(--mono); font-size: .88rem; border-radius: 2px;
+  min-width: 0;
+}
+input[type="text"] { width: 6.5rem; }
+input[type="search"] {
+  background: var(--bg); border: 1px solid var(--line); color: var(--ink);
+  padding: .42rem .5rem; font-family: var(--sans); font-size: .88rem; border-radius: 2px;
+  width: 11rem; min-width: 0;
+}
+input.wide { width: 14rem; font-family: var(--sans); }
+select { font-family: var(--sans); }
+.clearq { align-self: center; font-size: .74rem; color: var(--ink-faint); }
+/* Sits on the Day menu's baseline, and only appears when the page is showing some other day. */
+.slatebar .today { align-self: flex-end; padding-bottom: .45rem; font-size: .74rem; white-space: nowrap; }
+input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--toward); outline-offset: 1px;
+}
+
+button {
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--ink);
+  padding: .45rem .8rem; font-family: var(--sans); font-size: .85rem; cursor: pointer; border-radius: 2px;
+}
+button:hover { border-color: var(--ink-faint); }
+button.go { background: var(--toward); border-color: var(--toward); color: #0d1a14; font-weight: 600; }
+button.no { background: transparent; color: var(--ink-dim); }
+/* Removal is destructive-looking but reversible, so it is quiet until you reach for it rather than
+   sitting in the row shouting red at every bet you placed on purpose. */
+button.pull { background: transparent; color: var(--ink-faint); border-color: transparent; }
+button.pull:hover { color: var(--against); border-color: var(--against); }
+
+.pill { font-size: .7rem; padding: .1rem .4rem; border: 1px solid var(--line);
+        color: var(--ink-dim); border-radius: 2px; font-family: var(--mono); }
+.pill.q { border-color: #4a5a72; color: #9db4d4; }
+.pill.pricebet { border-color: var(--flag); color: var(--flag); }
+.pill.filled { border-color: var(--toward); color: var(--toward); }
+.pill.nofill { border-color: var(--ink-faint); color: var(--ink-faint); }
+/* Neither win-coloured nor loss-coloured on purpose: a cashout is neither, and tinting it either way
+   would argue with the W or L standing beside it. */
+.pill.cash { border-color: #6b5a3a; color: #c9a961; }
+/* A match whose local start time has passed. Deliberately muted, not a warning colour: the row is still
+   a real row worth reading for CLV, it just cannot be bet any more. */
+.pill.off { border-color: var(--ink-faint); color: var(--ink-faint); }
+/* The same two colours the CLV and move columns already use for good and bad, so a green badge and a
+   green number mean the same direction without anyone having to learn a second palette. Filled rather
+   than outlined, because unlike every other pill this one is the outcome and should win the glance. */
+.pill.won  { border-color: var(--toward); color: var(--toward); font-weight: 600; }
+.pill.lost { border-color: var(--against); color: var(--against); font-weight: 600; }
+/* Pinnacle's live price. Its own colour because it is the one number on the slate that comes from the
+   book rather than the feed, and it is NOT an input to the model — it should not read as a model figure. */
+td.cur { color: #7fb6d9; }
+
+/* ---------- equity sparkline ---------- */
+
+.spark { width: 100%; height: 150px; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 1.1rem; font-size: .78rem; color: var(--ink-dim); margin-top: .3rem; }
+.legend i { display: inline-block; width: .8rem; height: 2px; vertical-align: middle; margin-right: .3rem; }
+.legend b { font-family: var(--mono); margin-left: .35rem; }
+
+/* The profit chart is the same drawing given room, plus an axis. preserveAspectRatio="none" means the
+   viewBox stretches, so the labels are positioned in CSS rather than in SVG user units. */
+.chartwrap { display: flex; gap: .5rem; align-items: stretch; border: 1px solid var(--line-soft);
+             background: var(--surface); padding: .6rem .7rem; }
+.bigchart { flex: 1; height: 340px; display: block; overflow: visible; }
+.axis { position: relative; width: 3.6rem; flex: 0 0 auto;
+        font-family: var(--mono); font-size: .72rem; color: var(--ink-faint); }
+.axis span { position: absolute; right: 0; transform: translateY(-50%); }
+.axis .top { top: 0; transform: none; }
+.axis .bot { bottom: 0; transform: none; }
+.axis .zero { color: var(--ink-dim); }
+
+/* The hoverable big chart (/chart, /kalshi). The SVG stretches (preserveAspectRatio="none"), so all
+   text — gridline values, date ticks, the tooltip — is HTML positioned by percent, never SVG text. */
+.chartwrap2 { border: 1px solid var(--line-soft); background: var(--surface); padding: .6rem .7rem .3rem; }
+.chartwrap2 .plot { position: relative; height: 340px; }
+.chartwrap2 svg { width: 100%; height: 100%; display: block; }
+.chartwrap2 .ylab { position: absolute; right: .2rem; transform: translateY(-50%);
+                    font-family: var(--mono); font-size: .7rem; color: var(--ink-faint);
+                    background: color-mix(in srgb, var(--surface) 78%, transparent);
+                    padding: 0 .2rem; pointer-events: none; }
+.chartwrap2 .ylab.zero { color: var(--ink-dim); }
+.chartwrap2 .xlabs { position: relative; height: 1.1rem; margin-top: .25rem;
+                     font-family: var(--mono); font-size: .68rem; color: var(--ink-faint); }
+.chartwrap2 .xlabs span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.chartwrap2 .xlabs span:first-child { transform: none; }
+.chartwrap2 .xlabs span:last-child { transform: translateX(-100%); }
+.chartwrap2 .crosshair { position: absolute; top: 0; bottom: 0; width: 0;
+                         border-left: 1px dashed var(--ink-faint); pointer-events: none; }
+.chartwrap2 .charttip { position: absolute; top: .4rem; max-width: 24rem; z-index: 3;
+                        border: 1px solid var(--line); background: var(--bg, #10151c);
+                        padding: .45rem .6rem; font-size: .76rem; color: var(--ink-dim);
+                        pointer-events: none; }
+.chartwrap2 .charttip .tiphead { color: var(--ink); margin-bottom: .25rem; }
+.chartwrap2 .charttip i { display: inline-block; width: .7rem; height: 2px;
+                          vertical-align: middle; margin-right: .3rem; }
+.chartwrap2 .charttip b { font-family: var(--mono); margin-left: .3rem; }
+
+/* ---------- kalshi tracker ---------- */
+
+.statgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+            gap: .4rem; margin: .6rem 0 1rem; }
+.statgrid.tight { margin: 0; align-content: start; }
+.stat { border: 1px solid var(--line-soft); background: var(--surface); padding: .5rem .6rem; }
+.stat .k { font-size: .68rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .04em; }
+.stat .v { font-family: var(--mono); font-size: 1.05rem; margin-top: .15rem; }
+.stat .s { font-size: .7rem; color: var(--ink-faint); margin-top: .1rem; }
+
+.kshero { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+          gap: .5rem; margin: .35rem 0 .9rem; }
+.hcard { border: 1px solid var(--line-soft); border-left: 3px solid var(--line);
+         background: var(--surface); padding: .65rem .85rem .6rem; }
+.hcard.amber { border-left-color: var(--flag); }
+.hcard.blue  { border-left-color: #7fb6d9; }
+.hcard.pos   { border-left-color: var(--toward); }
+.hcard.neg   { border-left-color: var(--against); }
+.hcard .k { font-size: .68rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .05em; }
+.hcard .v { font-family: var(--mono); font-size: 1.55rem; line-height: 1.15; margin-top: .2rem; }
+.hcard .v .vsub { font-size: .92rem; color: var(--ink-dim); margin-left: .3rem; }
+.hcard .s { font-size: .72rem; color: var(--ink-dim); margin-top: .2rem; }
+
+.pnlband { display: grid; grid-template-columns: minmax(14rem, 1.2fr) 2fr;
+           gap: .5rem; margin: .35rem 0 1rem; align-items: start; }
+@media (max-width: 40rem) { .pnlband { grid-template-columns: 1fr; } }
+
+.quiet { border: 1px dashed var(--line); color: var(--ink-faint); font-size: .78rem;
+         padding: .55rem .8rem; margin: .35rem 0 1rem; }
+
+.stbadge { display: inline-block; font-family: var(--mono); font-size: .7rem;
+           padding: .02rem .45rem; border: 1px solid var(--line); border-radius: 8px;
+           color: var(--ink-dim); white-space: nowrap; }
+.st-posted   { color: var(--flag); border-color: #4a4130; }
+.st-partial,
+.st-filled   { color: #7fb6d9; border-color: #2b4150; }
+.st-settled  { color: var(--toward); border-color: #2b4a3c; }
+.st-rejected { color: var(--against); border-color: #4a3030; }
+
+h4 { font-size: .78rem; font-weight: 600; color: var(--ink-dim); text-transform: uppercase;
+     letter-spacing: .04em; margin: .9rem 0 .3rem; }
+
+pre.runlog { font-family: var(--mono); font-size: .74rem; line-height: 1.45; color: var(--ink-dim);
+             background: var(--surface); border: 1px solid var(--line-soft); padding: .6rem .7rem;
+             margin: 0 0 .5rem; max-height: 16rem; overflow: auto; white-space: pre-wrap; }
+
+/* ---------- login ---------- */
+
+.gate { min-height: 100vh; display: grid; place-items: center; padding: 1.5rem; }
+.gate form { width: min(22rem, 100%); border: 1px solid var(--line); background: var(--surface); padding: 1.4rem; }
+.gate h1 { font-size: 1.05rem; margin: 0 0 .2rem; }
+.gate p { color: var(--ink-faint); font-size: .82rem; margin: 0 0 1.1rem; }
+.gate label { display: block; font-size: .78rem; color: var(--ink-dim); margin-bottom: .8rem; }
+.gate input { width: 100%; margin-top: .2rem; }
+.gate button { width: 100%; margin-top: .4rem; }
+.gate .err { color: var(--against); font-size: .82rem; margin-bottom: .8rem; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

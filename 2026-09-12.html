@@ -1,0 +1,5122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Kickstarter Serve</title>
+
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="ks.css">
+
+
+</head>
+<body>
+<header class="masthead">
+  <h1>Kickstarter Serve</h1>
+  
+  <span class="state">26 Sep 17:55 CDT · built</span>
+  
+</header>
+
+
+<main class="slate">
+
+
+
+
+
+  
+  
+  <div class="slatebar">
+    <form method="get" action="/" id="filters">
+      <input type="hidden" name="sort" value="edge">
+      <input type="hidden" name="desc" value="1">
+      
+      <label>Day
+        
+        <select name="date" onchange="location.href = this.value + '.html'">
+        
+          <option value="2026-09-27" >2026-09-27</option><option value="2026-09-26" >2026-09-26</option><option value="2026-09-25" >2026-09-25</option><option value="2026-09-24" >2026-09-24</option><option value="2026-09-23" >2026-09-23</option><option value="2026-09-22" >2026-09-22</option><option value="2026-09-21" >2026-09-21</option><option value="2026-09-20" >2026-09-20</option><option value="2026-09-19" >2026-09-19</option><option value="2026-09-18" >2026-09-18</option><option value="2026-09-17" >2026-09-17</option><option value="2026-09-16" >2026-09-16</option><option value="2026-09-15" >2026-09-15</option><option value="2026-09-14" >2026-09-14</option><option value="2026-09-13" >2026-09-13</option><option value="2026-09-12" selected>2026-09-12</option>
+          
+          <option value="all" >All dates</option>
+        </select>
+      </label>
+      
+      
+        <a class="today" href="index.html">Today</a>
+        
+      
+      <label>Tour
+        <select name="circuit" onchange="">
+          <option value="">Men &amp; women</option>
+          <option value="ATP" >
+            Men (ATP)</option><option value="WTA" >
+            Women (WTA)</option>
+        </select>
+      </label>
+      <label>Tournament
+        <select name="tour" onchange="">
+          <option value="">All (12)</option>
+          <option value="ATIK Antalya Open - Antalya" >ATIK Antalya Open - Antalya</option><option value="Cassis Challenger" >Cassis Challenger</option><option value="Genoa Challenger" >Genoa Challenger</option><option value="Guadalajara Open Akron - Guadalajara" >Guadalajara Open Akron - Guadalajara</option><option value="Istanbul Challenger" >Istanbul Challenger</option><option value="Kia Open - Barranquilla" >Kia Open - Barranquilla</option><option value="Montreux Nestle Open - Montreux" >Montreux Nestle Open - Montreux</option><option value="SP Open - Sao Paulo" >SP Open - Sao Paulo</option><option value="Seville Challenger" >Seville Challenger</option><option value="Shanghai Challenger" >Shanghai Challenger</option><option value="Tulln Challenger" >Tulln Challenger</option><option value="U.S. Open - New York" >U.S. Open - New York</option>
+        </select>
+      </label>
+      
+      <label>Open
+        <select name="src" onchange="">
+          <option value="">Any source</option>
+          <option value="vb" >ValueBet open only</option>
+          <option value="prov" >Pinnacle stand-in only</option>
+        </select>
+      </label>
+      
+      <label>Move
+        <select name="move" onchange="">
+          <option value="">Either way</option>
+          <option value="toward" >Toward only</option>
+          <option value="against" >Against only</option>
+        </select>
+      </label>
+      
+      <label>Show
+        <select name="universe" onchange="">
+          <option value="1" selected>In universe</option>
+          <option value="0" >Every side scored</option>
+        </select>
+      </label>
+      
+      <label class="ck"><input type="checkbox" name="picks" value="1"
+         onchange=""> Picks only</label>
+      
+      <label class="band">Fair
+    <span>
+      <input type="number" name="fair_min" value="" step="0.01"
+             placeholder="min" inputmode="decimal" autocomplete="off" onchange="">
+      <input type="number" name="fair_max" value="" step="0.01"
+             placeholder="max" inputmode="decimal" autocomplete="off" onchange="">
+    </span>
+  </label>
+      <label class="band">Quote
+    <span>
+      <input type="number" name="quote_min" value="" step="0.01"
+             placeholder="min" inputmode="decimal" autocomplete="off" onchange="">
+      <input type="number" name="quote_max" value="" step="0.01"
+             placeholder="max" inputmode="decimal" autocomplete="off" onchange="">
+    </span>
+  </label>
+      <label class="band">Model
+    <span>
+      <input type="number" name="model_min" value="" step="0.01"
+             placeholder="min" inputmode="decimal" autocomplete="off" onchange="">
+      <input type="number" name="model_max" value="" step="0.01"
+             placeholder="max" inputmode="decimal" autocomplete="off" onchange="">
+    </span>
+  </label>
+      <label class="band">Edge (pts)
+    <span>
+      <input type="number" name="edge_min" value="" step="0.1"
+             placeholder="min" inputmode="decimal" autocomplete="off" onchange="">
+      <input type="number" name="edge_max" value="" step="0.1"
+             placeholder="max" inputmode="decimal" autocomplete="off" onchange="">
+    </span>
+  </label>
+      
+      
+      <label>Search
+        <input type="search" name="q" value="" placeholder="player or event" autocomplete="off">
+      </label>
+      
+      
+    </form>
+    
+    <div class="count"><span id="n-sides">62</span> sides ·
+      <span id="n-picks">1</span> picks · latest run
+      <span title="stored as 12 Sep 23:06 UTC">18:06 CDT</span></div>
+  </div>
+
+  
+
+  
+  <div class="scroll">
+  <table class="slate">
+    <thead>
+    <tr class="grp">
+      
+      <th colspan="13"></th>
+      <th colspan="2" class="n sep">Pinnacle now</th>
+      <th colspan="2" class="n sep">Open to close</th>
+      <th colspan="4" class="n sep">ROI if bought at</th>
+      <th class="n sep">Kalshi</th>
+      
+    </tr>
+    <tr>
+      <th class="name " data-col="player"><a href="#">Side<span class="arrow"></span></a></th>
+      <th class="when " data-col="match_date"><a href="#">Time<span class="arrow"></span></a></th>
+      <th class=" " data-col="tournament"><a href="#">Event<span class="arrow"></span></a></th>
+      <th class="n " data-col="fair"><a href="#">Fair<span class="arrow"></span></a></th>
+      <th class="n " data-col="quote"><a href="#">Quote<span class="arrow"></span></a></th>
+      <th class="n " data-col="cal"><a href="#">Model<span class="arrow"></span></a></th>
+      <th class="n sorted" data-col="edge"><a href="#">Edge<span class="arrow">↓</span></a></th>
+      <th class="n " data-col="edge_now"><a href="#">Now<span class="arrow"></span></a></th>
+      <th class="n " data-col="price_edge"><a href="#">Price Edge<span class="arrow"></span></a></th>
+      <th>Move</th>
+      <th>Bet</th>
+      <th class="n " data-col="need"><a href="#">Need<span class="arrow"></span></a></th>
+      <th class="n " data-col="stake"><a href="#">Stake<span class="arrow"></span></a></th>
+      <th class="n sep " data-col="cur"><a href="#">Current<span class="arrow"></span></a></th>
+      <th class="n " data-col="cur_move"><a href="#">vs open<span class="arrow"></span></a></th>
+      <th class="n sep " data-col="close"><a href="#">close<span class="arrow"></span></a></th>
+      <th class="n " data-col="clv"><a href="#">CLV<span class="arrow"></span></a></th>
+      <th class="n sep " data-col="roi_quote"><a href="#">quote<span class="arrow"></span></a></th>
+      <th class="n " data-col="roi_fair"><a href="#">fair<span class="arrow"></span></a></th>
+      <th class="n " data-col="roi_m1"><a href="#">−1c<span class="arrow"></span></a></th>
+      <th class="n " data-col="roi_m2"><a href="#">−2c<span class="arrow"></span></a></th>
+      <th class="n sep " data-col="roi_kt"><a href="#">take<span class="arrow"></span></a></th>
+      
+    </tr></thead>
+    <tbody>
+    
+      
+      <tr class="bet"
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Guadalajara Open Akron - Guadalajara"
+          data-src="vb"
+          data-move="toward"
+          data-find="ana sofia sanchez iryna shymanovich guadalajara open akron - guadalajara"
+          data-when="2026-09-12 23:05:00"
+          
+          data-fair="0.355"
+          data-quote="0.377"
+          data-model="0.383"
+          data-edge="2.8">
+        <td class="name" title="Ana Sofia Sanchez v Iryna Shymanovich"><b>Ana Sofia Sanchez</b>
+          <span class="dim">v Iryna Shymanovich</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 18:05 CDT — stored as 12 Sep 23:05 UTC">
+          18:05
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Ana Sofia Sanchez lost — 7-5 6-2">
+              lost</span></span></td>
+        <td class="event dim" title="Guadalajara Open Akron - Guadalajara">Guadalajara Open Akron - Guadalajara
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.355</td>
+        <td class="n dim">0.377</td>
+        <td class="n">0.383</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +2.8</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +2.8</td>
+        
+        <td class="n up"
+            title="Edge / Fair = +2.8 pts / 0.355 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row clears it.">
+          +7.9%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><b class="yes">YES</b></td>
+        <td class="n dim">+0.0</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.272</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -8.3</td>
+        <td class="n sep up">
+          +1.5</td>
+        <td class="n up">
+          +7.9</td>
+        <td class="n up">
+          +11.0</td>
+        <td class="n up">
+          +14.3</td>
+        <td class="n sep up"
+            title="Taking at fair on Kalshi, after a 1.6c taker fee">
+          +3.2</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Shanghai Challenger"
+          data-src="vb"
+          data-move="against"
+          data-find="marat sharipov pavel kotov shanghai challenger"
+          data-when="2026-09-12 13:35:00"
+          
+          data-fair="0.469"
+          data-quote="0.485"
+          data-model="0.496"
+          data-edge="2.7">
+        <td class="name" title="Marat Sharipov v Pavel Kotov"><b>Marat Sharipov</b>
+          <span class="dim">v Pavel Kotov</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 08:35 CDT — stored as 12 Sep 13:35 UTC">
+          08:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Marat Sharipov won — 3-6 2-4">
+              won</span></span></td>
+        <td class="event dim" title="Shanghai Challenger">Shanghai Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.469</td>
+        <td class="n dim">0.485</td>
+        <td class="n">0.496</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +2.7</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +2.7</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +2.7 pts / 0.469 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          +5.7%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+1.9</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.479</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.9</td>
+        <td class="n sep up">
+          +2.3</td>
+        <td class="n up">
+          +5.7</td>
+        <td class="n up">
+          +8.0</td>
+        <td class="n up">
+          +10.4</td>
+        <td class="n sep up"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          +1.9</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="toward"
+          data-find="antonia vergara rivera justina mikulskyte sp open - sao paulo"
+          data-when="2026-09-12 16:10:00"
+          
+          data-fair="0.246"
+          data-quote="0.269"
+          data-model="0.266"
+          data-edge="2.0">
+        <td class="name" title="Antonia Vergara Rivera v Justina Mikulskyte"><b>Antonia Vergara Rivera</b>
+          <span class="dim">v Justina Mikulskyte</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 11:10 CDT — stored as 12 Sep 16:10 UTC">
+          11:10
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Antonia Vergara Rivera lost — 6-2 6-3">
+              lost</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.246</td>
+        <td class="n dim">0.269</td>
+        <td class="n">0.266</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +2.0</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +2.0</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +2.0 pts / 0.246 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          +8.1%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+0.5</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.212</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -3.4</td>
+        <td class="n sep dim">
+          -1.0</td>
+        <td class="n up">
+          +8.1</td>
+        <td class="n up">
+          +12.7</td>
+        <td class="n up">
+          +17.7</td>
+        <td class="n sep up"
+            title="Taking at fair on Kalshi, after a 1.3c taker fee">
+          +2.7</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Cassis Challenger"
+          data-src="vb"
+          data-move="against"
+          data-find="nicolai budkov kjaer titouan droguet cassis challenger"
+          data-when="2026-09-12 15:04:00"
+          
+          data-fair="0.413"
+          data-quote="0.433"
+          data-model="0.433"
+          data-edge="2.0">
+        <td class="name" title="Nicolai Budkov Kjaer v Titouan Droguet"><b>Nicolai Budkov Kjaer</b>
+          <span class="dim">v Titouan Droguet</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 10:04 CDT — stored as 12 Sep 15:04 UTC">
+          10:04
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Nicolai Budkov Kjaer lost — 6-7(4) 6-2 6-4">
+              lost</span></span></td>
+        <td class="event dim" title="Cassis Challenger">Cassis Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.413</td>
+        <td class="n dim">0.433</td>
+        <td class="n">0.433</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +2.0</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +2.0</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +2.0 pts / 0.413 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          +4.7%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.1</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.350</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -6.3</td>
+        <td class="n sep up">
+          +0.0</td>
+        <td class="n up">
+          +4.7</td>
+        <td class="n up">
+          +7.3</td>
+        <td class="n up">
+          +10.1</td>
+        <td class="n sep up"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          +0.6</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="toward"
+          data-find="hayu kinoshita victoria rodriguez sp open - sao paulo"
+          data-when="2026-09-12 18:35:00"
+          
+          data-fair="0.814"
+          data-quote="0.833"
+          data-model="0.829"
+          data-edge="1.5">
+        <td class="name" title="Hayu Kinoshita v Victoria Rodriguez"><b>Hayu Kinoshita</b>
+          <span class="dim">v Victoria Rodriguez</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 13:35 CDT — stored as 12 Sep 18:35 UTC">
+          13:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Hayu Kinoshita won — 6-4 1-6 4-2">
+              won</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.814</td>
+        <td class="n dim">0.833</td>
+        <td class="n">0.829</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +1.5</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +1.5</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +1.5 pts / 0.814 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it. Favourites selector reads the same number at 0.70+: core ≥ 2.5%, ext 1.5–2.5%. This row is ext, staked 0.25u by the favourites rule.">
+          +1.9%<span
+            class="rnd">ext</span></td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><b class="yes" title="The favourites selector fired here and the general rule did not — ext at +1.9% relative edge, 0.25u. Almost always a price above 0.80, which the general rule's band does not reach.">YES(Fav)</b></td>
+        <td class="n dim">+1.0</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.838</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +2.4</td>
+        <td class="n sep dim">
+          -0.5</td>
+        <td class="n up">
+          +1.9</td>
+        <td class="n up">
+          +3.1</td>
+        <td class="n up">
+          +4.4</td>
+        <td class="n sep up"
+            title="Taking at fair on Kalshi, after a 1.1c taker fee">
+          +0.5</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Guadalajara Open Akron - Guadalajara"
+          data-src="vb"
+          data-move="against"
+          data-find="lea ma katarina zavatska guadalajara open akron - guadalajara"
+          data-when="2026-09-12 22:30:00"
+          
+          data-fair="0.415"
+          data-quote="0.437"
+          data-model="0.429"
+          data-edge="1.4">
+        <td class="name" title="Lea Ma v Katarina Zavatska"><b>Lea Ma</b>
+          <span class="dim">v Katarina Zavatska</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 17:30 CDT — stored as 12 Sep 22:30 UTC">
+          17:30
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Lea Ma won — 6-2 6-2">
+              won</span></span></td>
+        <td class="event dim" title="Guadalajara Open Akron - Guadalajara">Guadalajara Open Akron - Guadalajara
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.415</td>
+        <td class="n dim">0.437</td>
+        <td class="n">0.429</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +1.4</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +1.4</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +1.4 pts / 0.415 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          +3.4%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+1.9</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.423</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.8</td>
+        <td class="n sep dim">
+          -1.7</td>
+        <td class="n up">
+          +3.4</td>
+        <td class="n up">
+          +6.0</td>
+        <td class="n up">
+          +8.7</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -0.6</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Tulln Challenger"
+          data-src="vb"
+          data-move="against"
+          data-find="mika brunold vitaliy sachko tulln challenger"
+          data-when="2026-09-12 11:58:00"
+          
+          data-fair="0.537"
+          data-quote="0.552"
+          data-model="0.550"
+          data-edge="1.3">
+        <td class="name" title="Mika Brunold v Vitaliy Sachko"><b>Mika Brunold</b>
+          <span class="dim">v Vitaliy Sachko</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 06:58 CDT — stored as 12 Sep 11:58 UTC">
+          06:58
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Mika Brunold won — 0-6 2-6">
+              won</span></span></td>
+        <td class="event dim" title="Tulln Challenger">Tulln Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.537</td>
+        <td class="n dim">0.552</td>
+        <td class="n">0.550</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +1.3</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +1.3</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +1.3 pts / 0.537 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          +2.4%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.4</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.521</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -1.6</td>
+        <td class="n sep dim">
+          -0.5</td>
+        <td class="n up">
+          +2.4</td>
+        <td class="n up">
+          +4.3</td>
+        <td class="n up">
+          +6.3</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -0.9</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="ATIK Antalya Open - Antalya"
+          data-src="vb"
+          data-move="toward"
+          data-find="alicia herrero linana alevtina ibragimova atik antalya open - antalya"
+          data-when="2026-09-12 14:30:00"
+          
+          data-fair="0.406"
+          data-quote="0.426"
+          data-model="0.418"
+          data-edge="1.2">
+        <td class="name" title="Alicia Herrero Linana v Alevtina Ibragimova"><b>Alicia Herrero Linana</b>
+          <span class="dim">v Alevtina Ibragimova</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 09:30 CDT — stored as 12 Sep 14:30 UTC">
+          09:30
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Alicia Herrero Linana lost — 4-6 6-2 6-3">
+              lost</span></span></td>
+        <td class="event dim" title="ATIK Antalya Open - Antalya">ATIK Antalya Open - Antalya
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.406</td>
+        <td class="n dim">0.426</td>
+        <td class="n">0.418</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +1.2</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +1.2</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +1.2 pts / 0.406 — the model's expected ROI if bought at the open. Current rules hold WTA Chall/125 to 2.0 points of edge; this row does not clear it.">
+          +3.0%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+0.8</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.383</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -2.2</td>
+        <td class="n sep dim">
+          -1.8</td>
+        <td class="n up">
+          +3.0</td>
+        <td class="n up">
+          +5.6</td>
+        <td class="n up">
+          +8.3</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -1.1</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Guadalajara Open Akron - Guadalajara"
+          data-src="vb"
+          data-move="against"
+          data-find="mingge xu caroline dolehide guadalajara open akron - guadalajara"
+          data-when="2026-09-12 20:35:00"
+          
+          data-fair="0.240"
+          data-quote="0.262"
+          data-model="0.251"
+          data-edge="1.1">
+        <td class="name" title="Mingge Xu v Caroline Dolehide"><b>Mingge Xu</b>
+          <span class="dim">v Caroline Dolehide</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 15:35 CDT — stored as 12 Sep 20:35 UTC">
+          15:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Mingge Xu lost — 0-6 2-4">
+              lost</span></span></td>
+        <td class="event dim" title="Guadalajara Open Akron - Guadalajara">Guadalajara Open Akron - Guadalajara
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.240</td>
+        <td class="n dim">0.262</td>
+        <td class="n">0.251</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +1.1</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +1.1</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +1.1 pts / 0.240 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          +4.6%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.1</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.240</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.0</td>
+        <td class="n sep dim">
+          -4.4</td>
+        <td class="n up">
+          +4.6</td>
+        <td class="n up">
+          +9.1</td>
+        <td class="n up">
+          +14.1</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.3c taker fee">
+          -0.7</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Montreux Nestle Open - Montreux"
+          data-src="vb"
+          data-move="toward"
+          data-find="dalma galfi fiona ferro montreux nestle open - montreux"
+          data-when="2026-09-12 17:00:00"
+          
+          data-fair="0.410"
+          data-quote="0.429"
+          data-model="0.420"
+          data-edge="1.1">
+        <td class="name" title="Dalma Galfi v Fiona Ferro"><b>Dalma Galfi</b>
+          <span class="dim">v Fiona Ferro</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 12:00 CDT — stored as 12 Sep 17:00 UTC">
+          12:00
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Dalma Galfi lost — 1-6 6-2 0-6">
+              lost</span></span></td>
+        <td class="event dim" title="Montreux Nestle Open - Montreux">Montreux Nestle Open - Montreux
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.410</td>
+        <td class="n dim">0.429</td>
+        <td class="n">0.420</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +1.1</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +1.1</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +1.1 pts / 0.410 — the model's expected ROI if bought at the open. Current rules hold WTA Chall/125 to 2.0 points of edge; this row does not clear it.">
+          +2.6%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+0.9</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.396</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -1.4</td>
+        <td class="n sep dim">
+          -2.1</td>
+        <td class="n up">
+          +2.6</td>
+        <td class="n up">
+          +5.2</td>
+        <td class="n up">
+          +7.9</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -1.5</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Seville Challenger"
+          data-src="vb"
+          data-move="toward"
+          data-find="max alcala gurri dusan lajovic seville challenger"
+          data-when="2026-09-12 23:20:00"
+          
+          data-fair="0.383"
+          data-quote="0.400"
+          data-model="0.394"
+          data-edge="1.0">
+        <td class="name" title="Max Alcala Gurri v Dusan Lajovic"><b>Max Alcala Gurri</b>
+          <span class="dim">v Dusan Lajovic</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 18:20 CDT — stored as 12 Sep 23:20 UTC">
+          18:20
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Max Alcala Gurri lost — 2-5">
+              lost</span></span></td>
+        <td class="event dim" title="Seville Challenger">Seville Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.383</td>
+        <td class="n dim">0.400</td>
+        <td class="n">0.394</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +1.0</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +1.0</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +1.0 pts / 0.383 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          +2.7%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+1.9</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.314</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -7.0</td>
+        <td class="n sep dim">
+          -1.6</td>
+        <td class="n up">
+          +2.7</td>
+        <td class="n up">
+          +5.4</td>
+        <td class="n up">
+          +8.4</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -1.6</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Shanghai Challenger"
+          data-src="vb"
+          data-move="against"
+          data-find="luca castelnuovo ilya ivashka shanghai challenger"
+          data-when="2026-09-12 12:00:00"
+          
+          data-fair="0.259"
+          data-quote="0.276"
+          data-model="0.269"
+          data-edge="1.0">
+        <td class="name" title="Luca Castelnuovo v Ilya Ivashka"><b>Luca Castelnuovo</b>
+          <span class="dim">v Ilya Ivashka</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 07:00 CDT — stored as 12 Sep 12:00 UTC">
+          07:00
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Luca Castelnuovo lost — 3-6 4-6">
+              lost</span></span></td>
+        <td class="event dim" title="Shanghai Challenger">Shanghai Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.259</td>
+        <td class="n dim">0.276</td>
+        <td class="n">0.269</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +1.0</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +1.0</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +1.0 pts / 0.259 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          +3.9%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.5</td>
+        <td class="n">0.25</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.209</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -4.9</td>
+        <td class="n sep dim">
+          -2.6</td>
+        <td class="n up">
+          +3.9</td>
+        <td class="n up">
+          +8.0</td>
+        <td class="n up">
+          +12.5</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.3c taker fee">
+          -1.3</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="against"
+          data-find="anastasia tikhonova alana smith sp open - sao paulo"
+          data-when="2026-09-12 20:00:00"
+          
+          data-fair="0.619"
+          data-quote="0.641"
+          data-model="0.629"
+          data-edge="1.0">
+        <td class="name" title="Anastasia Tikhonova v Alana Smith"><b>Anastasia Tikhonova</b>
+          <span class="dim">v Alana Smith</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 15:00 CDT — stored as 12 Sep 20:00 UTC">
+          15:00
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill off" title="Under way, or finished and not graded yet. The Day menu above is the feed's UTC key, not this clock.">played</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.619</td>
+        <td class="n dim">0.641</td>
+        <td class="n">0.629</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +1.0</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +1.0</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +1.0 pts / 0.619 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          +1.6%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.1</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          —</td>
+        <td class="n dim"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          —</td>
+        <td class="n sep dim">
+          -1.9</td>
+        <td class="n up">
+          +1.6</td>
+        <td class="n up">
+          +3.3</td>
+        <td class="n up">
+          +5.0</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -1.0</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Kia Open - Barranquilla"
+          data-src="vb"
+          data-move="toward"
+          data-find="claire liu anna blinkova kia open - barranquilla"
+          data-when="2026-09-13 00:35:00"
+          
+          data-fair="0.515"
+          data-quote="0.535"
+          data-model="0.523"
+          data-edge="0.9">
+        <td class="name" title="Claire Liu v Anna Blinkova"><b>Claire Liu</b>
+          <span class="dim">v Anna Blinkova</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 19:35 CDT — stored as 13 Sep 00:35 UTC">
+          19:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Claire Liu won — 6-0 2-6 5-5">
+              won</span></span></td>
+        <td class="event dim" title="Kia Open - Barranquilla">Kia Open - Barranquilla
+          <span class="rnd">F</span></td>
+        
+        <td class="n">0.515</td>
+        <td class="n dim">0.535</td>
+        <td class="n">0.523</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.9</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.9</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.9 pts / 0.515 — the model's expected ROI if bought at the open. Current rules hold WTA Chall/125 to 2.0 points of edge; this row does not clear it.">
+          +1.7%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+1.1</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.546</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +3.1</td>
+        <td class="n sep dim">
+          -2.1</td>
+        <td class="n up">
+          +1.7</td>
+        <td class="n up">
+          +3.7</td>
+        <td class="n up">
+          +5.8</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -1.7</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Genoa Challenger"
+          data-src="vb"
+          data-move="against"
+          data-find="pedro martinez portero laslo djere genoa challenger"
+          data-when="2026-09-12 19:10:00"
+          
+          data-fair="0.355"
+          data-quote="0.373"
+          data-model="0.362"
+          data-edge="0.7">
+        <td class="name" title="Pedro Martinez Portero v Laslo Djere"><b>Pedro Martinez Portero</b>
+          <span class="dim">v Laslo Djere</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 14:10 CDT — stored as 12 Sep 19:10 UTC">
+          14:10
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Pedro Martinez Portero won — 6-2 4-6 5-7">
+              won</span></span></td>
+        <td class="event dim" title="Genoa Challenger">Genoa Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.355</td>
+        <td class="n dim">0.373</td>
+        <td class="n">0.362</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.7</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.7</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.7 pts / 0.355 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          +2.0%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.6</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.367</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +1.1</td>
+        <td class="n sep dim">
+          -2.9</td>
+        <td class="n up">
+          +2.0</td>
+        <td class="n up">
+          +4.9</td>
+        <td class="n up">
+          +8.1</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.6c taker fee">
+          -2.4</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Guadalajara Open Akron - Guadalajara"
+          data-src="vb"
+          data-move="against"
+          data-find="ena koike sara sorribes tormo guadalajara open akron - guadalajara"
+          data-when="2026-09-12 20:35:00"
+          
+          data-fair="0.228"
+          data-quote="0.252"
+          data-model="0.235"
+          data-edge="0.7">
+        <td class="name" title="Ena Koike v Sara Sorribes Tormo"><b>Ena Koike</b>
+          <span class="dim">v Sara Sorribes Tormo</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 15:35 CDT — stored as 12 Sep 20:35 UTC">
+          15:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Ena Koike lost — 7-5 6-2">
+              lost</span></span></td>
+        <td class="event dim" title="Guadalajara Open Akron - Guadalajara">Guadalajara Open Akron - Guadalajara
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.228</td>
+        <td class="n dim">0.252</td>
+        <td class="n">0.235</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.7</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.7</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.7 pts / 0.228 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          +3.0%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.2</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.225</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.3</td>
+        <td class="n sep dim">
+          -6.7</td>
+        <td class="n up">
+          +3.0</td>
+        <td class="n up">
+          +7.7</td>
+        <td class="n up">
+          +12.9</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.2c taker fee">
+          -2.3</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="U.S. Open - New York"
+          data-src="vb"
+          data-move="toward"
+          data-find="aryna sabalenka elena rybakina u.s. open - new york"
+          data-when="2026-09-12 23:10:00"
+          
+          data-fair="0.574"
+          data-quote="0.588"
+          data-model="0.580"
+          data-edge="0.6">
+        <td class="name" title="Aryna Sabalenka v Elena Rybakina"><b>Aryna Sabalenka</b>
+          <span class="dim">v Elena Rybakina</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 18:10 CDT — stored as 12 Sep 23:10 UTC">
+          18:10
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Aryna Sabalenka lost — 4-6 7-5 2-5">
+              lost</span></span></td>
+        <td class="event dim" title="U.S. Open - New York">U.S. Open - New York
+          <span class="rnd">F</span></td>
+        
+        <td class="n">0.574</td>
+        <td class="n dim">0.588</td>
+        <td class="n">0.580</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.6</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.6</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.6 pts / 0.574 — the model's expected ROI if bought at the open. Current rules hold WTA Slam to 2.5 points of edge; this row does not clear it.">
+          +1.1%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+1.9</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.579</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.6</td>
+        <td class="n sep dim">
+          -1.3</td>
+        <td class="n up">
+          +1.1</td>
+        <td class="n up">
+          +2.9</td>
+        <td class="n up">
+          +4.8</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -1.8</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Montreux Nestle Open - Montreux"
+          data-src="vb"
+          data-move="against"
+          data-find="noma akugue noha guiomar zuleta de reales montreux nestle open - montreux"
+          data-when="2026-09-12 15:30:00"
+          
+          data-fair="0.503"
+          data-quote="0.521"
+          data-model="0.509"
+          data-edge="0.6">
+        <td class="name" title="Noma Akugue Noha v Guiomar Zuleta De Reales"><b>Noma Akugue Noha</b>
+          <span class="dim">v Guiomar Zuleta De Reales</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 10:30 CDT — stored as 12 Sep 15:30 UTC">
+          10:30
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Noma Akugue Noha won — 7-6(2) 6-3">
+              won</span></span></td>
+        <td class="event dim" title="Montreux Nestle Open - Montreux">Montreux Nestle Open - Montreux
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.503</td>
+        <td class="n dim">0.521</td>
+        <td class="n">0.509</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.6</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.6</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.6 pts / 0.503 — the model's expected ROI if bought at the open. Current rules hold WTA Chall/125 to 2.0 points of edge; this row does not clear it.">
+          +1.2%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+1.8</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.509</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.7</td>
+        <td class="n sep dim">
+          -2.3</td>
+        <td class="n up">
+          +1.2</td>
+        <td class="n up">
+          +3.2</td>
+        <td class="n up">
+          +5.4</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -2.2</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Cassis Challenger"
+          data-src="vb"
+          data-move="toward"
+          data-find="mark lajal daniel masur cassis challenger"
+          data-when="2026-09-12 12:35:00"
+          
+          data-fair="0.821"
+          data-quote="0.840"
+          data-model="0.827"
+          data-edge="0.6">
+        <td class="name" title="Mark Lajal v Daniel Masur"><b>Mark Lajal</b>
+          <span class="dim">v Daniel Masur</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 07:35 CDT — stored as 12 Sep 12:35 UTC">
+          07:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Mark Lajal won — 7-6(2) 7-5">
+              won</span></span></td>
+        <td class="event dim" title="Cassis Challenger">Cassis Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.821</td>
+        <td class="n dim">0.840</td>
+        <td class="n">0.827</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.6</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.6</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.6 pts / 0.821 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it. Favourites selector reads the same number at 0.70+: core ≥ 2.5%, ext 1.5–2.5%.">
+          +0.7%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.3</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.812</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.9</td>
+        <td class="n sep dim">
+          -1.6</td>
+        <td class="n up">
+          +0.7</td>
+        <td class="n up">
+          +2.0</td>
+        <td class="n up">
+          +3.2</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.0c taker fee">
+          -0.5</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="ATIK Antalya Open - Antalya"
+          data-src="vb"
+          data-move="against"
+          data-find="rositsa dencheva irene burillo atik antalya open - antalya"
+          data-when="2026-09-12 13:05:00"
+          
+          data-fair="0.757"
+          data-quote="0.775"
+          data-model="0.763"
+          data-edge="0.6">
+        <td class="name" title="Rositsa Dencheva v Irene Burillo"><b>Rositsa Dencheva</b>
+          <span class="dim">v Irene Burillo</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 08:05 CDT — stored as 12 Sep 13:05 UTC">
+          08:05
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Rositsa Dencheva won — 4-6 6-4 6-4">
+              won</span></span></td>
+        <td class="event dim" title="ATIK Antalya Open - Antalya">ATIK Antalya Open - Antalya
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.757</td>
+        <td class="n dim">0.775</td>
+        <td class="n">0.763</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.6</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.6</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.6 pts / 0.757 — the model's expected ROI if bought at the open. Current rules hold WTA Chall/125 to 2.0 points of edge; this row does not clear it. Favourites selector reads the same number at 0.70+: core ≥ 2.5%, ext 1.5–2.5%.">
+          +0.7%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+1.8</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.708</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -4.9</td>
+        <td class="n sep dim">
+          -1.6</td>
+        <td class="n up">
+          +0.7</td>
+        <td class="n up">
+          +2.1</td>
+        <td class="n up">
+          +3.5</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.3c taker fee">
+          -0.9</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Seville Challenger"
+          data-src="vb"
+          data-move="toward"
+          data-find="facundo diaz acosta jaume antoni munar clar seville challenger"
+          data-when="2026-09-12 20:05:00"
+          
+          data-fair="0.501"
+          data-quote="0.518"
+          data-model="0.507"
+          data-edge="0.5">
+        <td class="name" title="Facundo Diaz Acosta v Jaume Antoni Munar Clar"><b>Facundo Diaz Acosta</b>
+          <span class="dim">v Jaume Antoni Munar Clar</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 15:05 CDT — stored as 12 Sep 20:05 UTC">
+          15:05
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Facundo Diaz Acosta won — 6-4 3-6 6-5">
+              won</span></span></td>
+        <td class="event dim" title="Seville Challenger">Seville Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.501</td>
+        <td class="n dim">0.518</td>
+        <td class="n">0.507</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.5</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.5</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.5 pts / 0.501 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          +1.0%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.4</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.488</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -1.3</td>
+        <td class="n sep dim">
+          -2.2</td>
+        <td class="n up">
+          +1.0</td>
+        <td class="n up">
+          +3.1</td>
+        <td class="n up">
+          +5.2</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -2.4</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="toward"
+          data-find="fernanda labrana whitney osuigwe sp open - sao paulo"
+          data-when="2026-09-13 01:55:00"
+          
+          data-fair="0.095"
+          data-quote="0.122"
+          data-model="0.100"
+          data-edge="0.5">
+        <td class="name" title="Fernanda Labrana v Whitney Osuigwe"><b>Fernanda Labrana</b>
+          <span class="dim">v Whitney Osuigwe</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 20:55 CDT — stored as 13 Sep 01:55 UTC">
+          20:55
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Fernanda Labrana lost — 6-3 6-0">
+              lost</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.095</td>
+        <td class="n dim">0.122</td>
+        <td class="n">0.100</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.5</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.4</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.5 pts / 0.095 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          +5.1%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.1</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.093</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.3</td>
+        <td class="n sep dim">
+          -18.2</td>
+        <td class="n up">
+          +4.6</td>
+        <td class="n up">
+          +16.9</td>
+        <td class="n up">
+          +32.4</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 0.6c taker fee">
+          -1.6</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="toward"
+          data-find="victoria bosio lizette cabrera sp open - sao paulo"
+          data-when="2026-09-12 16:00:00"
+          
+          data-fair="0.317"
+          data-quote="0.339"
+          data-model="0.322"
+          data-edge="0.5">
+        <td class="name" title="Victoria Bosio v Lizette Cabrera"><b>Victoria Bosio</b>
+          <span class="dim">v Lizette Cabrera</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 11:00 CDT — stored as 12 Sep 16:00 UTC">
+          11:00
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Victoria Bosio won — 7-5 6-7 5-3">
+              won</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.317</td>
+        <td class="n dim">0.339</td>
+        <td class="n">0.322</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.5</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.5</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.5 pts / 0.317 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          +1.4%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.0</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.323</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.6</td>
+        <td class="n sep dim">
+          -5.1</td>
+        <td class="n up">
+          +1.4</td>
+        <td class="n up">
+          +4.8</td>
+        <td class="n up">
+          +8.3</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.5c taker fee">
+          -3.2</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Guadalajara Open Akron - Guadalajara"
+          data-src="vb"
+          data-move="toward"
+          data-find="nao hibino sofiia bielinska guadalajara open akron - guadalajara"
+          data-when="2026-09-12 19:05:00"
+          
+          data-fair="0.895"
+          data-quote="0.917"
+          data-model="0.899"
+          data-edge="0.5">
+        <td class="name" title="Nao Hibino v Sofiia Bielinska"><b>Nao Hibino</b>
+          <span class="dim">v Sofiia Bielinska</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 14:05 CDT — stored as 12 Sep 19:05 UTC">
+          14:05
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Nao Hibino won — 4-6 1-6">
+              won</span></span></td>
+        <td class="event dim" title="Guadalajara Open Akron - Guadalajara">Guadalajara Open Akron - Guadalajara
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.895</td>
+        <td class="n dim">0.917</td>
+        <td class="n">0.899</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.5</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.5</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.5 pts / 0.895 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it. Favourites selector reads the same number at 0.70+: core ≥ 2.5%, ext 1.5–2.5%.">
+          +0.5%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.0</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.902</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.7</td>
+        <td class="n sep dim">
+          -2.0</td>
+        <td class="n up">
+          +0.5</td>
+        <td class="n up">
+          +1.6</td>
+        <td class="n up">
+          +2.8</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 0.7c taker fee">
+          -0.2</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Istanbul Challenger"
+          data-src="vb"
+          data-move="against"
+          data-find="maks kasnikowski jay dylan hara friend istanbul challenger"
+          data-when="2026-09-12 12:40:00"
+          
+          data-fair="0.516"
+          data-quote="0.535"
+          data-model="0.520"
+          data-edge="0.4">
+        <td class="name" title="Maks Kasnikowski v Jay Dylan Hara Friend"><b>Maks Kasnikowski</b>
+          <span class="dim">v Jay Dylan Hara Friend</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 07:40 CDT — stored as 12 Sep 12:40 UTC">
+          07:40
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Maks Kasnikowski lost — 6-7 2-1">
+              lost</span></span></td>
+        <td class="event dim" title="Istanbul Challenger">Istanbul Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.516</td>
+        <td class="n dim">0.535</td>
+        <td class="n">0.520</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.4</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.4</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.4 pts / 0.516 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          +0.8%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.7</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.509</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.7</td>
+        <td class="n sep dim">
+          -2.7</td>
+        <td class="n up">
+          +0.8</td>
+        <td class="n up">
+          +2.8</td>
+        <td class="n up">
+          +4.9</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -2.5</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Tulln Challenger"
+          data-src="vb"
+          data-move="toward"
+          data-find="alex barrena joao lucas reis da silva tulln challenger"
+          data-when="2026-09-12 14:45:00"
+          
+          data-fair="0.417"
+          data-quote="0.433"
+          data-model="0.421"
+          data-edge="0.4">
+        <td class="name" title="Alex Barrena v Joao Lucas Reis Da Silva"><b>Alex Barrena</b>
+          <span class="dim">v Joao Lucas Reis Da Silva</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 09:45 CDT — stored as 12 Sep 14:45 UTC">
+          09:45
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Alex Barrena lost — 6-2 4-1">
+              lost</span></span></td>
+        <td class="event dim" title="Tulln Challenger">Tulln Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.417</td>
+        <td class="n dim">0.433</td>
+        <td class="n">0.421</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.4</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.4</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.4 pts / 0.417 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          +1.0%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.5</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.420</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.3</td>
+        <td class="n sep dim">
+          -2.7</td>
+        <td class="n up">
+          +1.0</td>
+        <td class="n up">
+          +3.5</td>
+        <td class="n up">
+          +6.1</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -3.0</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="against"
+          data-find="chloe paquet martina capurro taborda sp open - sao paulo"
+          data-when="2026-09-12 18:35:00"
+          
+          data-fair="0.635"
+          data-quote="0.658"
+          data-model="0.639"
+          data-edge="0.3">
+        <td class="name" title="Chloe Paquet v Martina Capurro Taborda"><b>Chloe Paquet</b>
+          <span class="dim">v Martina Capurro Taborda</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 13:35 CDT — stored as 12 Sep 18:35 UTC">
+          13:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Chloe Paquet won — 7-5 1-6 3-1">
+              won</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.635</td>
+        <td class="n dim">0.658</td>
+        <td class="n">0.639</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.3</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.3</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.3 pts / 0.635 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          +0.6%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.4</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.625</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -1.1</td>
+        <td class="n sep dim">
+          -2.9</td>
+        <td class="n up">
+          +0.6</td>
+        <td class="n up">
+          +2.2</td>
+        <td class="n up">
+          +3.8</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.6c taker fee">
+          -2.0</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Genoa Challenger"
+          data-src="vb"
+          data-move="against"
+          data-find="thiago seyboth wild matej dodig genoa challenger"
+          data-when="2026-09-12 22:30:00"
+          
+          data-fair="0.555"
+          data-quote="0.571"
+          data-model="0.557"
+          data-edge="0.2">
+        <td class="name" title="Thiago Seyboth Wild v Matej Dodig"><b>Thiago Seyboth Wild</b>
+          <span class="dim">v Matej Dodig</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 17:30 CDT — stored as 12 Sep 22:30 UTC">
+          17:30
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Thiago Seyboth Wild won — 7-5 4-6 6-2">
+              won</span></span></td>
+        <td class="event dim" title="Genoa Challenger">Genoa Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.555</td>
+        <td class="n dim">0.571</td>
+        <td class="n">0.557</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.2</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.2</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.2 pts / 0.555 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          +0.3%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.8</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.545</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -1.0</td>
+        <td class="n sep dim">
+          -2.5</td>
+        <td class="n up">
+          +0.3</td>
+        <td class="n up">
+          +2.1</td>
+        <td class="n up">
+          +4.0</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -2.7</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="toward"
+          data-find="anastasia tikhonova maria florencia urrutia sp open - sao paulo"
+          data-when="2026-09-13 03:05:00"
+          
+          data-fair="0.810"
+          data-quote="0.833"
+          data-model="0.808"
+          data-edge="0.1">
+        <td class="name" title="Anastasia Tikhonova v Maria Florencia Urrutia"><b>Anastasia Tikhonova</b>
+          <span class="dim">v Maria Florencia Urrutia</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 22:05 CDT — stored as 13 Sep 03:05 UTC">
+          22:05
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Anastasia Tikhonova won — 2-6 1-6">
+              won</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.810</td>
+        <td class="n dim">0.833</td>
+        <td class="n">0.808</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.1</td>
+        
+        <td class="n down"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.2</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.1 pts / 0.810 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it. Favourites selector reads the same number at 0.70+: core ≥ 2.5%, ext 1.5–2.5%.">
+          +0.2%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.7</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.844</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +3.3</td>
+        <td class="n sep dim">
+          -3.0</td>
+        <td class="n dim">
+          -0.2</td>
+        <td class="n up">
+          +1.0</td>
+        <td class="n up">
+          +2.3</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.1c taker fee">
+          -1.5</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="against"
+          data-find="luiza fullana xiaodi you sp open - sao paulo"
+          data-when="2026-09-12 16:00:00"
+          
+          data-fair="0.276"
+          data-quote="0.299"
+          data-model="0.276"
+          data-edge="0.1">
+        <td class="name" title="Luiza Fullana v Xiaodi You"><b>Luiza Fullana</b>
+          <span class="dim">v Xiaodi You</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 11:00 CDT — stored as 12 Sep 16:00 UTC">
+          11:00
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Luiza Fullana lost — 6-2 4-1">
+              lost</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.276</td>
+        <td class="n dim">0.299</td>
+        <td class="n">0.276</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.1</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.1</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.1 pts / 0.276 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          +0.3%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.5</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.232</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -4.3</td>
+        <td class="n sep dim">
+          -7.4</td>
+        <td class="n up">
+          +0.3</td>
+        <td class="n up">
+          +4.1</td>
+        <td class="n up">
+          +8.1</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.4c taker fee">
+          -4.5</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Istanbul Challenger"
+          data-src="vb"
+          data-move="toward"
+          data-find="max basing harold mayot istanbul challenger"
+          data-when="2026-09-12 11:05:00"
+          
+          data-fair="0.319"
+          data-quote="0.338"
+          data-model="0.320"
+          data-edge="0.1">
+        <td class="name" title="Max Basing v Harold Mayot"><b>Max Basing</b>
+          <span class="dim">v Harold Mayot</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 06:05 CDT — stored as 12 Sep 11:05 UTC">
+          06:05
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Max Basing won — 1-6 3-6">
+              won</span></span></td>
+        <td class="event dim" title="Istanbul Challenger">Istanbul Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.319</td>
+        <td class="n dim">0.338</td>
+        <td class="n">0.320</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.1</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.1</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.1 pts / 0.319 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          +0.2%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.8</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.322</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.3</td>
+        <td class="n sep dim">
+          -5.4</td>
+        <td class="n up">
+          +0.2</td>
+        <td class="n up">
+          +3.5</td>
+        <td class="n up">
+          +6.9</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.5c taker fee">
+          -4.3</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="against"
+          data-find="cadence brace ana candiotto sp open - sao paulo"
+          data-when="2026-09-12 18:35:00"
+          
+          data-fair="0.934"
+          data-quote="0.952"
+          data-model="0.935"
+          data-edge="0.0">
+        <td class="name" title="Cadence Brace v Ana Candiotto"><b>Cadence Brace</b>
+          <span class="dim">v Ana Candiotto</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 13:35 CDT — stored as 12 Sep 18:35 UTC">
+          13:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Cadence Brace won — 3-6 4-5">
+              won</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.934</td>
+        <td class="n dim">0.952</td>
+        <td class="n">0.935</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.0</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.0</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.0 pts / 0.934 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it. Favourites selector reads the same number at 0.70+: core ≥ 2.5%, ext 1.5–2.5%.">
+          +0.0%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.5</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.912</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -2.2</td>
+        <td class="n sep dim">
+          -1.9</td>
+        <td class="n up">
+          +0.0</td>
+        <td class="n up">
+          +1.1</td>
+        <td class="n up">
+          +2.2</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 0.4c taker fee">
+          -0.4</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="toward"
+          data-find="ana candiotto cadence brace sp open - sao paulo"
+          data-when="2026-09-12 18:35:00"
+          
+          data-fair="0.066"
+          data-quote="0.090"
+          data-model="0.065"
+          data-edge="-0.0">
+        <td class="name" title="Ana Candiotto v Cadence Brace"><b>Ana Candiotto</b>
+          <span class="dim">v Cadence Brace</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 13:35 CDT — stored as 12 Sep 18:35 UTC">
+          13:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Ana Candiotto lost — 3-6 4-5">
+              lost</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.066</td>
+        <td class="n dim">0.090</td>
+        <td class="n">0.065</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.0</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.0</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.0 pts / 0.066 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          -0.5%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.5</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.088</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +2.2</td>
+        <td class="n sep dim">
+          -27.3</td>
+        <td class="n dim">
+          -0.5</td>
+        <td class="n up">
+          +17.4</td>
+        <td class="n up">
+          +43.1</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 0.4c taker fee">
+          -6.6</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Istanbul Challenger"
+          data-src="vb"
+          data-move="against"
+          data-find="harold mayot max basing istanbul challenger"
+          data-when="2026-09-12 11:05:00"
+          
+          data-fair="0.681"
+          data-quote="0.699"
+          data-model="0.680"
+          data-edge="-0.1">
+        <td class="name" title="Harold Mayot v Max Basing"><b>Harold Mayot</b>
+          <span class="dim">v Max Basing</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 06:05 CDT — stored as 12 Sep 11:05 UTC">
+          06:05
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Harold Mayot lost — 1-6 3-6">
+              lost</span></span></td>
+        <td class="event dim" title="Istanbul Challenger">Istanbul Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.681</td>
+        <td class="n dim">0.699</td>
+        <td class="n">0.680</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.1</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.1</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.1 pts / 0.681 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          -0.1%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.9</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.678</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.3</td>
+        <td class="n sep dim">
+          -2.7</td>
+        <td class="n dim">
+          -0.1</td>
+        <td class="n up">
+          +1.4</td>
+        <td class="n up">
+          +2.9</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.5c taker fee">
+          -2.3</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="toward"
+          data-find="xiaodi you luiza fullana sp open - sao paulo"
+          data-when="2026-09-12 16:00:00"
+          
+          data-fair="0.724"
+          data-quote="0.746"
+          data-model="0.724"
+          data-edge="-0.1">
+        <td class="name" title="Xiaodi You v Luiza Fullana"><b>Xiaodi You</b>
+          <span class="dim">v Luiza Fullana</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 11:00 CDT — stored as 12 Sep 16:00 UTC">
+          11:00
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Xiaodi You won — 6-2 4-1">
+              won</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.724</td>
+        <td class="n dim">0.746</td>
+        <td class="n">0.724</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.1</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.1</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.1 pts / 0.724 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it. Favourites selector reads the same number at 0.70+: core ≥ 2.5%, ext 1.5–2.5%.">
+          -0.1%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.6</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.768</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +4.3</td>
+        <td class="n sep dim">
+          -3.0</td>
+        <td class="n dim">
+          -0.1</td>
+        <td class="n up">
+          +1.3</td>
+        <td class="n up">
+          +2.7</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.4c taker fee">
+          -2.0</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="against"
+          data-find="maria florencia urrutia anastasia tikhonova sp open - sao paulo"
+          data-when="2026-09-13 03:05:00"
+          
+          data-fair="0.190"
+          data-quote="0.216"
+          data-model="0.192"
+          data-edge="-0.1">
+        <td class="name" title="Maria Florencia Urrutia v Anastasia Tikhonova"><b>Maria Florencia Urrutia</b>
+          <span class="dim">v Anastasia Tikhonova</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 22:05 CDT — stored as 13 Sep 03:05 UTC">
+          22:05
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Maria Florencia Urrutia lost — 2-6 1-6">
+              lost</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.190</td>
+        <td class="n dim">0.216</td>
+        <td class="n">0.192</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.1</td>
+        
+        <td class="n up"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.2</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.1 pts / 0.190 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          -0.7%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.4</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.156</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -3.3</td>
+        <td class="n sep dim">
+          -11.1</td>
+        <td class="n up">
+          +0.9</td>
+        <td class="n up">
+          +6.5</td>
+        <td class="n up">
+          +12.8</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.1c taker fee">
+          -4.5</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Genoa Challenger"
+          data-src="vb"
+          data-move="toward"
+          data-find="matej dodig thiago seyboth wild genoa challenger"
+          data-when="2026-09-12 22:30:00"
+          
+          data-fair="0.445"
+          data-quote="0.461"
+          data-model="0.443"
+          data-edge="-0.2">
+        <td class="name" title="Matej Dodig v Thiago Seyboth Wild"><b>Matej Dodig</b>
+          <span class="dim">v Thiago Seyboth Wild</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 17:30 CDT — stored as 12 Sep 22:30 UTC">
+          17:30
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Matej Dodig lost — 7-5 4-6 6-2">
+              lost</span></span></td>
+        <td class="event dim" title="Genoa Challenger">Genoa Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.445</td>
+        <td class="n dim">0.461</td>
+        <td class="n">0.443</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.2</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.2</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.2 pts / 0.445 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          -0.3%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.1</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.455</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +1.0</td>
+        <td class="n sep dim">
+          -3.8</td>
+        <td class="n dim">
+          -0.3</td>
+        <td class="n up">
+          +1.9</td>
+        <td class="n up">
+          +4.3</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -4.1</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="toward"
+          data-find="martina capurro taborda chloe paquet sp open - sao paulo"
+          data-when="2026-09-12 18:35:00"
+          
+          data-fair="0.365"
+          data-quote="0.388"
+          data-model="0.361"
+          data-edge="-0.3">
+        <td class="name" title="Martina Capurro Taborda v Chloe Paquet"><b>Martina Capurro Taborda</b>
+          <span class="dim">v Chloe Paquet</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 13:35 CDT — stored as 12 Sep 18:35 UTC">
+          13:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Martina Capurro Taborda lost — 7-5 1-6 3-1">
+              lost</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.365</td>
+        <td class="n dim">0.388</td>
+        <td class="n">0.361</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.3</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.3</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.3 pts / 0.365 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          -1.0%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.8</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.375</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +1.1</td>
+        <td class="n sep dim">
+          -6.8</td>
+        <td class="n dim">
+          -1.0</td>
+        <td class="n up">
+          +1.8</td>
+        <td class="n up">
+          +4.8</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.6c taker fee">
+          -5.2</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Tulln Challenger"
+          data-src="vb"
+          data-move="against"
+          data-find="joao lucas reis da silva alex barrena tulln challenger"
+          data-when="2026-09-12 14:45:00"
+          
+          data-fair="0.583"
+          data-quote="0.599"
+          data-model="0.579"
+          data-edge="-0.4">
+        <td class="name" title="Joao Lucas Reis Da Silva v Alex Barrena"><b>Joao Lucas Reis Da Silva</b>
+          <span class="dim">v Alex Barrena</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 09:45 CDT — stored as 12 Sep 14:45 UTC">
+          09:45
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Joao Lucas Reis Da Silva won — 6-2 4-1">
+              won</span></span></td>
+        <td class="event dim" title="Tulln Challenger">Tulln Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.583</td>
+        <td class="n dim">0.599</td>
+        <td class="n">0.579</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.4</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.4</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.4 pts / 0.583 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          -0.7%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.1</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.580</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.3</td>
+        <td class="n sep dim">
+          -3.3</td>
+        <td class="n dim">
+          -0.7</td>
+        <td class="n up">
+          +1.0</td>
+        <td class="n up">
+          +2.8</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -3.5</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Istanbul Challenger"
+          data-src="vb"
+          data-move="toward"
+          data-find="jay dylan hara friend maks kasnikowski istanbul challenger"
+          data-when="2026-09-12 12:40:00"
+          
+          data-fair="0.484"
+          data-quote="0.503"
+          data-model="0.480"
+          data-edge="-0.4">
+        <td class="name" title="Jay Dylan Hara Friend v Maks Kasnikowski"><b>Jay Dylan Hara Friend</b>
+          <span class="dim">v Maks Kasnikowski</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 07:40 CDT — stored as 12 Sep 12:40 UTC">
+          07:40
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Jay Dylan Hara Friend won — 6-7 2-1">
+              won</span></span></td>
+        <td class="event dim" title="Istanbul Challenger">Istanbul Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.484</td>
+        <td class="n dim">0.503</td>
+        <td class="n">0.480</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.4</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.4</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.4 pts / 0.484 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          -0.9%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.3</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.491</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.7</td>
+        <td class="n sep dim">
+          -4.6</td>
+        <td class="n dim">
+          -0.9</td>
+        <td class="n up">
+          +1.2</td>
+        <td class="n up">
+          +3.4</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -4.3</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Guadalajara Open Akron - Guadalajara"
+          data-src="vb"
+          data-move="against"
+          data-find="sofiia bielinska nao hibino guadalajara open akron - guadalajara"
+          data-when="2026-09-12 19:05:00"
+          
+          data-fair="0.105"
+          data-quote="0.133"
+          data-model="0.101"
+          data-edge="-0.5">
+        <td class="name" title="Sofiia Bielinska v Nao Hibino"><b>Sofiia Bielinska</b>
+          <span class="dim">v Nao Hibino</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 14:05 CDT — stored as 12 Sep 19:05 UTC">
+          14:05
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Sofiia Bielinska lost — 4-6 1-6">
+              lost</span></span></td>
+        <td class="event dim" title="Guadalajara Open Akron - Guadalajara">Guadalajara Open Akron - Guadalajara
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.105</td>
+        <td class="n dim">0.133</td>
+        <td class="n">0.101</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.5</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.5</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.5 pts / 0.105 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          -4.3%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.7</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.098</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.7</td>
+        <td class="n sep dim">
+          -24.5</td>
+        <td class="n dim">
+          -4.3</td>
+        <td class="n up">
+          +5.7</td>
+        <td class="n up">
+          +18.1</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 0.7c taker fee">
+          -10.0</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="against"
+          data-find="lizette cabrera victoria bosio sp open - sao paulo"
+          data-when="2026-09-12 16:00:00"
+          
+          data-fair="0.683"
+          data-quote="0.704"
+          data-model="0.678"
+          data-edge="-0.5">
+        <td class="name" title="Lizette Cabrera v Victoria Bosio"><b>Lizette Cabrera</b>
+          <span class="dim">v Victoria Bosio</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 11:00 CDT — stored as 12 Sep 16:00 UTC">
+          11:00
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Lizette Cabrera lost — 7-5 6-7 5-3">
+              lost</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.683</td>
+        <td class="n dim">0.704</td>
+        <td class="n">0.678</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.5</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.5</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.5 pts / 0.683 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          -0.7%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.7</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.677</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.6</td>
+        <td class="n sep dim">
+          -3.7</td>
+        <td class="n dim">
+          -0.7</td>
+        <td class="n up">
+          +0.8</td>
+        <td class="n up">
+          +2.3</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.5c taker fee">
+          -2.8</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="against"
+          data-find="whitney osuigwe fernanda labrana sp open - sao paulo"
+          data-when="2026-09-13 01:55:00"
+          
+          data-fair="0.905"
+          data-quote="0.926"
+          data-model="0.900"
+          data-edge="-0.5">
+        <td class="name" title="Whitney Osuigwe v Fernanda Labrana"><b>Whitney Osuigwe</b>
+          <span class="dim">v Fernanda Labrana</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 20:55 CDT — stored as 13 Sep 01:55 UTC">
+          20:55
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Whitney Osuigwe won — 6-3 6-0">
+              won</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.905</td>
+        <td class="n dim">0.926</td>
+        <td class="n">0.900</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.5</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.4</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.5 pts / 0.905 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it. Favourites selector reads the same number at 0.70+: core ≥ 2.5%, ext 1.5–2.5%.">
+          -0.5%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.7</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.907</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.3</td>
+        <td class="n sep dim">
+          -2.8</td>
+        <td class="n dim">
+          -0.5</td>
+        <td class="n up">
+          +0.6</td>
+        <td class="n up">
+          +1.8</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 0.6c taker fee">
+          -1.1</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Seville Challenger"
+          data-src="vb"
+          data-move="against"
+          data-find="jaume antoni munar clar facundo diaz acosta seville challenger"
+          data-when="2026-09-12 20:05:00"
+          
+          data-fair="0.499"
+          data-quote="0.515"
+          data-model="0.493"
+          data-edge="-0.5">
+        <td class="name" title="Jaume Antoni Munar Clar v Facundo Diaz Acosta"><b>Jaume Antoni Munar Clar</b>
+          <span class="dim">v Facundo Diaz Acosta</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 15:05 CDT — stored as 12 Sep 20:05 UTC">
+          15:05
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Jaume Antoni Munar Clar lost — 6-4 3-6 6-5">
+              lost</span></span></td>
+        <td class="event dim" title="Seville Challenger">Seville Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.499</td>
+        <td class="n dim">0.515</td>
+        <td class="n">0.493</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.5</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.5</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.5 pts / 0.499 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          -1.0%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.1</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.512</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +1.3</td>
+        <td class="n sep dim">
+          -4.3</td>
+        <td class="n dim">
+          -1.0</td>
+        <td class="n up">
+          +1.0</td>
+        <td class="n up">
+          +3.1</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -4.4</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="ATIK Antalya Open - Antalya"
+          data-src="vb"
+          data-move="toward"
+          data-find="irene burillo rositsa dencheva atik antalya open - antalya"
+          data-when="2026-09-12 13:05:00"
+          
+          data-fair="0.243"
+          data-quote="0.262"
+          data-model="0.237"
+          data-edge="-0.6">
+        <td class="name" title="Irene Burillo v Rositsa Dencheva"><b>Irene Burillo</b>
+          <span class="dim">v Rositsa Dencheva</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 08:05 CDT — stored as 12 Sep 13:05 UTC">
+          08:05
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Irene Burillo lost — 4-6 6-4 6-4">
+              lost</span></span></td>
+        <td class="event dim" title="ATIK Antalya Open - Antalya">ATIK Antalya Open - Antalya
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.243</td>
+        <td class="n dim">0.262</td>
+        <td class="n">0.237</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.6</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.6</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.6 pts / 0.243 — the model's expected ROI if bought at the open. Current rules hold WTA Chall/125 to 2.0 points of edge; this row does not clear it.">
+          -2.3%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.6</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.292</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +4.9</td>
+        <td class="n sep dim">
+          -9.5</td>
+        <td class="n dim">
+          -2.3</td>
+        <td class="n up">
+          +1.9</td>
+        <td class="n up">
+          +6.4</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.3c taker fee">
+          -7.2</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Cassis Challenger"
+          data-src="vb"
+          data-move="against"
+          data-find="daniel masur mark lajal cassis challenger"
+          data-when="2026-09-12 12:35:00"
+          
+          data-fair="0.179"
+          data-quote="0.199"
+          data-model="0.173"
+          data-edge="-0.6">
+        <td class="name" title="Daniel Masur v Mark Lajal"><b>Daniel Masur</b>
+          <span class="dim">v Mark Lajal</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 07:35 CDT — stored as 12 Sep 12:35 UTC">
+          07:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Daniel Masur lost — 7-6(2) 7-5">
+              lost</span></span></td>
+        <td class="event dim" title="Cassis Challenger">Cassis Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.179</td>
+        <td class="n dim">0.199</td>
+        <td class="n">0.173</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.6</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.6</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.6 pts / 0.179 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          -3.3%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.1</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.188</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.9</td>
+        <td class="n sep dim">
+          -13.3</td>
+        <td class="n dim">
+          -3.3</td>
+        <td class="n up">
+          +2.5</td>
+        <td class="n up">
+          +8.9</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.0c taker fee">
+          -8.5</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Montreux Nestle Open - Montreux"
+          data-src="vb"
+          data-move="toward"
+          data-find="guiomar zuleta de reales noma akugue noha montreux nestle open - montreux"
+          data-when="2026-09-12 15:30:00"
+          
+          data-fair="0.497"
+          data-quote="0.515"
+          data-model="0.491"
+          data-edge="-0.6">
+        <td class="name" title="Guiomar Zuleta De Reales v Noma Akugue Noha"><b>Guiomar Zuleta De Reales</b>
+          <span class="dim">v Noma Akugue Noha</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 10:30 CDT — stored as 12 Sep 15:30 UTC">
+          10:30
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Guiomar Zuleta De Reales lost — 7-6(2) 6-3">
+              lost</span></span></td>
+        <td class="event dim" title="Montreux Nestle Open - Montreux">Montreux Nestle Open - Montreux
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.497</td>
+        <td class="n dim">0.515</td>
+        <td class="n">0.491</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.6</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.6</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.6 pts / 0.497 — the model's expected ROI if bought at the open. Current rules hold WTA Chall/125 to 2.0 points of edge; this row does not clear it.">
+          -1.2%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.6</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.491</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.7</td>
+        <td class="n sep dim">
+          -4.7</td>
+        <td class="n dim">
+          -1.2</td>
+        <td class="n up">
+          +0.8</td>
+        <td class="n up">
+          +2.9</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -4.6</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="U.S. Open - New York"
+          data-src="vb"
+          data-move="against"
+          data-find="elena rybakina aryna sabalenka u.s. open - new york"
+          data-when="2026-09-12 23:10:00"
+          
+          data-fair="0.426"
+          data-quote="0.441"
+          data-model="0.420"
+          data-edge="-0.6">
+        <td class="name" title="Elena Rybakina v Aryna Sabalenka"><b>Elena Rybakina</b>
+          <span class="dim">v Aryna Sabalenka</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 18:10 CDT — stored as 12 Sep 23:10 UTC">
+          18:10
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Elena Rybakina won — 4-6 7-5 2-5">
+              won</span></span></td>
+        <td class="event dim" title="U.S. Open - New York">U.S. Open - New York
+          <span class="rnd">F</span></td>
+        
+        <td class="n">0.426</td>
+        <td class="n dim">0.441</td>
+        <td class="n">0.420</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.6</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.6</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.6 pts / 0.426 — the model's expected ROI if bought at the open. Current rules hold WTA Slam to 2.5 points of edge; this row does not clear it.">
+          -1.5%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.7</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.421</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.6</td>
+        <td class="n sep dim">
+          -4.7</td>
+        <td class="n dim">
+          -1.5</td>
+        <td class="n up">
+          +0.9</td>
+        <td class="n up">
+          +3.3</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -5.3</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Guadalajara Open Akron - Guadalajara"
+          data-src="vb"
+          data-move="toward"
+          data-find="sara sorribes tormo ena koike guadalajara open akron - guadalajara"
+          data-when="2026-09-12 20:35:00"
+          
+          data-fair="0.772"
+          data-quote="0.794"
+          data-model="0.765"
+          data-edge="-0.7">
+        <td class="name" title="Sara Sorribes Tormo v Ena Koike"><b>Sara Sorribes Tormo</b>
+          <span class="dim">v Ena Koike</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 15:35 CDT — stored as 12 Sep 20:35 UTC">
+          15:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Sara Sorribes Tormo won — 7-5 6-2">
+              won</span></span></td>
+        <td class="event dim" title="Guadalajara Open Akron - Guadalajara">Guadalajara Open Akron - Guadalajara
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.772</td>
+        <td class="n dim">0.794</td>
+        <td class="n">0.765</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.7</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.7</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.7 pts / 0.772 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it. Favourites selector reads the same number at 0.70+: core ≥ 2.5%, ext 1.5–2.5%.">
+          -0.9%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.2</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.775</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +0.3</td>
+        <td class="n sep dim">
+          -3.6</td>
+        <td class="n dim">
+          -0.9</td>
+        <td class="n up">
+          +0.4</td>
+        <td class="n up">
+          +1.8</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.2c taker fee">
+          -2.4</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Genoa Challenger"
+          data-src="vb"
+          data-move="toward"
+          data-find="laslo djere pedro martinez portero genoa challenger"
+          data-when="2026-09-12 19:10:00"
+          
+          data-fair="0.645"
+          data-quote="0.662"
+          data-model="0.638"
+          data-edge="-0.7">
+        <td class="name" title="Laslo Djere v Pedro Martinez Portero"><b>Laslo Djere</b>
+          <span class="dim">v Pedro Martinez Portero</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 14:10 CDT — stored as 12 Sep 19:10 UTC">
+          14:10
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Laslo Djere lost — 6-2 4-6 5-7">
+              lost</span></span></td>
+        <td class="event dim" title="Genoa Challenger">Genoa Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.645</td>
+        <td class="n dim">0.662</td>
+        <td class="n">0.638</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.7</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.7</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.7 pts / 0.645 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          -1.1%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.6</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.633</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -1.1</td>
+        <td class="n sep dim">
+          -3.7</td>
+        <td class="n dim">
+          -1.1</td>
+        <td class="n up">
+          +0.5</td>
+        <td class="n up">
+          +2.1</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.6c taker fee">
+          -3.5</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Kia Open - Barranquilla"
+          data-src="vb"
+          data-move="against"
+          data-find="anna blinkova claire liu kia open - barranquilla"
+          data-when="2026-09-13 00:35:00"
+          
+          data-fair="0.485"
+          data-quote="0.505"
+          data-model="0.477"
+          data-edge="-0.9">
+        <td class="name" title="Anna Blinkova v Claire Liu"><b>Anna Blinkova</b>
+          <span class="dim">v Claire Liu</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 19:35 CDT — stored as 13 Sep 00:35 UTC">
+          19:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Anna Blinkova lost — 6-0 2-6 5-5">
+              lost</span></span></td>
+        <td class="event dim" title="Kia Open - Barranquilla">Kia Open - Barranquilla
+          <span class="rnd">F</span></td>
+        
+        <td class="n">0.485</td>
+        <td class="n dim">0.505</td>
+        <td class="n">0.477</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.9</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.9</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.9 pts / 0.485 — the model's expected ROI if bought at the open. Current rules hold WTA Chall/125 to 2.0 points of edge; this row does not clear it.">
+          -1.8%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.3</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.454</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -3.1</td>
+        <td class="n sep dim">
+          -5.6</td>
+        <td class="n dim">
+          -1.8</td>
+        <td class="n up">
+          +0.3</td>
+        <td class="n up">
+          +2.4</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -5.2</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="toward"
+          data-find="alana smith anastasia tikhonova sp open - sao paulo"
+          data-when="2026-09-12 20:00:00"
+          
+          data-fair="0.381"
+          data-quote="0.403"
+          data-model="0.371"
+          data-edge="-1.0">
+        <td class="name" title="Alana Smith v Anastasia Tikhonova"><b>Alana Smith</b>
+          <span class="dim">v Anastasia Tikhonova</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 15:00 CDT — stored as 12 Sep 20:00 UTC">
+          15:00
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill off" title="Under way, or finished and not graded yet. The Day menu above is the feed's UTC key, not this clock.">played</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.381</td>
+        <td class="n dim">0.403</td>
+        <td class="n">0.371</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -1.0</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -1.0</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -1.0 pts / 0.381 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          -2.6%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.5</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          —</td>
+        <td class="n dim"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          —</td>
+        <td class="n sep dim">
+          -8.0</td>
+        <td class="n dim">
+          -2.6</td>
+        <td class="n up">
+          +0.0</td>
+        <td class="n up">
+          +2.8</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -6.6</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Shanghai Challenger"
+          data-src="vb"
+          data-move="toward"
+          data-find="ilya ivashka luca castelnuovo shanghai challenger"
+          data-when="2026-09-12 12:00:00"
+          
+          data-fair="0.741"
+          data-quote="0.758"
+          data-model="0.731"
+          data-edge="-1.0">
+        <td class="name" title="Ilya Ivashka v Luca Castelnuovo"><b>Ilya Ivashka</b>
+          <span class="dim">v Luca Castelnuovo</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 07:00 CDT — stored as 12 Sep 12:00 UTC">
+          07:00
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Ilya Ivashka won — 3-6 4-6">
+              won</span></span></td>
+        <td class="event dim" title="Shanghai Challenger">Shanghai Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.741</td>
+        <td class="n dim">0.758</td>
+        <td class="n">0.731</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -1.0</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -1.0</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -1.0 pts / 0.741 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it. Favourites selector reads the same number at 0.70+: core ≥ 2.5%, ext 1.5–2.5%.">
+          -1.3%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.9</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.791</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +4.9</td>
+        <td class="n sep dim">
+          -3.5</td>
+        <td class="n dim">
+          -1.3</td>
+        <td class="n up">
+          +0.0</td>
+        <td class="n up">
+          +1.4</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.3c taker fee">
+          -3.1</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Seville Challenger"
+          data-src="vb"
+          data-move="against"
+          data-find="dusan lajovic max alcala gurri seville challenger"
+          data-when="2026-09-12 23:20:00"
+          
+          data-fair="0.617"
+          data-quote="0.633"
+          data-model="0.606"
+          data-edge="-1.0">
+        <td class="name" title="Dusan Lajovic v Max Alcala Gurri"><b>Dusan Lajovic</b>
+          <span class="dim">v Max Alcala Gurri</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 18:20 CDT — stored as 12 Sep 23:20 UTC">
+          18:20
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Dusan Lajovic won — 2-5">
+              won</span></span></td>
+        <td class="event dim" title="Seville Challenger">Seville Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.617</td>
+        <td class="n dim">0.633</td>
+        <td class="n">0.606</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -1.0</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -1.0</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -1.0 pts / 0.617 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          -1.7%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.3</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.686</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +7.0</td>
+        <td class="n sep dim">
+          -4.2</td>
+        <td class="n dim">
+          -1.7</td>
+        <td class="n dim">
+          -0.1</td>
+        <td class="n up">
+          +1.6</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -4.2</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Montreux Nestle Open - Montreux"
+          data-src="vb"
+          data-move="against"
+          data-find="fiona ferro dalma galfi montreux nestle open - montreux"
+          data-when="2026-09-12 17:00:00"
+          
+          data-fair="0.590"
+          data-quote="0.610"
+          data-model="0.580"
+          data-edge="-1.1">
+        <td class="name" title="Fiona Ferro v Dalma Galfi"><b>Fiona Ferro</b>
+          <span class="dim">v Dalma Galfi</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 12:00 CDT — stored as 12 Sep 17:00 UTC">
+          12:00
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Fiona Ferro won — 1-6 6-2 0-6">
+              won</span></span></td>
+        <td class="event dim" title="Montreux Nestle Open - Montreux">Montreux Nestle Open - Montreux
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.590</td>
+        <td class="n dim">0.610</td>
+        <td class="n">0.580</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -1.1</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -1.1</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -1.1 pts / 0.590 — the model's expected ROI if bought at the open. Current rules hold WTA Chall/125 to 2.0 points of edge; this row does not clear it.">
+          -1.8%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.4</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.604</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +1.4</td>
+        <td class="n sep dim">
+          -4.9</td>
+        <td class="n dim">
+          -1.8</td>
+        <td class="n dim">
+          -0.1</td>
+        <td class="n up">
+          +1.6</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -4.5</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Guadalajara Open Akron - Guadalajara"
+          data-src="vb"
+          data-move="toward"
+          data-find="caroline dolehide mingge xu guadalajara open akron - guadalajara"
+          data-when="2026-09-12 20:35:00"
+          
+          data-fair="0.760"
+          data-quote="0.781"
+          data-model="0.749"
+          data-edge="-1.1">
+        <td class="name" title="Caroline Dolehide v Mingge Xu"><b>Caroline Dolehide</b>
+          <span class="dim">v Mingge Xu</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 15:35 CDT — stored as 12 Sep 20:35 UTC">
+          15:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Caroline Dolehide won — 0-6 2-4">
+              won</span></span></td>
+        <td class="event dim" title="Guadalajara Open Akron - Guadalajara">Guadalajara Open Akron - Guadalajara
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.760</td>
+        <td class="n dim">0.781</td>
+        <td class="n">0.749</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -1.1</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -1.1</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -1.1 pts / 0.760 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it. Favourites selector reads the same number at 0.70+: core ≥ 2.5%, ext 1.5–2.5%.">
+          -1.4%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.6</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.760</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.0</td>
+        <td class="n sep dim">
+          -4.1</td>
+        <td class="n dim">
+          -1.4</td>
+        <td class="n dim">
+          -0.1</td>
+        <td class="n up">
+          +1.2</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.3c taker fee">
+          -3.1</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="ATIK Antalya Open - Antalya"
+          data-src="vb"
+          data-move="against"
+          data-find="alevtina ibragimova alicia herrero linana atik antalya open - antalya"
+          data-when="2026-09-12 14:30:00"
+          
+          data-fair="0.594"
+          data-quote="0.613"
+          data-model="0.582"
+          data-edge="-1.2">
+        <td class="name" title="Alevtina Ibragimova v Alicia Herrero Linana"><b>Alevtina Ibragimova</b>
+          <span class="dim">v Alicia Herrero Linana</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 09:30 CDT — stored as 12 Sep 14:30 UTC">
+          09:30
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Alevtina Ibragimova won — 4-6 6-2 6-3">
+              won</span></span></td>
+        <td class="event dim" title="ATIK Antalya Open - Antalya">ATIK Antalya Open - Antalya
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.594</td>
+        <td class="n dim">0.613</td>
+        <td class="n">0.582</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -1.2</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -1.2</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -1.2 pts / 0.594 — the model's expected ROI if bought at the open. Current rules hold WTA Chall/125 to 2.0 points of edge; this row does not clear it.">
+          -2.0%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+2.5</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.617</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +2.2</td>
+        <td class="n sep dim">
+          -5.1</td>
+        <td class="n dim">
+          -2.0</td>
+        <td class="n dim">
+          -0.4</td>
+        <td class="n up">
+          +1.4</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -4.7</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Tulln Challenger"
+          data-src="vb"
+          data-move="toward"
+          data-find="vitaliy sachko mika brunold tulln challenger"
+          data-when="2026-09-12 11:58:00"
+          
+          data-fair="0.463"
+          data-quote="0.478"
+          data-model="0.450"
+          data-edge="-1.3">
+        <td class="name" title="Vitaliy Sachko v Mika Brunold"><b>Vitaliy Sachko</b>
+          <span class="dim">v Mika Brunold</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 06:58 CDT — stored as 12 Sep 11:58 UTC">
+          06:58
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Vitaliy Sachko lost — 0-6 2-6">
+              lost</span></span></td>
+        <td class="event dim" title="Tulln Challenger">Tulln Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.463</td>
+        <td class="n dim">0.478</td>
+        <td class="n">0.450</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -1.3</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -1.3</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -1.3 pts / 0.463 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          -2.7%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+4.2</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.479</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +1.6</td>
+        <td class="n sep dim">
+          -5.9</td>
+        <td class="n dim">
+          -2.7</td>
+        <td class="n dim">
+          -0.6</td>
+        <td class="n up">
+          +1.7</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -6.3</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Guadalajara Open Akron - Guadalajara"
+          data-src="vb"
+          data-move="toward"
+          data-find="katarina zavatska lea ma guadalajara open akron - guadalajara"
+          data-when="2026-09-12 22:30:00"
+          
+          data-fair="0.585"
+          data-quote="0.606"
+          data-model="0.571"
+          data-edge="-1.4">
+        <td class="name" title="Katarina Zavatska v Lea Ma"><b>Katarina Zavatska</b>
+          <span class="dim">v Lea Ma</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 17:30 CDT — stored as 12 Sep 22:30 UTC">
+          17:30
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Katarina Zavatska lost — 6-2 6-2">
+              lost</span></span></td>
+        <td class="event dim" title="Guadalajara Open Akron - Guadalajara">Guadalajara Open Akron - Guadalajara
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.585</td>
+        <td class="n dim">0.606</td>
+        <td class="n">0.571</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -1.4</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -1.4</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -1.4 pts / 0.585 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          -2.4%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.9</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.577</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.8</td>
+        <td class="n sep dim">
+          -5.9</td>
+        <td class="n dim">
+          -2.4</td>
+        <td class="n dim">
+          -0.7</td>
+        <td class="n up">
+          +1.0</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -5.2</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="SP Open - Sao Paulo"
+          data-src="vb"
+          data-move="against"
+          data-find="victoria rodriguez hayu kinoshita sp open - sao paulo"
+          data-when="2026-09-12 18:35:00"
+          
+          data-fair="0.186"
+          data-quote="0.207"
+          data-model="0.171"
+          data-edge="-1.5">
+        <td class="name" title="Victoria Rodriguez v Hayu Kinoshita"><b>Victoria Rodriguez</b>
+          <span class="dim">v Hayu Kinoshita</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 13:35 CDT — stored as 12 Sep 18:35 UTC">
+          13:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Victoria Rodriguez lost — 6-4 1-6 4-2">
+              lost</span></span></td>
+        <td class="event dim" title="SP Open - Sao Paulo">SP Open - Sao Paulo
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.186</td>
+        <td class="n dim">0.207</td>
+        <td class="n">0.171</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -1.5</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -1.5</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -1.5 pts / 0.186 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          -8.1%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.1</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.162</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -2.4</td>
+        <td class="n sep dim">
+          -17.4</td>
+        <td class="n dim">
+          -8.1</td>
+        <td class="n dim">
+          -2.9</td>
+        <td class="n up">
+          +3.0</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.1c taker fee">
+          -13.1</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="ATP"
+          data-tour="Shanghai Challenger"
+          data-src="vb"
+          data-move="toward"
+          data-find="pavel kotov marat sharipov shanghai challenger"
+          data-when="2026-09-12 13:35:00"
+          
+          data-fair="0.531"
+          data-quote="0.546"
+          data-model="0.504"
+          data-edge="-2.7">
+        <td class="name" title="Pavel Kotov v Marat Sharipov"><b>Pavel Kotov</b>
+          <span class="dim">v Marat Sharipov</span>
+          </td>
+        
+        <td class="when" title="Saturday 12 September 2026, 08:35 CDT — stored as 12 Sep 13:35 UTC">
+          08:35
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill lost"
+                  title="Pavel Kotov lost — 3-6 2-4">
+              lost</span></span></td>
+        <td class="event dim" title="Shanghai Challenger">Shanghai Challenger
+          <span class="rnd">SF</span></td>
+        
+        <td class="n">0.531</td>
+        <td class="n dim">0.546</td>
+        <td class="n">0.504</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -2.7</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -2.7</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -2.7 pts / 0.531 — the model's expected ROI if bought at the open. Current rules hold ATP Chall/125 to 2.9 points of edge; this row does not clear it.">
+          -5.1%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+5.6</td>
+        <td class="n">0.5</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.521</td>
+        <td class="n down"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          -0.9</td>
+        <td class="n sep dim">
+          -7.8</td>
+        <td class="n dim">
+          -5.1</td>
+        <td class="n dim">
+          -3.2</td>
+        <td class="n dim">
+          -1.4</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.7c taker fee">
+          -8.1</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="Guadalajara Open Akron - Guadalajara"
+          data-src="vb"
+          data-move="against"
+          data-find="iryna shymanovich ana sofia sanchez guadalajara open akron - guadalajara"
+          data-when="2026-09-12 23:05:00"
+          
+          data-fair="0.645"
+          data-quote="0.667"
+          data-model="0.617"
+          data-edge="-2.8">
+        <td class="name" title="Iryna Shymanovich v Ana Sofia Sanchez"><b>Iryna Shymanovich</b>
+          <span class="dim">v Ana Sofia Sanchez</span>
+          <span class="pill q">Q</span></td>
+        
+        <td class="when" title="Saturday 12 September 2026, 18:05 CDT — stored as 12 Sep 23:05 UTC">
+          18:05
+          
+          <span class="tod">Sat 12 Sep
+            <span class="pill won"
+                  title="Iryna Shymanovich won — 7-5 6-2">
+              won</span></span></td>
+        <td class="event dim" title="Guadalajara Open Akron - Guadalajara">Guadalajara Open Akron - Guadalajara
+          <span class="rnd">Q1</span></td>
+        
+        <td class="n">0.645</td>
+        <td class="n dim">0.667</td>
+        <td class="n">0.617</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -2.8</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -2.8</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -2.8 pts / 0.645 — the model's expected ROI if bought at the open. Current rules hold WTA 250/500 to 2.5 points of edge; this row does not clear it.">
+          -4.3%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="dim">no</span></td>
+        <td class="n dim">+3.6</td>
+        <td class="n">1</td>
+        
+        <td class="n sep dim"
+            title="Not on Pinnacle's board right now.">
+          —</td>
+        <td class="n dim"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          —</td>
+        <td class="n dim sep"
+            >
+          0.728</td>
+        <td class="n up"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          +8.3</td>
+        <td class="n sep dim">
+          -7.5</td>
+        <td class="n dim">
+          -4.3</td>
+        <td class="n dim">
+          -2.8</td>
+        <td class="n dim">
+          -1.3</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.6c taker fee">
+          -6.7</td>
+        
+        
+      </tr>
+    
+    </tbody>
+  </table>
+  </div>
+
+  <p class="note">
+    <b>Bet = YES</b> is the frozen rule and nothing else: edge ≥ 2.5 points <i>and</i> the move filter
+    reading toward, inside the 0.20–0.80 band, overround ≤ 1.06, in universe. <b>Need</b> is how many
+    points inside fair you have to rest to make a side worth taking — negative means fair itself is
+    already good enough. <b>Stake</b> multiplies two independent halvings: ATP Challenger/125 ×0.5 and
+    the 0.20–0.30 price slice ×0.5, so 0.25 is both at once. Qualifying is staked like anything else.
+    <b>missed</b> is a one-off and will not recur: the row clears every rule as it stands today, but it
+    was scored before the rule changed on 16 September, and a match that has already started is never
+    re-scored, so its verdict can never be revised. Fourteen sides on 14–16 September are in that state —
+    Leme Da Silva v Sharma among them, at +2.65 with the move toward. They are deliberately NOT counted as
+    picks anywhere in the P&amp;L or the CLV panel: the book did not fire on them at the time, and
+    backdating a bet nobody placed is how a track record stops meaning anything.
+  </p>
+
+  <p class="note">
+    <b>The favourites selector</b> is a second, separate rule on the same scores, frozen
+    14 September. It reads the <b>Price Edge</b> column — the same <b>edge ÷ fair</b> shown there —
+    <b>core</b> at ≥ 2.5%, <b>ext</b> at 1.5–2.5%, both needing the move toward and
+    the row in universe, in the price band <b>0.70–0.95</b>. The column shows the number up to 1.00
+    because that is a favourite's price either way, but nothing above 0.95 is ever a pick — the 0.95 cap
+    is part of the frozen rule, and every attempt to re-cut the band failed to transfer between periods
+    (rank correlation −0.81 design to test). Stakes are its own: core 1u, ext 0.5u, qualifying ×0.5, and
+    Challenger/125 at <i>full</i> size, which is the one place it deliberately disagrees with the general
+    book's sizing. <b>Bet = YES(Fav)</b> marks a row this rule took and the general rule did not, which
+    in practice means a price above 0.80 that the general band never reaches: inside the 0.70–0.80
+    overlap every general pick is already a favourites core pick by arithmetic (edge ≥ 2.5 pts at
+    fair &lt; 0.80 is ≥ 3.1% relative), so there is no row where the two rules disagree. These picks are
+    <b>not</b> in the P&amp;L by default — the Profit page has a <b>Regular Model</b> / <b>All Models</b>
+    switch for that.
+  </p>
+  <p class="note">
+    <b>Price Edge</b> is <b>edge ÷ fair</b> — the frozen first-sighting edge as a share of what the
+    contract costs, i.e. the model's expected ROI on stake if bought at the open. It is context, not a
+    gate: the rule reads the <b>point</b> edge. Set <b>Current rules</b> and the <b>Bet</b> column
+    re-decides every row against today's per-level edge floors, read live from the same config the
+    Kalshi autotrader trades from — so this view and the bot cannot disagree about what is a pick
+    <i>today</i>. Nothing frozen is rewritten: the verdict each row was scored with stays the graded
+    book, and where the two views differ the Bet cell's tooltip says so and names the floor for that
+    row's level. The differences run both ways here, because the slate shows every side: a level whose
+    floor came down surfaces sides the old flat floor said NO to, and a level whose floor went up drops
+    sides it said YES to. <b>Floor (as scored)</b> stays the default and remains the graded record. The
+    split rule that used to occupy this switch is parked for 2027, paper only — its numbers live in
+    FINAL_RULESET §1, not here.
+  </p>
+  <p class="note">
+    <b>Fair 0.512*</b> — the asterisk means valuebettennis had no open for this match yet, so <b>fair</b> and
+    <b>quote</b> are the first price Pinnacle showed instead, frozen at that first sighting and not re-read as
+    the line moves. <b>These rows are picked and bet like any other, and have been since 16 September.</b>
+    Until then they could not be: the 2.5-point floor, the price band and the per-segment calibration were
+    all fitted against the feed's opens, so firing the rule on a substitute read a threshold off the wrong
+    scale. That objection died with the thing it protected. The feed's open broke on 14 September — its
+    median overround went from 1.0566 across the 7,111 matches the model was calibrated on to 1.0928
+    after, and 61% of what it now publishes fails the 1.06 overround cap outright. Our own first sighting
+    sits at 1.0477, which is <i>nearer</i> the calibration regime than the feed's current number, so the
+    asterisk had been excluding the better of the two prices. The residual objection is real and is not
+    hidden: a first sighting is not literally an open, and it differs from the feed's published open by a
+    median 2.08 points. What makes it tolerable is that the gap does not shrink as the sighting gets
+    earlier, which is what it would do if the gap were our lateness rather than the feed's error. The mark
+    stays on the page as <i>provenance</i>, not as a warning — the two price sources must stay tellable
+    apart, because comparing them is the only way this change is ever judged. Use <b>Open</b> above to see
+    only one kind or the other.
+  </p>
+  <p class="note">
+    <b>Open to close</b> is the market's opinion changing, not the model's. <b>Fair</b> already <i>is</i>
+    the open — the feed carries Pinnacle's opening price and nothing re-quotes it, so every run of a day
+    stores the same fair for a side and there is no intraday move to show. <b>close</b> is the closing
+    line and <b>CLV</b> is <code>close − fair</code> in points, positive when the market came towards
+    this side after it opened and the open was the better price. Both are blank until the match is graded
+    and the close arrives, usually a day later, and blank for a void: a price a market was suspended at
+    is not its last word. CLV is the honest scoreboard while the settled sample is still too small to
+    read — it says whether you were on the right side of a moving line, on every bet rather than on the
+    handful that have finished. A close marked <span class="prov">*</span> came from our own Pinnacle
+    poller rather than the feed, because the feed never published that match — on 2026-09-14 that was
+    107 of 221. It is the last price Pinnacle showed before the match left the pre-match board, which is
+    the same thing the feed's close is; the mark is there so the two are never silently mixed.
+    <span class="prov">†</span> is the same source but a weaker claim: the poller lost sight of that match
+    more than ten minutes before the advertised start, so the number is the last price it caught, not the
+    last price on the board. Its CLV is greyed, because the gap between those two is not a line move.
+  </p>
+  <p class="note">
+    <b>ROI</b> is <code>model ÷ price − 1</code>, the expected return per unit at that price.
+    <b>quote</b> is Pinnacle's raw vigged price, <b>fair</b> is the devigged open, and <b>−1c</b>/<b>−2c</b>
+    are one and two points inside fair — the prices you would actually type into Novig. Placing an order
+    moves the row onto the Book, which is where the venue, stake and fill get recorded.
+  </p>
+  <p class="note">
+    <b>Kalshi take</b> is the same ROI if you cross the spread at fair on Kalshi instead of resting on
+    Novig: <code>model ÷ (fair + fee) − 1</code>, with the taker fee <code>0.07 × p × (1−p)</code> added
+    to what you pay. It is the answer to "is it still worth it if I just take it now". Hover a cell for
+    the fee in cents. The fee is a curve, not a haircut — it peaks at <b>1.75c</b> at a coin-flip price
+    and falls to about <b>1.1c</b> at 0.20 or 0.80, so it eats a far larger share of a thin edge in the
+    middle of the board than at the edges. Against the 2.5-point floor that is roughly 70% of the edge
+    gone at 0.50 and 45% at 0.20. The maker fee is a quarter of it, <code>0.0175 × p × (1−p)</code>,
+    which is why the frozen rule posts rather than takes.
+  </p>
+  
+
+
+<script src="slate-static.js"></script>
+
+</main>
+</body>
+</html>
