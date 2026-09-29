@@ -56,6 +56,7 @@ from __future__ import annotations
 import csv
 import json
 import os
+import re
 import ssl
 import sys
 import time
@@ -74,6 +75,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 BOARD = os.path.join(ROOT, "board")
 OPEN_CSV = os.path.join(BOARD, "pin_open.csv")
 CLOSE_CSV = os.path.join(BOARD, "pin_close.csv")
+LIVE_CSV = os.path.join(BOARD, "pin_live.csv")
 TICK_DIR = os.path.join(BOARD, "ticks")
 ARCHIVE_DIR = os.path.join(BOARD, "archive")
 
@@ -110,9 +112,18 @@ MARKET_VARIANTS = [
 OPEN_COLS = ["pair", "k1", "k2", "name1", "name2", "league", "start_time",
              "fair1", "fair2", "quote1", "quote2", "limit_usd", "seen_at",
              "obs_at", "cutoff_at", "version"]
-CLOSE_COLS = OPEN_COLS + ["mins_to_start", "n_seen"]
+# `matchup_id` is appended last so rows written before it existed still parse; DictReader hands back
+# None for the missing field and the consumer treats that as "unknown market".
+CLOSE_COLS = OPEN_COLS + ["mins_to_start", "n_seen", "matchup_id"]
 TICK_COLS = ["pair", "seen_at", "obs_at", "start_time", "mins_to_start",
              "fair1", "fair2", "quote1", "quote2", "limit_usd", "version"]
+# First time each matchup was SEEN live. `isLive` is Pinnacle's own statement that the match started,
+# it arrives free on every list request, and it is the one signal a postponement cannot forge: a match
+# suspended mid-set and re-listed for tomorrow moves its advertised start AND its betting cutoff
+# forward together, so every clock-based test reads the resumed market as pre-match when its price
+# already knows the partial score. Keyed with the matchup id because the same two players can meet
+# again days later under a NEW id, and that rematch must not inherit the old match's sighting.
+LIVE_COLS = ["pair", "matchup_id", "first_live"]
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -206,14 +217,25 @@ def _utc(v) -> str | None:
 # ---------------------------------------------------------------------------------------------------
 # the board
 
-def fetch_board() -> dict:
-    """One poll. Returns {pair_key: row}, or {} if the network was unusable.
+def _live_name(name: str) -> str:
+    """Drop the unit qualifier Pinnacle appends on derived live matchups ('Otto Virtanen (Games)').
+    Restricted to the known unit words so a real name ending in parentheses is never touched."""
+    return re.sub(r"\s*\((?:games|sets|points)\)\s*$", "", name, flags=re.I)
+
+
+def fetch_board() -> tuple[dict, list]:
+    """One poll. Returns ({pair_key: row}, live sightings), or ({}, []) if the network was unusable.
 
     Four requests total, replacing the one-list-plus-one-per-matchup fan-out the private poller used —
     that was ~85 round trips for the same information, and it capped how many new matchups could be
     priced in a pass because the fan-out was the expensive part.
+
+    The live sightings ride along for free: the isLive matchups this loop has always filtered OUT are
+    the one direct statement that a match has started, which is what lets a postponed match keep the
+    close it had before play began instead of the resumed market's price.
     """
     meta: dict[int, dict] = {}
+    live_ids: dict[int, str] = {}
     for v in LIST_VARIANTS:
         raw, age = _get(v)
         if not raw:
@@ -222,7 +244,23 @@ def fetch_board() -> dict:
             # Derived children (sets, handicaps) repeat the parent's participants, so letting them
             # through would overwrite a real moneyline with a set line under the same key. They are
             # over half the list.
-            if m.get("parentId") or not m.get("hasMarkets") or m.get("isLive"):
+            if m.get("isLive"):
+                # A live PARENT never appears on this list -- Pinnacle removes it the moment the match
+                # starts (measured 2026-09-29: 26 isLive rows, all children). What stays is the live
+                # CHILDREN (Sets/Games derivatives), which repeat the parent's participants and carry
+                # `parentId` = the id the pre-match close was recorded under. So the sighting is read
+                # from the child and filed under the parent. Games children suffix the names
+                # ("Valentina Ryser (Games)" -> "(games)|v" without the strip), hence _live_name.
+                mid = m.get("parentId") or m.get("id")
+                ps = [p for p in (m.get("participants") or []) if p.get("name")]
+                if len(ps) == 2 and mid is not None:
+                    k1 = name_key(_live_name(ps[0]["name"]))
+                    k2 = name_key(_live_name(ps[1]["name"]))
+                    if k1 and k2 and k1 != k2:
+                        lo, hi = sorted((k1, k2))
+                        live_ids.setdefault(mid, f"{lo}|{hi}")
+                continue
+            if m.get("parentId") or not m.get("hasMarkets"):
                 continue
             meta.setdefault(m["id"], m)
         print(f"  list {v.split('/')[-1]:38s} n={len(raw):4d} age={age}")
@@ -286,8 +324,10 @@ def fetch_board() -> dict:
             # 297 pairs it moved a median +14 minutes between first and last sighting.
             "cutoff_at": _utc(mk.get("cutoffAt")),
             "version": ver,
+            # The market's identity. A suspension keeps it; a rematch of the same pair mints a new one.
+            "matchup_id": mid,
         }
-    return out
+    return out, [(pair, mid) for mid, pair in sorted(live_ids.items())]
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -410,6 +450,31 @@ def _append_ticks(rows: list[dict]) -> int:
     return n
 
 
+def update_lives(lives: list) -> int:
+    """First live sightings, insert-only. Returns how many matchups were newly seen live.
+
+    A sighting already on file is never touched: `first_live` is the claim "the match had started by
+    this moment", and the earliest such moment is the strongest form of it. New sightings are stamped
+    with the current poll time.
+    """
+    if not lives:
+        return 0
+    have = {}
+    if os.path.exists(LIVE_CSV):
+        with open(LIVE_CSV, newline="", encoding="utf-8") as fh:
+            have = {(r["pair"], r["matchup_id"]): r for r in csv.DictReader(fh) if r.get("pair")}
+    now_s = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    new = 0
+    for pair, mid in lives:
+        key = (pair, str(mid))
+        if key not in have:
+            have[key] = {"pair": pair, "matchup_id": mid, "first_live": now_s}
+            new += 1
+    if new:
+        _write(LIVE_CSV, LIVE_COLS, [have[k] for k in sorted(have)])
+    return new
+
+
 def archive_old() -> int:
     """Move finished matches out of the live close file into a monthly archive.
 
@@ -436,17 +501,20 @@ def archive_old() -> int:
 def main() -> int:
     t0 = time.time()
     print(f"poll {datetime.now(timezone.utc):%Y-%m-%d %H:%M:%S}Z")
-    board = fetch_board()
+    board, lives = fetch_board()
+    # Lives first: they come from the list requests, so they can be real even when every market
+    # request failed and the board below is empty.
+    seen_live = update_lives(lives)
     if not board:
         # Exit 0, not 1. An empty board is nearly always Cloudflare or a quiet hour, and a red cron is
         # a notification that trains you to ignore notifications. The counts below are the signal.
-        print("  board empty — nothing written")
+        print(f"  board empty — nothing written (live+{seen_live})")
         return 0
     opened = update_open(board)
     closes, ticks = update_close(board)
     archived = archive_old()
     print(f"  board={len(board)} new_open={opened} close={closes} ticks={ticks} "
-          f"archived={archived} {time.time() - t0:.1f}s")
+          f"live+{seen_live} archived={archived} {time.time() - t0:.1f}s")
     return 0
 
 
