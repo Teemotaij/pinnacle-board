@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Kickstarter Serve</title>
+
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="ks.css">
+
+
+</head>
+<body>
+<header class="masthead">
+  <h1>Kickstarter Serve</h1>
+  
+  <span class="state">03 Oct 16:36 CDT · built</span>
+  
+</header>
+
+
+<main class="slate">
+
+
+
+
+
+  
+  
+  <div class="slatebar">
+    <form method="get" action="/" id="filters">
+      <input type="hidden" name="sort" value="edge">
+      <input type="hidden" name="desc" value="1">
+      
+      <label>Day
+        
+        <select name="date" onchange="location.href = this.value + '.html'">
+        
+          <option value="2026-10-05" selected>2026-10-05</option><option value="2026-10-04" >2026-10-04</option><option value="2026-10-03" >2026-10-03</option><option value="2026-10-02" >2026-10-02</option><option value="2026-10-01" >2026-10-01</option><option value="2026-09-30" >2026-09-30</option><option value="2026-09-29" >2026-09-29</option><option value="2026-09-28" >2026-09-28</option><option value="2026-09-27" >2026-09-27</option><option value="2026-09-26" >2026-09-26</option><option value="2026-09-25" >2026-09-25</option><option value="2026-09-24" >2026-09-24</option><option value="2026-09-23" >2026-09-23</option><option value="2026-09-22" >2026-09-22</option><option value="2026-09-21" >2026-09-21</option><option value="2026-09-20" >2026-09-20</option><option value="2026-09-19" >2026-09-19</option><option value="2026-09-18" >2026-09-18</option><option value="2026-09-17" >2026-09-17</option><option value="2026-09-16" >2026-09-16</option><option value="2026-09-15" >2026-09-15</option><option value="2026-09-14" >2026-09-14</option><option value="2026-09-13" >2026-09-13</option><option value="2026-09-12" >2026-09-12</option>
+          
+          <option value="all" >All dates</option>
+        </select>
+      </label>
+      
+      
+        <a class="today" href="index.html">Today</a>
+        
+      
+      <label>Tour
+        <select name="circuit" onchange="">
+          <option value="">Men &amp; women</option>
+          <option value="WTA" >
+            Women (WTA)</option>
+        </select>
+      </label>
+      <label>Tournament
+        <select name="tour" onchange="">
+          <option value="">All (1)</option>
+          <option value="China Open - Beijing" >China Open - Beijing</option>
+        </select>
+      </label>
+      
+      <label>Open
+        <select name="src" onchange="">
+          <option value="">Any source</option>
+          <option value="vb" >ValueBet open only</option>
+          <option value="prov" >Pinnacle stand-in only</option>
+        </select>
+      </label>
+      
+      <label>Move
+        <select name="move" onchange="">
+          <option value="">Either way</option>
+          <option value="toward" >Toward only</option>
+          <option value="against" >Against only</option>
+        </select>
+      </label>
+      
+      <label>Show
+        <select name="universe" onchange="">
+          <option value="1" selected>In universe</option>
+          <option value="0" >Every side scored</option>
+        </select>
+      </label>
+      
+      <label class="ck"><input type="checkbox" name="picks" value="1"
+         onchange=""> Picks only</label>
+      
+      <label class="band">Fair
+    <span>
+      <input type="number" name="fair_min" value="" step="0.01"
+             placeholder="min" inputmode="decimal" autocomplete="off" onchange="">
+      <input type="number" name="fair_max" value="" step="0.01"
+             placeholder="max" inputmode="decimal" autocomplete="off" onchange="">
+    </span>
+  </label>
+      <label class="band">Quote
+    <span>
+      <input type="number" name="quote_min" value="" step="0.01"
+             placeholder="min" inputmode="decimal" autocomplete="off" onchange="">
+      <input type="number" name="quote_max" value="" step="0.01"
+             placeholder="max" inputmode="decimal" autocomplete="off" onchange="">
+    </span>
+  </label>
+      <label class="band">Model
+    <span>
+      <input type="number" name="model_min" value="" step="0.01"
+             placeholder="min" inputmode="decimal" autocomplete="off" onchange="">
+      <input type="number" name="model_max" value="" step="0.01"
+             placeholder="max" inputmode="decimal" autocomplete="off" onchange="">
+    </span>
+  </label>
+      <label class="band">Edge (pts)
+    <span>
+      <input type="number" name="edge_min" value="" step="0.1"
+             placeholder="min" inputmode="decimal" autocomplete="off" onchange="">
+      <input type="number" name="edge_max" value="" step="0.1"
+             placeholder="max" inputmode="decimal" autocomplete="off" onchange="">
+    </span>
+  </label>
+      
+      <label>Rule
+        <select name="rule" onchange="">
+          <option value="floor" >Floor (as scored)</option>
+          <option value="current" selected>Current rules</option>
+        </select>
+      </label>
+      <label>Search
+        <input type="search" name="q" value="" placeholder="player or event" autocomplete="off">
+      </label>
+      
+      
+    </form>
+    
+    <div class="count"><span id="n-sides">4</span> sides ·
+      <span id="n-picks">0</span> picks
+      <span id="rule-pill" class="pill q" hidden title="Today's per-level edge floors, read live from the config, over every row's LATEST re-score (the Now column). The verdict each row was scored with is untouched underneath; only the Bet column and this count are reading today's gate — each row's tooltip names its own floor.">current rules</span> · latest run
+      <span title="stored as 03 Oct 21:33 UTC">16:33 CDT</span></div>
+  </div>
+
+  
+
+  
+  <div class="scroll">
+  <table class="slate">
+    <thead>
+    <tr class="grp">
+      
+      <th colspan="13"></th>
+      <th colspan="2" class="n sep">Pinnacle now</th>
+      <th colspan="2" class="n sep">Open to close</th>
+      <th colspan="4" class="n sep">ROI if bought at</th>
+      <th class="n sep">Kalshi</th>
+      
+    </tr>
+    <tr>
+      <th class="name " data-col="player"><a href="#">Side<span class="arrow"></span></a></th>
+      <th class="when " data-col="match_date"><a href="#">Time<span class="arrow"></span></a></th>
+      <th class=" " data-col="tournament"><a href="#">Event<span class="arrow"></span></a></th>
+      <th class="n " data-col="fair"><a href="#">Fair<span class="arrow"></span></a></th>
+      <th class="n " data-col="quote"><a href="#">Quote<span class="arrow"></span></a></th>
+      <th class="n " data-col="cal"><a href="#">Model<span class="arrow"></span></a></th>
+      <th class="n sorted" data-col="edge"><a href="#">Edge<span class="arrow">↓</span></a></th>
+      <th class="n " data-col="edge_now"><a href="#">Now<span class="arrow"></span></a></th>
+      <th class="n " data-col="price_edge"><a href="#">Price Edge<span class="arrow"></span></a></th>
+      <th>Move</th>
+      <th>Bet</th>
+      <th class="n " data-col="need"><a href="#">Need<span class="arrow"></span></a></th>
+      <th class="n " data-col="stake"><a href="#">Stake<span class="arrow"></span></a></th>
+      <th class="n sep " data-col="cur"><a href="#">Current<span class="arrow"></span></a></th>
+      <th class="n " data-col="cur_move"><a href="#">vs open<span class="arrow"></span></a></th>
+      <th class="n sep " data-col="close"><a href="#">close<span class="arrow"></span></a></th>
+      <th class="n " data-col="clv"><a href="#">Line move<span class="arrow"></span></a></th>
+      <th class="n sep " data-col="roi_quote"><a href="#">quote<span class="arrow"></span></a></th>
+      <th class="n " data-col="roi_fair"><a href="#">fair<span class="arrow"></span></a></th>
+      <th class="n " data-col="roi_m1"><a href="#">−1c<span class="arrow"></span></a></th>
+      <th class="n " data-col="roi_m2"><a href="#">−2c<span class="arrow"></span></a></th>
+      <th class="n sep " data-col="roi_kt"><a href="#">take<span class="arrow"></span></a></th>
+      
+    </tr></thead>
+    <tbody>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="China Open - Beijing"
+          data-src="vb"
+          data-move="against"
+          data-find="jelena ostapenko elise mertens china open - beijing"
+          data-when="2026-10-06 02:00:00"
+          
+          data-fair="0.380"
+          data-quote="0.394"
+          data-model="0.393"
+          data-edge="1.2"
+          
+          data-pick="0"
+          data-picknew="0">
+        <td class="name" title="Jelena Ostapenko v Elise Mertens"><b>Jelena Ostapenko</b>
+          <span class="dim">v Elise Mertens</span>
+          </td>
+        
+        <td class="when" title="Monday 05 October 2026, 21:00 CDT — stored as 06 Oct 02:00 UTC">
+          21:00
+          
+          <span class="tod">Mon 05 Oct</span></td>
+        <td class="event dim" title="China Open - Beijing">China Open - Beijing
+          <span class="rnd">R32</span></td>
+        
+        <td class="n">0.380</td>
+        <td class="n dim">0.394</td>
+        <td class="n">0.393</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +1.2</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +1.2</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +1.2 pts / 0.380 — the model's expected ROI if bought at the open. Current rules hold WTA 1000 to 2.5 points of edge, read against the LATEST re-score (+1.24 pts, the Now column) and not the frozen Edge to the left; this row does not clear it.">
+          +3.1%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="v-floor"><span class="dim">no</span></span><span class="v-current" hidden><span class="dim" title="Latest re-score +1.24 pts (opened +1.19) against the 2.5-point floor for WTA 1000, below it.">no</span></span></td>
+        <td class="n dim">+2.0</td>
+        <td class="n">1</td>
+        
+        <td class="n sep cur"
+            title="Pinnacle now: +154, devigged 0.3792 — max $3,000. Live price, not an input to the model.">
+          0.379</td>
+        <td class="n down"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          -0.1</td>
+        <td class="n dim sep"
+            >
+          —</td>
+        <td class="n dim"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          —</td>
+        <td class="n sep dim">
+          -0.3</td>
+        <td class="n up">
+          +3.2</td>
+        <td class="n up">
+          +6.0</td>
+        <td class="n up">
+          +9.0</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.6c taker fee">
+          -1.0</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="China Open - Beijing"
+          data-src="prov"
+          data-move="toward"
+          data-find="iga swiatek donna vekic china open - beijing"
+          data-when="2026-10-06 02:00:00"
+          
+          data-fair="0.920"
+          data-quote="0.936"
+          data-model="0.926"
+          data-edge="0.6"
+          
+          data-pick="0"
+          data-picknew="0">
+        <td class="name" title="Iga Swiatek v Donna Vekic"><b>Iga Swiatek</b>
+          <span class="dim">v Donna Vekic</span>
+          </td>
+        
+        <td class="when" title="Monday 05 October 2026, 21:00 CDT — stored as 06 Oct 02:00 UTC">
+          21:00
+          
+          <span class="tod">Mon 05 Oct</span></td>
+        <td class="event dim" title="China Open - Beijing">China Open - Beijing
+          <span class="rnd">R32</span></td>
+        
+        <td class="n">0.920<span class="prov"
+            title="No valuebettennis open yet. Fair and quote are the first price Pinnacle showed for this match, held fixed once seen. Since 16 Sep these rows are picked and bet like any other — the mark records which book the open came from, it does not hold the row back.">*</span></td>
+        <td class="n dim">0.936</td>
+        <td class="n">0.926</td>
+        
+        <td class="n up"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          +0.6</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          +0.6</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = +0.6 pts / 0.920 — the model's expected ROI if bought at the open. Current rules hold WTA 1000 to 2.5 points of edge, read against the LATEST re-score (+0.62 pts, the Now column) and not the frozen Edge to the left; this row does not clear it. Favourites selector reads the same number at 0.70+: core ≥ 2.5%, ext 1.5–2.5%.">
+          +0.7%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="v-floor"><span class="dim">no</span></span><span class="v-current" hidden><span class="dim" title="Latest re-score +0.62 pts (opened +0.62) against the 2.5-point floor for WTA 1000, below it.">no</span></span></td>
+        <td class="n dim">+1.9</td>
+        <td class="n">1</td>
+        
+        <td class="n sep cur"
+            title="Pinnacle now: -1434, devigged 0.9186 — max $325. Live price, not an input to the model.">
+          0.919</td>
+        <td class="n down"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          -0.2</td>
+        <td class="n dim sep"
+            >
+          —</td>
+        <td class="n dim"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          —</td>
+        <td class="n sep dim">
+          -1.1</td>
+        <td class="n up">
+          +0.7</td>
+        <td class="n up">
+          +1.8</td>
+        <td class="n up">
+          +2.9</td>
+        <td class="n sep up"
+            title="Taking at fair on Kalshi, after a 0.5c taker fee">
+          +0.1</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="China Open - Beijing"
+          data-src="prov"
+          data-move="against"
+          data-find="donna vekic iga swiatek china open - beijing"
+          data-when="2026-10-06 02:00:00"
+          
+          data-fair="0.080"
+          data-quote="0.100"
+          data-model="0.074"
+          data-edge="-0.6"
+          
+          data-pick="0"
+          data-picknew="0">
+        <td class="name" title="Donna Vekic v Iga Swiatek"><b>Donna Vekic</b>
+          <span class="dim">v Iga Swiatek</span>
+          </td>
+        
+        <td class="when" title="Monday 05 October 2026, 21:00 CDT — stored as 06 Oct 02:00 UTC">
+          21:00
+          
+          <span class="tod">Mon 05 Oct</span></td>
+        <td class="event dim" title="China Open - Beijing">China Open - Beijing
+          <span class="rnd">R32</span></td>
+        
+        <td class="n">0.080<span class="prov"
+            title="No valuebettennis open yet. Fair and quote are the first price Pinnacle showed for this match, held fixed once seen. Since 16 Sep these rows are picked and bet like any other — the mark records which book the open came from, it does not hold the row back.">*</span></td>
+        <td class="n dim">0.100</td>
+        <td class="n">0.074</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -0.6</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -0.6</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -0.6 pts / 0.080 — the model's expected ROI if bought at the open. Current rules hold WTA 1000 to 2.5 points of edge, read against the LATEST re-score (-0.62 pts, the Now column) and not the frozen Edge to the left; this row does not clear it.">
+          -7.7%</td>
+        <td><span class="down">against</span></td>
+        
+        
+        
+        <td><span class="v-floor"><span class="dim">no</span></span><span class="v-current" hidden><span class="dim" title="Latest re-score -0.62 pts (opened -0.62) against the 2.5-point floor for WTA 1000, below it.">no</span></span></td>
+        <td class="n dim">+2.7</td>
+        <td class="n">1</td>
+        
+        <td class="n sep cur"
+            title="Pinnacle now: +887, devigged 0.0814 — max $325. Live price, not an input to the model.">
+          0.081</td>
+        <td class="n up"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          +0.2</td>
+        <td class="n dim sep"
+            >
+          —</td>
+        <td class="n dim"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          —</td>
+        <td class="n sep dim">
+          -26.1</td>
+        <td class="n dim">
+          -7.7</td>
+        <td class="n up">
+          +5.5</td>
+        <td class="n up">
+          +23.2</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 0.5c taker fee">
+          -13.3</td>
+        
+        
+      </tr>
+    
+      
+      <tr class=""
+          data-universe="1"
+          data-circuit="WTA"
+          data-tour="China Open - Beijing"
+          data-src="vb"
+          data-move="toward"
+          data-find="elise mertens jelena ostapenko china open - beijing"
+          data-when="2026-10-06 02:00:00"
+          
+          data-fair="0.620"
+          data-quote="0.633"
+          data-model="0.607"
+          data-edge="-1.2"
+          
+          data-pick="0"
+          data-picknew="0">
+        <td class="name" title="Elise Mertens v Jelena Ostapenko"><b>Elise Mertens</b>
+          <span class="dim">v Jelena Ostapenko</span>
+          </td>
+        
+        <td class="when" title="Monday 05 October 2026, 21:00 CDT — stored as 06 Oct 02:00 UTC">
+          21:00
+          
+          <span class="tod">Mon 05 Oct</span></td>
+        <td class="event dim" title="China Open - Beijing">China Open - Beijing
+          <span class="rnd">R32</span></td>
+        
+        <td class="n">0.620</td>
+        <td class="n dim">0.633</td>
+        <td class="n">0.607</td>
+        
+        <td class="n down"
+            title="As first scored, vs the opening fair value. This number does not change afterwards.">
+          -1.2</td>
+        
+        <td class="n dim"
+            title="The latest re-score against the same opening price. The model keeps learning from results, so this can drift; the Edge column never does.">
+          -1.2</td>
+        
+        <td class="n dim"
+            title="Edge / Fair = -1.2 pts / 0.620 — the model's expected ROI if bought at the open. Current rules hold WTA 1000 to 2.5 points of edge, read against the LATEST re-score (-1.24 pts, the Now column) and not the frozen Edge to the left; this row does not clear it.">
+          -1.9%</td>
+        <td><span class="up">toward</span></td>
+        
+        
+        
+        <td><span class="v-floor"><span class="dim">no</span></span><span class="v-current" hidden><span class="dim" title="Latest re-score -1.24 pts (opened -1.19) against the 2.5-point floor for WTA 1000, below it.">no</span></span></td>
+        <td class="n dim">+3.7</td>
+        <td class="n">1</td>
+        
+        <td class="n sep cur"
+            title="Pinnacle now: -174, devigged 0.6208 — max $3,000. Live price, not an input to the model.">
+          0.621</td>
+        <td class="n up"
+            title="Pinnacle now less the feed's open, in points. Positive means the market has come towards this side since it opened.">
+          +0.1</td>
+        <td class="n dim sep"
+            >
+          —</td>
+        <td class="n dim"
+            title="Closing line less Fair, in points. Blank until the match is graded.">
+          —</td>
+        <td class="n sep dim">
+          -4.0</td>
+        <td class="n dim">
+          -2.0</td>
+        <td class="n dim">
+          -0.4</td>
+        <td class="n up">
+          +1.3</td>
+        <td class="n sep dim"
+            title="Taking at fair on Kalshi, after a 1.6c taker fee">
+          -4.5</td>
+        
+        
+      </tr>
+    
+    </tbody>
+  </table>
+  </div>
+
+  <p class="note">
+    <b>Bet = YES</b> is the frozen rule and nothing else: edge ≥ 2.5 points <i>and</i> the move filter
+    reading toward, inside the <b>0.20–0.70</b> band (0.80 until 30 September — everything at 0.70 and
+    above is the favourites book's now, see below), overround ≤ 1.06, in universe. <b>Need</b> is how many
+    points inside fair you have to rest to make a side worth taking — negative means fair itself is
+    already good enough. <b>Stake</b> multiplies two independent halvings: ATP Challenger/125 ×0.5 and
+    the 0.20–0.30 price slice ×0.5, so 0.25 is both at once. Qualifying is staked like anything else.
+    <b>missed</b> is a one-off and will not recur: the row clears every rule as it stands today, but it
+    was scored before the rule changed on 16 September, and a match that has already started is never
+    re-scored, so its verdict can never be revised. Fourteen sides on 14–16 September are in that state —
+    Leme Da Silva v Sharma among them, at +2.65 with the move toward. They are deliberately NOT counted as
+    picks anywhere in the P&amp;L or the line-move panel: the book did not fire on them at the time, and
+    backdating a bet nobody placed is how a track record stops meaning anything.
+  </p>
+
+  <p class="note">
+    <b>The favourites selector</b> is a second, separate rule on the same scores, frozen
+    14 September. It reads the <b>Price Edge</b> column — the same <b>edge ÷ fair</b> shown there —
+    <b>core</b> at ≥ 2.5%, <b>ext</b> at 1.5–2.5%, both needing the move toward and
+    the row in universe, in the price band <b>0.70–0.95</b>. The column shows the number up to 1.00
+    because that is a favourite's price either way, but nothing above 0.95 is ever a pick — the 0.95 cap
+    is part of the frozen rule, and every attempt to re-cut the band failed to transfer between periods
+    (rank correlation −0.81 design to test). Stakes are its own: core 1u, ext 0.5u, qualifying ×0.5, and
+    Challenger/125 at <i>full</i> size, which is the one place it deliberately disagrees with the general
+    book's sizing. <b>Bet = YES(Fav)</b> marks a row this rule took and the general rule did not. These
+    picks are <b>not</b> in the P&amp;L by default — the Profit page has a <b>Regular Model</b> /
+    <b>All Models</b> switch for that.
+  </p>
+  <p class="note">
+    <b>Since 30 September the two rules divide the price line rather than overlapping.</b> The general
+    band stops at 0.70 and the favourites book owns 0.70–0.95 outright, so <b>YES(Fav)</b> is now every
+    favourite the book bets and not only the ones above 0.80. Nothing is given up in the strip that
+    moved: a general pick below 0.80 has edge ≥ 2.5 points, hence ≥ 3.1% relative, hence a favourites
+    <b>core</b> pick already — 263 of 263 on the backtest rows. What changes is the stake and the
+    execution. <b>Stake</b> starts at the flat tier — 1u core, 0.5u ext, ×0.5 qualifying — and is then
+    <b>sized</b>: the handoff's tercile multiplier, terciles of edge × terciles of mvhat, each
+    0.5/1.0/1.5, normalised over this book's trailing 24 months so its total planned stake is
+    unchanged. Clips run 0.05u to about 2u. Sizing was switched on 30 September after the pipeline was
+    reconciled against the package's own scorer: run as-if over five recent dates, 814 sides,
+    <b>every</b> side agrees exactly on fair, cal, edge and mvhat once our own Pinnacle-close fill is
+    disabled, and with it enabled median |Δmvhat| is still 0.000000 (p90 0.0069). The favourites rule
+    here selects exactly what the package's <code>fav_rule</code> selects on those dates, with no
+    exceptions. Two cells are withheld entirely, WTA 1000 main draw and ATP Challenger
+    qualifying; they also read <b>Fav(hold)</b> and come back at half stake if their fills show
+    win-vs-close ≥ +1.0 over 100. And these orders <b>take</b> the offer at or within a cent or two of
+    fair instead of resting a cent under it: at 77c a cent is 1.4 ROI points against a ~7% book, resting
+    filled 23% of favourites picks and filled them adversely, and the live order log is blunter still —
+    every band under 0.70 filled 100% of its picks and 0.70+ filled 0%.
+  </p>
+  <p class="note">
+    <b>Price Edge</b> is <b>edge ÷ fair</b> — the frozen first-sighting edge as a share of what the
+    contract costs, i.e. the model's expected ROI on stake if bought at the open. It is context, not a
+    gate: the rule reads the <b>point</b> edge. Set <b>Current rules</b> and the <b>Bet</b> column
+    re-decides every row against today's per-level edge floors, read live from the same config the
+    Kalshi autotrader trades from — so this view and the bot cannot disagree about what is a pick
+    <i>today</i>. Nothing frozen is rewritten: the verdict each row was scored with stays the graded
+    book, and where the two views differ the Bet cell's tooltip says so and names the floor for that
+    row's level. The differences run both ways here, because the slate shows every side: a level whose
+    floor came down surfaces sides the old flat floor said NO to, and a level whose floor went up drops
+    sides it said YES to. <b>Floor (as scored)</b> stays the default and remains the graded record. The
+    split rule that used to occupy this switch is parked for 2027, paper only — its numbers live in
+    FINAL_RULESET §1, not here.
+  </p>
+  <p class="note">
+    <b>Fair 0.512*</b> — the asterisk means valuebettennis had no open for this match yet, so <b>fair</b> and
+    <b>quote</b> are the first price Pinnacle showed instead, frozen at that first sighting and not re-read as
+    the line moves. <b>These rows are picked and bet like any other, and have been since 16 September.</b>
+    Until then they could not be: the 2.5-point floor, the price band and the per-segment calibration were
+    all fitted against the feed's opens, so firing the rule on a substitute read a threshold off the wrong
+    scale. That objection died with the thing it protected. The feed's open broke on 14 September — its
+    median overround went from 1.0566 across the 7,111 matches the model was calibrated on to 1.0928
+    after, and 61% of what it now publishes fails the 1.06 overround cap outright. Our own first sighting
+    sits at 1.0477, which is <i>nearer</i> the calibration regime than the feed's current number, so the
+    asterisk had been excluding the better of the two prices. The residual objection is real and is not
+    hidden: a first sighting is not literally an open, and it differs from the feed's published open by a
+    median 2.08 points. What makes it tolerable is that the gap does not shrink as the sighting gets
+    earlier, which is what it would do if the gap were our lateness rather than the feed's error. The mark
+    stays on the page as <i>provenance</i>, not as a warning — the two price sources must stay tellable
+    apart, because comparing them is the only way this change is ever judged. Use <b>Open</b> above to see
+    only one kind or the other.
+  </p>
+  <p class="note">
+    <b>Open to close</b> is the market's opinion changing, not the model's. <b>Fair</b> already <i>is</i>
+    the open — the feed carries Pinnacle's opening price and nothing re-quotes it, so every run of a day
+    stores the same fair for a side and there is no intraday move to show. <b>close</b> is the closing
+    line and <b>Line move</b> is <code>close − fair</code> in points, positive when the market came towards
+    this side after it opened and the open was the better price. That is closing line <i>movement</i>, and
+    it is deliberately not called CLV: closing line <i>value</i> is the close minus what was actually
+    <i>paid</i>, a different and flattering number, because §2 rests a cent under fair and that discount
+    alone is worth about a point. CLV in that sense lives on the Kalshi page, split from the discount.
+    Both are blank until the match is graded
+    and the close arrives, usually a day later, and blank for a void: a price a market was suspended at
+    is not its last word. Line move is the honest scoreboard while the settled sample is still too small to
+    read — it says whether you were on the right side of a moving line, on every bet rather than on the
+    handful that have finished. A close marked <span class="prov">*</span> came from our own Pinnacle
+    poller rather than the feed, because the feed never published that match — on 2026-09-14 that was
+    107 of 221. It is the last price Pinnacle showed before the match left the pre-match board, which is
+    the same thing the feed's close is; the mark is there so the two are never silently mixed.
+    <span class="prov">†</span> is the same source but a weaker claim: the poller lost sight of that match
+    more than ten minutes before the advertised start, so the number is the last price it caught, not the
+    last price on the board. Its line move is greyed, because the gap between those two is not a real move.
+  </p>
+  <p class="note">
+    <b>ROI</b> is <code>model ÷ price − 1</code>, the expected return per unit at that price.
+    <b>quote</b> is Pinnacle's raw vigged price, <b>fair</b> is the devigged open, and <b>−1c</b>/<b>−2c</b>
+    are one and two points inside fair — the prices you would actually type into Novig. Placing an order
+    moves the row onto the Book, which is where the venue, stake and fill get recorded.
+  </p>
+  <p class="note">
+    <b>Kalshi take</b> is the same ROI if you cross the spread at fair on Kalshi instead of resting on
+    Novig: <code>model ÷ (fair + fee) − 1</code>, with the taker fee <code>0.07 × p × (1−p)</code> added
+    to what you pay. It is the answer to "is it still worth it if I just take it now". Hover a cell for
+    the fee in cents. The fee is a curve, not a haircut — it peaks at <b>1.75c</b> at a coin-flip price
+    and falls to about <b>1.1c</b> at 0.20 or 0.80, so it eats a far larger share of a thin edge in the
+    middle of the board than at the edges. Against the 2.5-point floor that is roughly 70% of the edge
+    gone at 0.50 and 45% at 0.20. The maker fee is a quarter of it, <code>0.0175 × p × (1−p)</code>,
+    which is why the frozen rule posts rather than takes.
+  </p>
+  
+
+
+<script src="slate-static.js"></script>
+
+</main>
+</body>
+</html>
