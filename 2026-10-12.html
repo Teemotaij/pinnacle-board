@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Kickstarter Serve</title>
+
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="ks.css">
+
+
+</head>
+<body>
+<header class="masthead">
+  <h1>Kickstarter Serve</h1>
+  
+  <span class="state">10 Oct 18:26 CDT · built</span>
+  
+</header>
+
+
+<main class="slate">
+
+
+
+
+  <div class="empty">
+    <strong>No slate yet</strong>
+    <p>The pipeline has not completed a run. Start it with <code>python ops/orchestrate.py</code>,
+       or check the Health screen for what failed.</p>
+  </div>
+
+
+<script src="slate-static.js"></script>
+
+<script>
+(function () {
+  "use strict";
+  var STAMP = "ks-slate-left";               // sessionStorage, per tab: when this tab last left a slate page
+  var CARRY_MS = 60 * 1000;                  // a load this soon after leaving continues; anything later opens
+  var AWAY_MS = 30 * 60 * 1000;              // back after this long counts as opening the page fresh
+  var STATIC = true;
+  var TZ = "America/Chicago";   // falls back if the template reloads before the Python does
+  var PAGE_DAY = "2026-10-12";
+  var SERVER_TODAY = "";
+  var form = document.getElementById("filters");
+
+  function today() {
+    try {
+      return new Intl.DateTimeFormat("en-CA", {timeZone: TZ, year: "numeric", month: "2-digit",
+                                                day: "2-digit"}).format(new Date());
+    } catch (e) { return SERVER_TODAY; }
+  }
+  var LOADED_DAY = today();
+
+  function stampAge() {
+    try { var t = +sessionStorage.getItem(STAMP); return t > 0 ? Date.now() - t : Infinity; }
+    catch (e) { return Infinity; }
+  }
+  function stamp() { try { sessionStorage.setItem(STAMP, String(Date.now())); } catch (e) {} }
+  function unstamp() { try { sessionStorage.removeItem(STAMP); } catch (e) {} }
+
+  function typing() {
+    var a = document.activeElement;
+    return !!(a && form && form.contains(a) && /^(INPUT|TEXTAREA)$/.test(a.tagName) &&
+              a.type !== "checkbox" && a.type !== "hidden");
+  }
+
+  // Where the default view lives.
+  //   live:     the bare address. The server opens it on today (or the nearest day with matches) and
+  //             every tour, so ANY query string is a remembered choice.
+  //   exported: today's file if the build wrote one, else index.html, the build's own landing day.
+  function target() {
+    if (!STATIC) return location.pathname;
+    var t = today(), sel = form && form.elements["date"];
+    var has = !!sel && Array.prototype.some.call(sel.options, function (o) { return o.value === t; });
+    return has ? t + ".html" : "index.html";
+  }
+
+  // `fresh` = the tab has been away: re-fetch even if the address is already the default one.
+  function toDefault(fresh) {
+    if (typing()) return;
+    if (!STATIC) {
+      if (fresh || location.search) location.replace(target());
+      return;
+    }
+    // Reset BEFORE leaving, so what the browser saves for this page is the default and not the old Tour.
+    if (form) { form.reset(); form.dispatchEvent(new Event("change")); }
+    var file = location.pathname.split("/").pop() || "index.html", t = target();
+    if (fresh || (PAGE_DAY !== today() && file !== t)) location.replace(t);
+  }
+
+  var opened = stampAge() > CARRY_MS;
+  unstamp();
+  if (opened && !STATIC && location.search) { location.replace(target()); return; }
+
+  window.addEventListener("pagehide", stamp);
+  window.addEventListener("pageshow", function (e) {
+    if (e.persisted) {                       // back from the back/forward cache: the stamp is when we left
+      if (stampAge() >= AWAY_MS || today() !== LOADED_DAY) toDefault(true); else unstamp();
+    } else if (opened) {
+      toDefault(false);                      // after load, so it lands after any browser form restore
+    }
+  });
+  var hiddenAt = 0;
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") { hiddenAt = Date.now(); return; }
+    if ((hiddenAt && Date.now() - hiddenAt >= AWAY_MS) || today() !== LOADED_DAY) toDefault(true);
+  });
+  window.addEventListener("focus", function () { if (today() !== LOADED_DAY) toDefault(true); });
+})();
+</script>
+
+</main>
+</body>
+</html>
