@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+<title>Tennis board</title>
+<style>
+:root {
+  --bg: #151a21; --surface: #1d242e; --line: #2b3441; --line-soft: #232b36;
+  --ink: #e4e9ef; --ink-dim: #9aa7b8; --ink-faint: #6b7889; --live: #e0a458;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px;
+       line-height: 1.45; font-feature-settings: "tnum" 1; }
+header { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding: .8rem 16px;
+         border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 2; }
+header h1 { margin: 0; font-size: 1rem; font-weight: 600; }
+header .built { margin-left: auto; font: .78rem var(--mono); color: var(--ink-faint); }
+main { padding: 12px 16px 32px; max-width: 900px; }
+.bar { display: flex; flex-wrap: wrap; gap: .5rem .9rem; align-items: end; margin-bottom: .8rem; }
+.bar label { display: flex; flex-direction: column; font-size: .72rem; color: var(--ink-dim); gap: .15rem; }
+.bar select, .bar input { font: inherit; font-size: .86rem; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 4px; padding: .3rem .4rem; max-width: 100%; }
+.bar input { width: 11rem; }
+.bar a { font-size: .86rem; color: var(--ink-dim); padding-bottom: .35rem; }
+.count { font-size: .78rem; color: var(--ink-faint); margin: 0 0 .4rem; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th { font-size: .7rem; font-weight: 500; color: var(--ink-faint); text-align: left; padding: .3rem .3rem;
+     border-bottom: 1px solid var(--line); }
+td { padding: .1rem .3rem .45rem; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+tr.ev td { padding: .5rem .3rem 0; border-bottom: 0; font-size: .72rem; color: var(--ink-faint); }
+th.n, td.n { text-align: right; font-family: var(--mono); font-size: .82rem; width: 3.6rem; }
+th.when, td.when { width: 4.4rem; }
+td.when .t { font-family: var(--mono); font-size: .86rem; }
+td.when .d, .sc { display: block; font-size: .72rem; color: var(--ink-faint); }
+.win { font-weight: 600; }
+.lose { color: var(--ink-dim); }
+td.n span, td.match .pl { display: block; line-height: 1.45rem; }
+/* One line per player, always, or the prices beside a long name stop sitting level with it. */
+td.match .pl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st { display: inline-block; font-size: .66rem; padding: 0 .3rem; border-radius: 3px; margin-top: .15rem;
+      border: 1px solid var(--line); color: var(--ink-dim); }
+.st.live { color: var(--live); border-color: var(--live); }
+.mv { color: var(--live); }
+.dash { color: var(--ink-faint); }
+.foot { margin-top: 1.2rem; font-size: .74rem; color: var(--ink-faint); max-width: 40rem; }
+@media (max-width: 520px) {
+  body { font-size: 14px; }
+  th.n, td.n { width: 3.1rem; font-size: .76rem; }
+  th.when, td.when { width: 3.6rem; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tennis board</h1>
+  <span class="built">31 Oct 04:56 PDT · built</span>
+</header>
+<main>
+  <div class="bar">
+    <label>Day
+      <select id="day" onchange="location.href = this.value + '.html'"><option value="2026-10-31" selected>2026-10-31</option><option value="2026-10-30">2026-10-30</option><option value="2026-10-29">2026-10-29</option><option value="2026-10-28">2026-10-28</option><option value="2026-10-27">2026-10-27</option><option value="2026-10-26">2026-10-26</option><option value="2026-10-25">2026-10-25</option><option value="2026-10-24">2026-10-24</option><option value="2026-10-23">2026-10-23</option><option value="2026-10-22">2026-10-22</option><option value="2026-10-21">2026-10-21</option><option value="2026-10-20">2026-10-20</option><option value="2026-10-19">2026-10-19</option><option value="2026-10-18">2026-10-18</option><option value="2026-10-17">2026-10-17</option><option value="2026-10-16">2026-10-16</option><option value="2026-10-15">2026-10-15</option><option value="2026-10-14">2026-10-14</option><option value="2026-10-13">2026-10-13</option><option value="2026-10-12">2026-10-12</option><option value="2026-10-11">2026-10-11</option><option value="2026-10-10">2026-10-10</option><option value="2026-10-09">2026-10-09</option><option value="2026-10-08">2026-10-08</option><option value="2026-10-07">2026-10-07</option><option value="2026-10-06">2026-10-06</option><option value="2026-10-05">2026-10-05</option><option value="2026-10-04">2026-10-04</option><option value="2026-10-03">2026-10-03</option><option value="2026-10-02">2026-10-02</option></select>
+    </label>
+    
+    <label>Tour
+      <select id="tour">
+        <option value="">Men &amp; women</option><option value="ATP">ATP</option><option value="WTA">WTA</option></select>
+    </label>
+    <label>Tournament
+      <select id="event">
+        <option value="">All</option><option value="Brest Challenger">Brest Challenger</option><option value="Chennai Open - Chennai">Chennai Open - Chennai</option><option value="Curitiba Open - Curitiba">Curitiba Open - Curitiba</option><option value="Erste Bank Open - Vienna">Erste Bank Open - Vienna</option><option value="Guangzhou Open - Guangzhou">Guangzhou Open - Guangzhou</option><option value="Guayaquil Challenger">Guayaquil Challenger</option><option value="Ningboo Challenger">Ningboo Challenger</option><option value="Queretaro Open - Queretaro">Queretaro Open - Queretaro</option><option value="Rolex Paris Masters - Paris">Rolex Paris Masters - Paris</option><option value="Sioux Falls Challenger">Sioux Falls Challenger</option><option value="Swiss Indoors Basel - Basel">Swiss Indoors Basel - Basel</option><option value="Toray Pan Pacific Open - Tokyo">Toray Pan Pacific Open - Tokyo</option><option value="Valle D&#39;Aosta Ladies Open - Courmayeur">Valle D&#39;Aosta Ladies Open - Courmayeur</option></select>
+    </label>
+    <label>Search
+      <input id="q" type="search" placeholder="player or event" autocomplete="off">
+    </label>
+  </div>
+  <p class="count"><span id="n">45</span> matches</p>
+  
+  <table>
+    <thead><tr>
+      <th class="when">Time</th><th>Match</th>
+      <th class="n">Open</th><th class="n">Now</th><th class="n">Close</th>
+    </tr></thead>
+    <tbody class="m" data-tour="ATP" data-event="Ningboo Challenger" data-q="yaroslav demin yu hsiou hsu ningboo challenger">
+      <tr class="ev"><td colspan="5"><span>Ningboo Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:00</span>
+          <span class="d">Sat 31 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Yaroslav Demin</span>
+          <span class="pl lose">Yu Hsiou Hsu</span><span class="sc">7-5 1-6 6-4</span>
+        </td>
+        <td class="n"><span>0.410</span><span>0.590</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.426</span><span>0.574</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Guangzhou Open - Guangzhou" data-q="xinran sun harriet dart guangzhou open - guangzhou">
+      <tr class="ev"><td colspan="5"><span>Guangzhou Open - Guangzhou</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:44</span>
+          <span class="d">Sat 31 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Xinran Sun</span>
+          <span class="pl win">Harriet Dart</span><span class="sc">7-5 6-7(1) 0-6</span>
+        </td>
+        <td class="n"><span>0.475</span><span>0.525</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.522</span><span>0.478</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Ningboo Challenger" data-q="petr bar biryukov liam broady ningboo challenger">
+      <tr class="ev"><td colspan="5"><span>Ningboo Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:00</span>
+          <span class="d">Sat 31 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Petr Bar Biryukov</span>
+          <span class="pl lose">Liam Broady</span>
+        </td>
+        <td class="n"><span>0.268</span><span>0.732</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.338</span><span>0.662</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Chennai Open - Chennai" data-q="mariia tkacheva rada zolotareva chennai open - chennai">
+      <tr class="ev"><td colspan="5"><span>Chennai Open - Chennai</span> · <span>Q1</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:44</span>
+          <span class="d">Sat 31 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Mariia Tkacheva</span>
+          <span class="pl">Rada Zolotareva</span>
+        </td>
+        <td class="n"><span>0.500</span><span>0.500</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.437</span><span>0.563</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Chennai Open - Chennai" data-q="kyoka okamura diya ramesh ramesh chennai open - chennai">
+      <tr class="ev"><td colspan="5"><span>Chennai Open - Chennai</span> · <span>Q1</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:45</span>
+          <span class="d">Sat 31 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Kyoka Okamura</span>
+          <span class="pl">Diya Ramesh Ramesh</span>
+        </td>
+        <td class="n"><span>0.983</span><span>0.017</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.984</span><span>0.016</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="pablo carreno-busta mattia bellucci rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:12</span>
+          <span class="d">Sat 31 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Pablo Carreno-Busta</span>
+          <span class="pl">Mattia Bellucci</span>
+        </td>
+        <td class="n"><span>0.407</span><span>0.593</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.371</span><span>0.629</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="thiago agustin tirante zachary svajda rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:13</span>
+          <span class="d">Sat 31 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Thiago Agustin Tirante</span>
+          <span class="pl">Zachary Svajda</span>
+        </td>
+        <td class="n"><span>0.446</span><span>0.554</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.484</span><span>0.516</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Chennai Open - Chennai" data-q="aliona falei ekaterina yashina chennai open - chennai">
+      <tr class="ev"><td colspan="5"><span>Chennai Open - Chennai</span> · <span>Q1</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:30</span>
+          <span class="d">Sat 31 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Aliona Falei</span>
+          <span class="pl">Ekaterina Yashina</span>
+        </td>
+        <td class="n"><span>0.971</span><span>0.029</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.950</span><span>0.050</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Chennai Open - Chennai" data-q="jensi dipakbhai kanabar weronika falkowska chennai open - chennai">
+      <tr class="ev"><td colspan="5"><span>Chennai Open - Chennai</span> · <span>Q1</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:00</span>
+          <span class="d">Sat 31 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Jensi Dipakbhai Kanabar</span>
+          <span class="pl">Weronika Falkowska</span>
+        </td>
+        <td class="n"><span>0.063</span><span>0.937</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.115</span><span>0.885</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Chennai Open - Chennai" data-q="viktoria morvayova shrivalli rashmikaa bhamidipaty chennai open - chennai">
+      <tr class="ev"><td colspan="5"><span>Chennai Open - Chennai</span> · <span>Q1</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:00</span>
+          <span class="d">Sat 31 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Viktoria Morvayova</span>
+          <span class="pl">Shrivalli Rashmikaa Bhamidipaty</span>
+        </td>
+        <td class="n"><span>0.752</span><span>0.248</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.718</span><span>0.282</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="jaime faria rinky hijikata rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:05</span>
+          <span class="d">Sat 31 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Jaime Faria</span>
+          <span class="pl">Rinky Hijikata</span>
+        </td>
+        <td class="n"><span>0.453</span><span>0.547</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.444</span><span>0.556</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="hugo gaston vit kopriva rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:12</span>
+          <span class="d">Sat 31 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Hugo Gaston</span>
+          <span class="pl">Vit Kopriva</span>
+        </td>
+        <td class="n"><span>0.697</span><span>0.303</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.657</span><span>0.343</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Chennai Open - Chennai" data-q="rinko matsuda momoko kobori chennai open - chennai">
+      <tr class="ev"><td colspan="5"><span>Chennai Open - Chennai</span> · <span>Q3</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:15</span>
+          <span class="d">Sat 31 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Rinko Matsuda</span>
+          <span class="pl">Momoko Kobori</span>
+        </td>
+        <td class="n"><span>0.516</span><span>0.484</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.564</span><span>0.436</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Guangzhou Open - Guangzhou" data-q="kaitlin quevedo lilli tagger guangzhou open - guangzhou">
+      <tr class="ev"><td colspan="5"><span>Guangzhou Open - Guangzhou</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:30</span>
+          <span class="d">Sat 31 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Kaitlin Quevedo</span>
+          <span class="pl">Lilli Tagger</span>
+        </td>
+        <td class="n"><span>0.334</span><span>0.666</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.324</span><span>0.676</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Queretaro Open - Queretaro" data-q="nadia podoroska carole monnet queretaro open - queretaro">
+      <tr class="ev"><td colspan="5"><span>Queretaro Open - Queretaro</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Nadia Podoroska</span>
+          <span class="pl">Carole Monnet</span>
+        </td>
+        <td class="n"><span>0.602</span><span>0.398</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.627</span><span>0.373</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="james duckworth miomir kecmanovic rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">James Duckworth</span>
+          <span class="pl">Miomir Kecmanovic</span>
+        </td>
+        <td class="n"><span>0.411</span><span>0.589</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.429</span><span>0.571</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="juan manuel cerundolo aleksandar kovacevic rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Juan Manuel Cerundolo</span>
+          <span class="pl">Aleksandar Kovacevic</span>
+        </td>
+        <td class="n"><span>0.469</span><span>0.531</span>
+        </td>
+        <td class="n"><span title="+119">0.437</span><span title="-139">0.563</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="tomas machac martin landaluce rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Tomas Machac</span>
+          <span class="pl">Martin Landaluce</span>
+        </td>
+        <td class="n"><span>0.664</span><span>0.336</span>
+        </td>
+        <td class="n"><span title="-202">0.650</span><span title="+170">0.350</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sioux Falls Challenger" data-q="max hans rehberg sebastian dominko sioux falls challenger">
+      <tr class="ev"><td colspan="5"><span>Sioux Falls Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:00</span>
+          <span class="d">Sat 31 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Max Hans Rehberg</span>
+          <span class="pl win">Sebastian Dominko</span><span class="sc">6-7 3-5</span>
+        </td>
+        <td class="n"><span>0.610</span><span>0.390</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.576</span><span>0.424</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Chennai Open - Chennai" data-q="mei yamaguchi zeel desai chennai open - chennai">
+      <tr class="ev"><td colspan="5"><span>Chennai Open - Chennai</span> · <span>Q3</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:30</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Mei Yamaguchi</span>
+          <span class="pl">Zeel Desai</span>
+        </td>
+        <td class="n"><span>0.904</span><span>0.096</span>
+        </td>
+        <td class="n"><span title="-1180">0.901</span><span title="+701">0.099</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Chennai Open - Chennai" data-q="zhibek kulambayeva yelyzaveta kotliar chennai open - chennai">
+      <tr class="ev"><td colspan="5"><span>Chennai Open - Chennai</span> · <span>Q3</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:30</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Zhibek Kulambayeva</span>
+          <span class="pl">Yelyzaveta Kotliar</span>
+        </td>
+        <td class="n"><span>0.363</span><span>0.637</span>
+        </td>
+        <td class="n"><span title="+131">0.413</span><span title="-154">0.587</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="tallon griekspoor benjamin bonzi rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Tallon Griekspoor</span>
+          <span class="pl">Benjamin Bonzi</span>
+        </td>
+        <td class="n"><span>0.601</span><span>0.399</span>
+        </td>
+        <td class="n"><span title="-173">0.615</span><span title="+147">0.385</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Valle D&#39;Aosta Ladies Open - Courmayeur" data-q="anna blinkova noma akugue noha valle d&#39;aosta ladies open - courmayeur">
+      <tr class="ev"><td colspan="5"><span>Valle D&#39;Aosta Ladies Open - Courmayeur</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:30</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Anna Blinkova</span>
+          <span class="pl">Noma Akugue Noha</span>
+        </td>
+        <td class="n"><span>0.665</span><span>0.335</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Brest Challenger" data-q="martin damm dino prizmic brest challenger">
+      <tr class="ev"><td colspan="5"><span>Brest Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Martin Damm</span>
+          <span class="pl">Dino Prizmic</span>
+        </td>
+        <td class="n"><span>0.446</span><span>0.554</span>
+        </td>
+        <td class="n"><span title="+107">0.468</span><span title="-121">0.532</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Curitiba Open - Curitiba" data-q="julia riera julia grabher curitiba open - curitiba">
+      <tr class="ev"><td colspan="5"><span>Curitiba Open - Curitiba</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Julia Riera</span>
+          <span class="pl">Julia Grabher</span>
+        </td>
+        <td class="n"><span>0.464</span><span>0.536</span>
+        </td>
+        <td class="n"><span title="+104">0.472</span><span title="-120">0.528</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="felix balshaw yannick hanfmann rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Felix Balshaw</span>
+          <span class="pl">Yannick Hanfmann</span>
+        </td>
+        <td class="n"><span>0.415</span><span>0.585</span>
+        </td>
+        <td class="n"><span title="+131">0.413</span><span title="-154">0.587</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="lorenzo sonego jaume antoni munar clar rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Lorenzo Sonego</span>
+          <span class="pl">Jaume Antoni Munar Clar</span>
+        </td>
+        <td class="n"><span>0.385</span><span>0.615</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="sebastian baez damir dzumhur rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Sebastian Baez</span>
+          <span class="pl">Damir Dzumhur</span>
+        </td>
+        <td class="n"><span>0.428</span><span>0.572</span>
+        </td>
+        <td class="n"><span title="+170">0.350</span><span title="-202">0.650</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Erste Bank Open - Vienna" data-q="daniil medvedev carlos alcaraz erste bank open - vienna">
+      <tr class="ev"><td colspan="5"><span>Erste Bank Open - Vienna</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:10</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Daniil Medvedev</span>
+          <span class="pl">Carlos Alcaraz</span>
+        </td>
+        <td class="n"><span>0.290</span><span>0.710</span>
+        </td>
+        <td class="n"><span title="+210">0.310</span><span title="-236">0.690</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Swiss Indoors Basel - Basel" data-q="valentin vacherot taylor harry fritz swiss indoors basel - basel">
+      <tr class="ev"><td colspan="5"><span>Swiss Indoors Basel - Basel</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:10</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Valentin Vacherot</span>
+          <span class="pl">Taylor Harry Fritz</span>
+        </td>
+        <td class="n"><span>0.257</span><span>0.743</span>
+        </td>
+        <td class="n"><span title="+270">0.258</span><span title="-306">0.742</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Valle D&#39;Aosta Ladies Open - Courmayeur" data-q="elsa jacquemot alina charaeva valle d&#39;aosta ladies open - courmayeur">
+      <tr class="ev"><td colspan="5"><span>Valle D&#39;Aosta Ladies Open - Courmayeur</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Elsa Jacquemot</span>
+          <span class="pl">Alina Charaeva</span>
+        </td>
+        <td class="n"><span>0.413</span><span>0.587</span>
+        </td>
+        <td class="n"><span title="+136">0.407</span><span title="-156">0.593</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Curitiba Open - Curitiba" data-q="nauhany vitoria leme da silva alice tubello curitiba open - curitiba">
+      <tr class="ev"><td colspan="5"><span>Curitiba Open - Curitiba</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:30</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Nauhany Vitoria Leme Da Silva</span>
+          <span class="pl">Alice Tubello</span>
+        </td>
+        <td class="n"><span>0.302</span><span>0.698</span>
+        </td>
+        <td class="n"><span title="+193">0.322</span><span title="-230">0.678</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Brest Challenger" data-q="moise kouame otto virtanen brest challenger">
+      <tr class="ev"><td colspan="5"><span>Brest Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Moise Kouame</span>
+          <span class="pl">Otto Virtanen</span>
+        </td>
+        <td class="n"><span>0.432</span><span>0.568</span>
+        </td>
+        <td class="n"><span title="+146">0.390</span><span title="-168">0.610</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Erste Bank Open - Vienna" data-q="alexander zverev alex de minaur erste bank open - vienna">
+      <tr class="ev"><td colspan="5"><span>Erste Bank Open - Vienna</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Alexander Zverev</span>
+          <span class="pl">Alex De Minaur</span>
+        </td>
+        <td class="n"><span>0.690</span><span>0.310</span>
+        </td>
+        <td class="n"><span title="-253">0.702</span><span title="+220">0.298</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="adolfo daniel vallejo grigor dimitrov rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Adolfo Daniel Vallejo</span>
+          <span class="pl">Grigor Dimitrov</span>
+        </td>
+        <td class="n"><span>0.503</span><span>0.497</span>
+        </td>
+        <td class="n"><span title="-100">0.479</span><span title="-118">0.521</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="alex molcan daniel altmaier rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Alex Molcan</span>
+          <span class="pl">Daniel Altmaier</span>
+        </td>
+        <td class="n"><span>0.528</span><span>0.472</span>
+        </td>
+        <td class="n"><span title="-121">0.526</span><span title="+102">0.474</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="nuno borges adrian mannarino rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Nuno Borges</span>
+          <span class="pl">Adrian Mannarino</span>
+        </td>
+        <td class="n"><span>0.612</span><span>0.388</span>
+        </td>
+        <td class="n"><span title="-148">0.575</span><span title="+124">0.425</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Swiss Indoors Basel - Basel" data-q="jiri lehecka jan-lennard struff swiss indoors basel - basel">
+      <tr class="ev"><td colspan="5"><span>Swiss Indoors Basel - Basel</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Jiri Lehecka</span>
+          <span class="pl">Jan-Lennard Struff</span>
+        </td>
+        <td class="n"><span>0.654</span><span>0.346</span>
+        </td>
+        <td class="n"><span title="-200">0.652</span><span title="+176">0.348</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sioux Falls Challenger" data-q="liam draxl sebastian dominko sioux falls challenger">
+      <tr class="ev"><td colspan="5"><span>Sioux Falls Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Liam Draxl</span>
+          <span class="pl">Sebastian Dominko</span>
+        </td>
+        <td class="n"><span>0.622</span><span>0.378</span>
+        </td>
+        <td class="n"><span title="-159">0.597</span><span title="+138">0.403</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sioux Falls Challenger" data-q="dylan dietrich aidan mayo sioux falls challenger">
+      <tr class="ev"><td colspan="5"><span>Sioux Falls Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">11:30</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Dylan Dietrich</span>
+          <span class="pl">Aidan Mayo</span>
+        </td>
+        <td class="n"><span>0.677</span><span>0.323</span>
+        </td>
+        <td class="n"><span title="-251">0.699</span><span title="+214">0.301</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Guayaquil Challenger" data-q="joao lucas reis da silva joaquin aguilar cardozo guayaquil challenger">
+      <tr class="ev"><td colspan="5"><span>Guayaquil Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Joao Lucas Reis Da Silva</span>
+          <span class="pl">Joaquin Aguilar Cardozo</span>
+        </td>
+        <td class="n"><span>0.500</span><span>0.500</span>
+        </td>
+        <td class="n"><span title="-104">0.490</span><span title="-113">0.510</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Guayaquil Challenger" data-q="valerio aboian hugo dellien guayaquil challenger">
+      <tr class="ev"><td colspan="5"><span>Guayaquil Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Valerio Aboian</span>
+          <span class="pl">Hugo Dellien</span>
+        </td>
+        <td class="n"><span>0.214</span><span>0.786</span>
+        </td>
+        <td class="n"><span title="+339">0.208</span><span title="-429">0.792</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Queretaro Open - Queretaro" data-q="tatjana maria fiona ferro queretaro open - queretaro">
+      <tr class="ev"><td colspan="5"><span>Queretaro Open - Queretaro</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">17:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Tatjana Maria</span>
+          <span class="pl">Fiona Ferro</span>
+        </td>
+        <td class="n"><span>0.529</span><span>0.471</span>
+        </td>
+        <td class="n"><span title="-123">0.533</span><span title="+106">0.467</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Queretaro Open - Queretaro" data-q="bianca vanessa andreescu carole monnet queretaro open - queretaro">
+      <tr class="ev"><td colspan="5"><span>Queretaro Open - Queretaro</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">18:30</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Bianca Vanessa Andreescu</span>
+          <span class="pl">Carole Monnet</span>
+        </td>
+        <td class="n"><span>0.794</span><span>0.206</span>
+        </td>
+        <td class="n"><span title="-497">0.814</span><span title="+386">0.186</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Toray Pan Pacific Open - Tokyo" data-q="leylah annie fernandez diana shnaider toray pan pacific open - tokyo">
+      <tr class="ev"><td colspan="5"><span>Toray Pan Pacific Open - Tokyo</span> · <span>F</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:00</span>
+          <span class="d">Sat 31 Oct</span></td>
+        <td class="match">
+          <span class="pl">Leylah Annie Fernandez</span>
+          <span class="pl">Diana Shnaider</span>
+        </td>
+        <td class="n"><span>0.404</span><span>0.596</span>
+        </td>
+        <td class="n"><span title="+136">0.409</span><span title="-154">0.591</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <p class="foot">Prices are implied probabilities with the margin removed, first player on top. Open is the
+    opening line; Now is Pinnacle at build time (tap for the American price); Close is the last pre-match price.
+    Times are PDT; an asterisk marks a match Pinnacle has moved later.</p>
+</main>
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('tbody.m'));
+  var tour = document.getElementById('tour'), ev = document.getElementById('event'),
+      q = document.getElementById('q'), n = document.getElementById('n');
+  if (!tour) return;
+  function fold(s) { return (s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+  function apply() {
+    var t = tour.value, e = ev.value, terms = fold(q.value).split(/\s+/).filter(Boolean), shown = 0;
+    rows.forEach(function (r) {
+      var ok = (!t || r.getAttribute('data-tour') === t) && (!e || r.getAttribute('data-event') === e);
+      if (ok) { var hay = r.getAttribute('data-q'); ok = terms.every(function (w) { return hay.indexOf(w) >= 0; }); }
+      r.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+    n.textContent = shown;
+  }
+  tour.addEventListener('change', apply); ev.addEventListener('change', apply); q.addEventListener('input', apply);
+})();
+</script>
+</body>
+</html>

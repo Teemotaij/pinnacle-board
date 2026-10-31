@@ -1,0 +1,983 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+<title>Tennis board</title>
+<style>
+:root {
+  --bg: #151a21; --surface: #1d242e; --line: #2b3441; --line-soft: #232b36;
+  --ink: #e4e9ef; --ink-dim: #9aa7b8; --ink-faint: #6b7889; --live: #e0a458;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px;
+       line-height: 1.45; font-feature-settings: "tnum" 1; }
+header { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding: .8rem 16px;
+         border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 2; }
+header h1 { margin: 0; font-size: 1rem; font-weight: 600; }
+header .built { margin-left: auto; font: .78rem var(--mono); color: var(--ink-faint); }
+main { padding: 12px 16px 32px; max-width: 900px; }
+.bar { display: flex; flex-wrap: wrap; gap: .5rem .9rem; align-items: end; margin-bottom: .8rem; }
+.bar label { display: flex; flex-direction: column; font-size: .72rem; color: var(--ink-dim); gap: .15rem; }
+.bar select, .bar input { font: inherit; font-size: .86rem; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 4px; padding: .3rem .4rem; max-width: 100%; }
+.bar input { width: 11rem; }
+.bar a { font-size: .86rem; color: var(--ink-dim); padding-bottom: .35rem; }
+.count { font-size: .78rem; color: var(--ink-faint); margin: 0 0 .4rem; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th { font-size: .7rem; font-weight: 500; color: var(--ink-faint); text-align: left; padding: .3rem .3rem;
+     border-bottom: 1px solid var(--line); }
+td { padding: .1rem .3rem .45rem; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+tr.ev td { padding: .5rem .3rem 0; border-bottom: 0; font-size: .72rem; color: var(--ink-faint); }
+th.n, td.n { text-align: right; font-family: var(--mono); font-size: .82rem; width: 3.6rem; }
+th.when, td.when { width: 4.4rem; }
+td.when .t { font-family: var(--mono); font-size: .86rem; }
+td.when .d, .sc { display: block; font-size: .72rem; color: var(--ink-faint); }
+.win { font-weight: 600; }
+.lose { color: var(--ink-dim); }
+td.n span, td.match .pl { display: block; line-height: 1.45rem; }
+/* One line per player, always, or the prices beside a long name stop sitting level with it. */
+td.match .pl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st { display: inline-block; font-size: .66rem; padding: 0 .3rem; border-radius: 3px; margin-top: .15rem;
+      border: 1px solid var(--line); color: var(--ink-dim); }
+.st.live { color: var(--live); border-color: var(--live); }
+.mv { color: var(--live); }
+.dash { color: var(--ink-faint); }
+.foot { margin-top: 1.2rem; font-size: .74rem; color: var(--ink-faint); max-width: 40rem; }
+@media (max-width: 520px) {
+  body { font-size: 14px; }
+  th.n, td.n { width: 3.1rem; font-size: .76rem; }
+  th.when, td.when { width: 3.6rem; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tennis board</h1>
+  <span class="built">31 Oct 04:56 PDT · built</span>
+</header>
+<main>
+  <div class="bar">
+    <label>Day
+      <select id="day" onchange="location.href = this.value + '.html'"><option value="2026-10-31">2026-10-31</option><option value="2026-10-30" selected>2026-10-30</option><option value="2026-10-29">2026-10-29</option><option value="2026-10-28">2026-10-28</option><option value="2026-10-27">2026-10-27</option><option value="2026-10-26">2026-10-26</option><option value="2026-10-25">2026-10-25</option><option value="2026-10-24">2026-10-24</option><option value="2026-10-23">2026-10-23</option><option value="2026-10-22">2026-10-22</option><option value="2026-10-21">2026-10-21</option><option value="2026-10-20">2026-10-20</option><option value="2026-10-19">2026-10-19</option><option value="2026-10-18">2026-10-18</option><option value="2026-10-17">2026-10-17</option><option value="2026-10-16">2026-10-16</option><option value="2026-10-15">2026-10-15</option><option value="2026-10-14">2026-10-14</option><option value="2026-10-13">2026-10-13</option><option value="2026-10-12">2026-10-12</option><option value="2026-10-11">2026-10-11</option><option value="2026-10-10">2026-10-10</option><option value="2026-10-09">2026-10-09</option><option value="2026-10-08">2026-10-08</option><option value="2026-10-07">2026-10-07</option><option value="2026-10-06">2026-10-06</option><option value="2026-10-05">2026-10-05</option><option value="2026-10-04">2026-10-04</option><option value="2026-10-03">2026-10-03</option><option value="2026-10-02">2026-10-02</option></select>
+    </label>
+    <a href="index.html">Today</a>
+    <label>Tour
+      <select id="tour">
+        <option value="">Men &amp; women</option><option value="ATP">ATP</option><option value="WTA">WTA</option></select>
+    </label>
+    <label>Tournament
+      <select id="event">
+        <option value="">All</option><option value="Brest Challenger">Brest Challenger</option><option value="Curitiba Open - Curitiba">Curitiba Open - Curitiba</option><option value="Erste Bank Open - Vienna">Erste Bank Open - Vienna</option><option value="Guangzhou Open - Guangzhou">Guangzhou Open - Guangzhou</option><option value="Guayaquil Challenger">Guayaquil Challenger</option><option value="Hong Kong Tennis Open - Hong Kong">Hong Kong Tennis Open - Hong Kong</option><option value="Ningboo Challenger">Ningboo Challenger</option><option value="Queretaro Open - Queretaro">Queretaro Open - Queretaro</option><option value="Seoul Challenger">Seoul Challenger</option><option value="Sioux Falls Challenger">Sioux Falls Challenger</option><option value="Swiss Indoors Basel - Basel">Swiss Indoors Basel - Basel</option><option value="Toray Pan Pacific Open - Tokyo">Toray Pan Pacific Open - Tokyo</option><option value="Valle D&#39;Aosta Ladies Open - Courmayeur">Valle D&#39;Aosta Ladies Open - Courmayeur</option></select>
+    </label>
+    <label>Search
+      <input id="q" type="search" placeholder="player or event" autocomplete="off">
+    </label>
+  </div>
+  <p class="count"><span id="n">51</span> matches</p>
+  
+  <table>
+    <thead><tr>
+      <th class="when">Time</th><th>Match</th>
+      <th class="n">Open</th><th class="n">Now</th><th class="n">Close</th>
+    </tr></thead>
+    <tbody class="m" data-tour="ATP" data-event="Ningboo Challenger" data-q="jake delaney liam broady ningboo challenger">
+      <tr class="ev"><td colspan="5"><span>Ningboo Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">00:55</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Jake Delaney</span>
+          <span class="pl win">Liam Broady</span><span class="sc">1-6 6-7(3)</span>
+        </td>
+        <td class="n"><span>0.320</span><span>0.680</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.311</span><span>0.689</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Guangzhou Open - Guangzhou" data-q="kaitlin quevedo jil teichmann guangzhou open - guangzhou">
+      <tr class="ev"><td colspan="5"><span>Guangzhou Open - Guangzhou</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Kaitlin Quevedo</span>
+          <span class="pl lose">Jil Teichmann</span><span class="sc">7-6(2) 6-3</span>
+        </td>
+        <td class="n"><span>0.576</span><span>0.424</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.604</span><span>0.396</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Toray Pan Pacific Open - Tokyo" data-q="alexandra eala diana shnaider toray pan pacific open - tokyo">
+      <tr class="ev"><td colspan="5"><span>Toray Pan Pacific Open - Tokyo</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Alexandra Eala</span>
+          <span class="pl win">Diana Shnaider</span><span class="sc">6-2 6-7(5) 4-6</span>
+        </td>
+        <td class="n"><span>0.356</span><span>0.644</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.460</span><span>0.540</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Ningboo Challenger" data-q="jie cui petr bar biryukov ningboo challenger">
+      <tr class="ev"><td colspan="5"><span>Ningboo Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:25</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Jie Cui</span>
+          <span class="pl win">Petr Bar Biryukov</span><span class="sc">6-4 4-6 1-6</span>
+        </td>
+        <td class="n"><span>0.723</span><span>0.277</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.726</span><span>0.274</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Guangzhou Open - Guangzhou" data-q="xinran sun claire liu guangzhou open - guangzhou">
+      <tr class="ev"><td colspan="5"><span>Guangzhou Open - Guangzhou</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Xinran Sun</span>
+          <span class="pl lose">Claire Liu</span><span class="sc">7-5 7-6(2)</span>
+        </td>
+        <td class="n"><span>0.414</span><span>0.586</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.389</span><span>0.611</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Guayaquil Challenger" data-q="emilio camacho joao lucas reis da silva guayaquil challenger">
+      <tr class="ev"><td colspan="5"><span>Guayaquil Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Emilio Camacho</span>
+          <span class="pl win">Joao Lucas Reis Da Silva</span><span class="sc">6-4 4-6 2-6</span>
+        </td>
+        <td class="n"><span>0.041</span><span>0.959</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.034</span><span>0.966</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Queretaro Open - Queretaro" data-q="tatjana maria martina colmegna queretaro open - queretaro">
+      <tr class="ev"><td colspan="5"><span>Queretaro Open - Queretaro</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Tatjana Maria</span>
+          <span class="pl">Martina Colmegna</span>
+        </td>
+        <td class="n"><span>0.922</span><span>0.078</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.906</span><span>0.094</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sioux Falls Challenger" data-q="liam draxl daniil ostapenkov sioux falls challenger">
+      <tr class="ev"><td colspan="5"><span>Sioux Falls Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Liam Draxl</span>
+          <span class="pl lose">Daniil Ostapenkov</span><span class="sc">3-4</span>
+        </td>
+        <td class="n"><span>0.750</span><span>0.250</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.748</span><span>0.252</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sioux Falls Challenger" data-q="mitchell krueger darwin blanch sioux falls challenger">
+      <tr class="ev"><td colspan="5"><span>Sioux Falls Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Mitchell Krueger</span>
+          <span class="pl win">Darwin Blanch</span><span class="sc">7-6 4-6 5-4</span>
+        </td>
+        <td class="n"><span>0.200</span><span>0.800</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.260</span><span>0.740</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Swiss Indoors Basel - Basel" data-q="ben shelton jerome kym swiss indoors basel - basel">
+      <tr class="ev"><td colspan="5"><span>Swiss Indoors Basel - Basel</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Ben Shelton</span>
+          <span class="pl win">Jerome Kym</span><span class="sc">3-6 7-6(4) 6-7(1)</span>
+        </td>
+        <td class="n"><span>0.732</span><span>0.268</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.778</span><span>0.222</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Guangzhou Open - Guangzhou" data-q="lilli tagger han shi guangzhou open - guangzhou">
+      <tr class="ev"><td colspan="5"><span>Guangzhou Open - Guangzhou</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:30</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Lilli Tagger</span>
+          <span class="pl lose">Han Shi</span><span class="sc">6-4 3-6 7-5</span>
+        </td>
+        <td class="n"><span>0.752</span><span>0.248</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.742</span><span>0.258</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Erste Bank Open - Vienna" data-q="adrian mannarino daniil medvedev erste bank open - vienna">
+      <tr class="ev"><td colspan="5"><span>Erste Bank Open - Vienna</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:49</span><span class="mv">*</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Adrian Mannarino</span>
+          <span class="pl win">Daniil Medvedev</span><span class="sc">2-6 3-6</span>
+        </td>
+        <td class="n"><span>0.154</span><span>0.846</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.200</span><span>0.800</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Brest Challenger" data-q="federico cina dino prizmic brest challenger">
+      <tr class="ev"><td colspan="5"><span>Brest Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Federico Cina</span>
+          <span class="pl win">Dino Prizmic</span><span class="sc">4-6 1-6</span>
+        </td>
+        <td class="n"><span>0.313</span><span>0.687</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.316</span><span>0.684</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Valle D&#39;Aosta Ladies Open - Courmayeur" data-q="ayla aksu noma akugue noha valle d&#39;aosta ladies open - courmayeur">
+      <tr class="ev"><td colspan="5"><span>Valle D&#39;Aosta Ladies Open - Courmayeur</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Ayla Aksu</span>
+          <span class="pl win">Noma Akugue Noha</span><span class="sc">4-6 1-6</span>
+        </td>
+        <td class="n"><span>0.400</span><span>0.600</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.410</span><span>0.590</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Valle D&#39;Aosta Ladies Open - Courmayeur" data-q="marina bassols ribera alina charaeva valle d&#39;aosta ladies open - courmayeur">
+      <tr class="ev"><td colspan="5"><span>Valle D&#39;Aosta Ladies Open - Courmayeur</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Marina Bassols Ribera</span>
+          <span class="pl win">Alina Charaeva</span><span class="sc">4-6 3-4</span>
+        </td>
+        <td class="n"><span>0.318</span><span>0.682</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.318</span><span>0.682</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Swiss Indoors Basel - Basel" data-q="holger rune valentin vacherot swiss indoors basel - basel">
+      <tr class="ev"><td colspan="5"><span>Swiss Indoors Basel - Basel</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:16</span><span class="mv">*</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Holger Rune</span>
+          <span class="pl win">Valentin Vacherot</span><span class="sc">3-6 6-3 3-6</span>
+        </td>
+        <td class="n"><span>0.568</span><span>0.432</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.572</span><span>0.428</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Valle D&#39;Aosta Ladies Open - Courmayeur" data-q="anna blinkova martyna kubka valle d&#39;aosta ladies open - courmayeur">
+      <tr class="ev"><td colspan="5"><span>Valle D&#39;Aosta Ladies Open - Courmayeur</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:37</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Anna Blinkova</span>
+          <span class="pl lose">Martyna Kubka</span><span class="sc">6-3 5-2</span>
+        </td>
+        <td class="n"><span>0.692</span><span>0.308</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.603</span><span>0.397</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Curitiba Open - Curitiba" data-q="julia riera solana sierra curitiba open - curitiba">
+      <tr class="ev"><td colspan="5"><span>Curitiba Open - Curitiba</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Julia Riera</span>
+          <span class="pl lose">Solana Sierra</span><span class="sc">1-6 6-4 7-5</span>
+        </td>
+        <td class="n"><span>0.495</span><span>0.505</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.475</span><span>0.525</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Curitiba Open - Curitiba" data-q="leyre romero gormaz julia grabher curitiba open - curitiba">
+      <tr class="ev"><td colspan="5"><span>Curitiba Open - Curitiba</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Leyre Romero Gormaz</span>
+          <span class="pl win">Julia Grabher</span><span class="sc">6-1 4-6 3-3</span>
+        </td>
+        <td class="n"><span>0.476</span><span>0.524</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.466</span><span>0.534</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Erste Bank Open - Vienna" data-q="tommy paul carlos alcaraz erste bank open - vienna">
+      <tr class="ev"><td colspan="5"><span>Erste Bank Open - Vienna</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Tommy Paul</span>
+          <span class="pl win">Carlos Alcaraz</span><span class="sc">4-6 6-7(2)</span>
+        </td>
+        <td class="n"><span>0.219</span><span>0.781</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.225</span><span>0.775</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Brest Challenger" data-q="martin damm clement tabur brest challenger">
+      <tr class="ev"><td colspan="5"><span>Brest Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:03</span><span class="mv">*</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Martin Damm</span>
+          <span class="pl lose">Clement Tabur</span><span class="sc">7-6(5) 7-6(4)</span>
+        </td>
+        <td class="n"><span>0.636</span><span>0.364</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.649</span><span>0.351</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Valle D&#39;Aosta Ladies Open - Courmayeur" data-q="elsa jacquemot elizara yaneva valle d&#39;aosta ladies open - courmayeur">
+      <tr class="ev"><td colspan="5"><span>Valle D&#39;Aosta Ladies Open - Courmayeur</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:18</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Elsa Jacquemot</span>
+          <span class="pl lose">Elizara Yaneva</span><span class="sc">5-7 7-6 5-1</span>
+        </td>
+        <td class="n"><span>0.498</span><span>0.502</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.469</span><span>0.531</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Swiss Indoors Basel - Basel" data-q="taylor harry fritz arthur fils swiss indoors basel - basel">
+      <tr class="ev"><td colspan="5"><span>Swiss Indoors Basel - Basel</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:30</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Taylor Harry Fritz</span>
+          <span class="pl lose">Arthur Fils</span><span class="sc">6-2 2-0 RET</span>
+        </td>
+        <td class="n"><span>0.491</span><span>0.509</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.462</span><span>0.538</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sioux Falls Challenger" data-q="mees rottgering aidan mayo sioux falls challenger">
+      <tr class="ev"><td colspan="5"><span>Sioux Falls Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Mees Rottgering</span>
+          <span class="pl win">Aidan Mayo</span><span class="sc">3-6 4-6</span>
+        </td>
+        <td class="n"><span>0.558</span><span>0.442</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.570</span><span>0.430</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Erste Bank Open - Vienna" data-q="alexander zverev arthur fery erste bank open - vienna">
+      <tr class="ev"><td colspan="5"><span>Erste Bank Open - Vienna</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:30</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Alexander Zverev</span>
+          <span class="pl lose">Arthur Fery</span><span class="sc">6-0 6-2</span>
+        </td>
+        <td class="n"><span>0.870</span><span>0.130</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.872</span><span>0.128</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Curitiba Open - Curitiba" data-q="alice tubello jazmin ortenzi curitiba open - curitiba">
+      <tr class="ev"><td colspan="5"><span>Curitiba Open - Curitiba</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">11:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Alice Tubello</span>
+          <span class="pl lose">Jazmin Ortenzi</span><span class="sc">2-6 6-2 6-3</span>
+        </td>
+        <td class="n"><span>0.578</span><span>0.422</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.600</span><span>0.400</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Brest Challenger" data-q="moise kouame francesco maestrelli brest challenger">
+      <tr class="ev"><td colspan="5"><span>Brest Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">11:30</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Moise Kouame</span>
+          <span class="pl lose">Francesco Maestrelli</span><span class="sc">6-3 3-2</span>
+        </td>
+        <td class="n"><span>0.641</span><span>0.359</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.662</span><span>0.338</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Curitiba Open - Curitiba" data-q="francesca jones nauhany vitoria leme da silva curitiba open - curitiba">
+      <tr class="ev"><td colspan="5"><span>Curitiba Open - Curitiba</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">11:30</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Francesca Jones</span>
+          <span class="pl win">Nauhany Vitoria Leme Da Silva</span><span class="sc">5-5</span>
+        </td>
+        <td class="n"><span>0.782</span><span>0.218</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.732</span><span>0.268</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Swiss Indoors Basel - Basel" data-q="jan-lennard struff nuno borges swiss indoors basel - basel">
+      <tr class="ev"><td colspan="5"><span>Swiss Indoors Basel - Basel</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Jan-Lennard Struff</span>
+          <span class="pl lose">Nuno Borges</span><span class="sc">6-2 6-3</span>
+        </td>
+        <td class="n"><span>0.560</span><span>0.440</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.537</span><span>0.463</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Swiss Indoors Basel - Basel" data-q="jerome kym jiri lehecka swiss indoors basel - basel">
+      <tr class="ev"><td colspan="5"><span>Swiss Indoors Basel - Basel</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Jerome Kym</span>
+          <span class="pl win">Jiri Lehecka</span><span class="sc">4-6 2-6</span>
+        </td>
+        <td class="n"><span>0.289</span><span>0.711</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.272</span><span>0.728</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Erste Bank Open - Vienna" data-q="matteo berrettini alex de minaur erste bank open - vienna">
+      <tr class="ev"><td colspan="5"><span>Erste Bank Open - Vienna</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:23</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Matteo Berrettini</span>
+          <span class="pl win">Alex De Minaur</span><span class="sc">7-6(4) 6-2</span>
+        </td>
+        <td class="n"><span>0.321</span><span>0.679</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.326</span><span>0.674</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sioux Falls Challenger" data-q="dylan dietrich jeff wolf sioux falls challenger">
+      <tr class="ev"><td colspan="5"><span>Sioux Falls Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:30</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Dylan Dietrich</span>
+          <span class="pl lose">Jeff Wolf</span><span class="sc">6-2 7-5</span>
+        </td>
+        <td class="n"><span>0.600</span><span>0.400</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.630</span><span>0.370</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Brest Challenger" data-q="stefano travaglia otto virtanen brest challenger">
+      <tr class="ev"><td colspan="5"><span>Brest Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:36</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Stefano Travaglia</span>
+          <span class="pl win">Otto Virtanen</span><span class="sc">7-6(4) 6-4</span>
+        </td>
+        <td class="n"><span>0.282</span><span>0.718</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.251</span><span>0.749</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Guayaquil Challenger" data-q="carlos maria zarate hugo dellien guayaquil challenger">
+      <tr class="ev"><td colspan="5"><span>Guayaquil Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:53</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Carlos Maria Zarate</span>
+          <span class="pl win">Hugo Dellien</span><span class="sc">0-6 2-5</span>
+        </td>
+        <td class="n"><span>0.163</span><span>0.837</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.168</span><span>0.832</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Queretaro Open - Queretaro" data-q="tatjana maria valeriya strakhova queretaro open - queretaro">
+      <tr class="ev"><td colspan="5"><span>Queretaro Open - Queretaro</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">13:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Tatjana Maria</span>
+          <span class="pl lose">Valeriya Strakhova</span><span class="sc">7-6 3-3</span>
+        </td>
+        <td class="n"><span>0.954</span><span>0.046</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.896</span><span>0.104</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Guayaquil Challenger" data-q="valerio aboian nick hardt guayaquil challenger">
+      <tr class="ev"><td colspan="5"><span>Guayaquil Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">13:25</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Valerio Aboian</span>
+          <span class="pl lose">Nick Hardt</span><span class="sc">6-2 1-6 7-6(5)</span>
+        </td>
+        <td class="n"><span>0.379</span><span>0.621</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.396</span><span>0.604</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Guayaquil Challenger" data-q="joaquin aguilar cardozo lautaro midon guayaquil challenger">
+      <tr class="ev"><td colspan="5"><span>Guayaquil Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">14:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Joaquin Aguilar Cardozo</span>
+          <span class="pl lose">Lautaro Midon</span><span class="sc">7-6 5-4</span>
+        </td>
+        <td class="n"><span>0.497</span><span>0.503</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.491</span><span>0.509</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Queretaro Open - Queretaro" data-q="fiona ferro elizabeth mandlik queretaro open - queretaro">
+      <tr class="ev"><td colspan="5"><span>Queretaro Open - Queretaro</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">17:44</span><span class="mv">*</span>
+          <span class="d">Fri 30 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Fiona Ferro</span>
+          <span class="pl">Elizabeth Mandlik</span>
+        </td>
+        <td class="n"><span>0.762</span><span>0.238</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.778</span><span>0.222</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sioux Falls Challenger" data-q="liam draxl darwin blanch sioux falls challenger">
+      <tr class="ev"><td colspan="5"><span>Sioux Falls Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">18:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Liam Draxl</span>
+          <span class="pl lose">Darwin Blanch</span><span class="sc">6-3 3-6 3-0</span>
+        </td>
+        <td class="n"><span>0.414</span><span>0.586</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.416</span><span>0.584</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Hong Kong Tennis Open - Hong Kong" data-q="himeno sakatsume hong yi cody wong hong kong tennis open - hong kong">
+      <tr class="ev"><td colspan="5"><span>Hong Kong Tennis Open - Hong Kong</span> · <span>Q1</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Himeno Sakatsume</span>
+          <span class="pl lose">Hong Yi Cody Wong</span><span class="sc">6-4 6-2</span>
+        </td>
+        <td class="n"><span>0.861</span><span>0.139</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.821</span><span>0.179</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Hong Kong Tennis Open - Hong Kong" data-q="mika stojsavljevic alevtina ibragimova hong kong tennis open - hong kong">
+      <tr class="ev"><td colspan="5"><span>Hong Kong Tennis Open - Hong Kong</span> · <span>Q1</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Mika Stojsavljevic</span>
+          <span class="pl lose">Alevtina Ibragimova</span><span class="sc">1-6 6-2 3-0</span>
+        </td>
+        <td class="n"><span>0.437</span><span>0.563</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.444</span><span>0.556</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Hong Kong Tennis Open - Hong Kong" data-q="tatiana prozorova hayu kinoshita hong kong tennis open - hong kong">
+      <tr class="ev"><td colspan="5"><span>Hong Kong Tennis Open - Hong Kong</span> · <span>Q1</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Tatiana Prozorova</span>
+          <span class="pl lose">Hayu Kinoshita</span><span class="sc">6-1 2-0</span>
+        </td>
+        <td class="n"><span>0.837</span><span>0.163</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.843</span><span>0.157</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Toray Pan Pacific Open - Tokyo" data-q="leylah annie fernandez kamilla rakhimova toray pan pacific open - tokyo">
+      <tr class="ev"><td colspan="5"><span>Toray Pan Pacific Open - Tokyo</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:13</span><span class="mv">*</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Leylah Annie Fernandez</span>
+          <span class="pl lose">Kamilla Rakhimova</span><span class="sc">7-5 6-3</span>
+        </td>
+        <td class="n"><span>0.726</span><span>0.274</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.739</span><span>0.261</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Hong Kong Tennis Open - Hong Kong" data-q="emerson jones heather watson hong kong tennis open - hong kong">
+      <tr class="ev"><td colspan="5"><span>Hong Kong Tennis Open - Hong Kong</span> · <span>Q1</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:27</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Emerson Jones</span>
+          <span class="pl lose">Heather Watson</span><span class="sc">6-1 6-4</span>
+        </td>
+        <td class="n"><span>0.714</span><span>0.286</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.674</span><span>0.326</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Queretaro Open - Queretaro" data-q="alicia herrero linana bianca vanessa andreescu queretaro open - queretaro">
+      <tr class="ev"><td colspan="5"><span>Queretaro Open - Queretaro</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:42</span>
+          <span class="d">Fri 30 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Alicia Herrero Linana</span>
+          <span class="pl">Bianca Vanessa Andreescu</span>
+        </td>
+        <td class="n"><span>0.254</span><span>0.746</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.222</span><span>0.778</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Hong Kong Tennis Open - Hong Kong" data-q="aliaksandra sasnovich cheuk ying shek hong kong tennis open - hong kong">
+      <tr class="ev"><td colspan="5"><span>Hong Kong Tennis Open - Hong Kong</span> · <span>Q1</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">21:00</span>
+          <span class="d">Fri 30 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Aliaksandra Sasnovich</span>
+          <span class="pl">Cheuk Ying Shek</span>
+        </td>
+        <td class="n"><span>0.961</span><span>0.039</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.960</span><span>0.040</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Seoul Challenger" data-q="chak lam coleman wong omar jasika seoul challenger">
+      <tr class="ev"><td colspan="5"><span>Seoul Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">21:30</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Chak Lam Coleman Wong</span>
+          <span class="pl lose">Omar Jasika</span><span class="sc">6-2 7-5</span>
+        </td>
+        <td class="n"><span>0.830</span><span>0.170</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.827</span><span>0.173</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Hong Kong Tennis Open - Hong Kong" data-q="elena pridankina ekaterine gorgodze hong kong tennis open - hong kong">
+      <tr class="ev"><td colspan="5"><span>Hong Kong Tennis Open - Hong Kong</span> · <span>Q1</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:10</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Elena Pridankina</span>
+          <span class="pl lose">Ekaterine Gorgodze</span><span class="sc">6-1 4-6 6-1</span>
+        </td>
+        <td class="n"><span>0.708</span><span>0.292</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.701</span><span>0.299</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Toray Pan Pacific Open - Tokyo" data-q="diana shnaider mia pohankova toray pan pacific open - tokyo">
+      <tr class="ev"><td colspan="5"><span>Toray Pan Pacific Open - Tokyo</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:27</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Diana Shnaider</span>
+          <span class="pl lose">Mia Pohankova</span><span class="sc">6-4 7-6(7)</span>
+        </td>
+        <td class="n"><span>0.681</span><span>0.319</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.708</span><span>0.292</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Seoul Challenger" data-q="billy harris terence atmane seoul challenger">
+      <tr class="ev"><td colspan="5"><span>Seoul Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:58</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Billy Harris</span>
+          <span class="pl win">Terence Atmane</span><span class="sc">3-6 1-6</span>
+        </td>
+        <td class="n"><span>0.271</span><span>0.729</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.268</span><span>0.732</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Hong Kong Tennis Open - Hong Kong" data-q="ying zhang alexandra shubladze hong kong tennis open - hong kong">
+      <tr class="ev"><td colspan="5"><span>Hong Kong Tennis Open - Hong Kong</span> · <span>Q1</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">23:27</span><span class="mv">*</span>
+          <span class="d">Fri 30 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Ying Zhang</span>
+          <span class="pl win">Alexandra Shubladze</span><span class="sc">4-6 3-6</span>
+        </td>
+        <td class="n"><span>0.026</span><span>0.974</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.043</span><span>0.957</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <p class="foot">Prices are implied probabilities with the margin removed, first player on top. Open is the
+    opening line; Now is Pinnacle at build time (tap for the American price); Close is the last pre-match price.
+    Times are PDT; an asterisk marks a match Pinnacle has moved later.</p>
+</main>
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('tbody.m'));
+  var tour = document.getElementById('tour'), ev = document.getElementById('event'),
+      q = document.getElementById('q'), n = document.getElementById('n');
+  if (!tour) return;
+  function fold(s) { return (s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+  function apply() {
+    var t = tour.value, e = ev.value, terms = fold(q.value).split(/\s+/).filter(Boolean), shown = 0;
+    rows.forEach(function (r) {
+      var ok = (!t || r.getAttribute('data-tour') === t) && (!e || r.getAttribute('data-event') === e);
+      if (ok) { var hay = r.getAttribute('data-q'); ok = terms.every(function (w) { return hay.indexOf(w) >= 0; }); }
+      r.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+    n.textContent = shown;
+  }
+  tour.addEventListener('change', apply); ev.addEventListener('change', apply); q.addEventListener('input', apply);
+})();
+</script>
+</body>
+</html>

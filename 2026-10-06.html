@@ -1,0 +1,1357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+<title>Tennis board</title>
+<style>
+:root {
+  --bg: #151a21; --surface: #1d242e; --line: #2b3441; --line-soft: #232b36;
+  --ink: #e4e9ef; --ink-dim: #9aa7b8; --ink-faint: #6b7889; --live: #e0a458;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px;
+       line-height: 1.45; font-feature-settings: "tnum" 1; }
+header { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding: .8rem 16px;
+         border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 2; }
+header h1 { margin: 0; font-size: 1rem; font-weight: 600; }
+header .built { margin-left: auto; font: .78rem var(--mono); color: var(--ink-faint); }
+main { padding: 12px 16px 32px; max-width: 900px; }
+.bar { display: flex; flex-wrap: wrap; gap: .5rem .9rem; align-items: end; margin-bottom: .8rem; }
+.bar label { display: flex; flex-direction: column; font-size: .72rem; color: var(--ink-dim); gap: .15rem; }
+.bar select, .bar input { font: inherit; font-size: .86rem; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 4px; padding: .3rem .4rem; max-width: 100%; }
+.bar input { width: 11rem; }
+.bar a { font-size: .86rem; color: var(--ink-dim); padding-bottom: .35rem; }
+.count { font-size: .78rem; color: var(--ink-faint); margin: 0 0 .4rem; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th { font-size: .7rem; font-weight: 500; color: var(--ink-faint); text-align: left; padding: .3rem .3rem;
+     border-bottom: 1px solid var(--line); }
+td { padding: .1rem .3rem .45rem; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+tr.ev td { padding: .5rem .3rem 0; border-bottom: 0; font-size: .72rem; color: var(--ink-faint); }
+th.n, td.n { text-align: right; font-family: var(--mono); font-size: .82rem; width: 3.6rem; }
+th.when, td.when { width: 4.4rem; }
+td.when .t { font-family: var(--mono); font-size: .86rem; }
+td.when .d, .sc { display: block; font-size: .72rem; color: var(--ink-faint); }
+.win { font-weight: 600; }
+.lose { color: var(--ink-dim); }
+td.n span, td.match .pl { display: block; line-height: 1.45rem; }
+/* One line per player, always, or the prices beside a long name stop sitting level with it. */
+td.match .pl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st { display: inline-block; font-size: .66rem; padding: 0 .3rem; border-radius: 3px; margin-top: .15rem;
+      border: 1px solid var(--line); color: var(--ink-dim); }
+.st.live { color: var(--live); border-color: var(--live); }
+.mv { color: var(--live); }
+.dash { color: var(--ink-faint); }
+.foot { margin-top: 1.2rem; font-size: .74rem; color: var(--ink-faint); max-width: 40rem; }
+@media (max-width: 520px) {
+  body { font-size: 14px; }
+  th.n, td.n { width: 3.1rem; font-size: .76rem; }
+  th.when, td.when { width: 3.6rem; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tennis board</h1>
+  <span class="built">31 Oct 04:58 PDT · built</span>
+</header>
+<main>
+  <div class="bar">
+    <label>Day
+      <select id="day" onchange="location.href = this.value + '.html'"><option value="2026-10-31">2026-10-31</option><option value="2026-10-30">2026-10-30</option><option value="2026-10-29">2026-10-29</option><option value="2026-10-28">2026-10-28</option><option value="2026-10-27">2026-10-27</option><option value="2026-10-26">2026-10-26</option><option value="2026-10-25">2026-10-25</option><option value="2026-10-24">2026-10-24</option><option value="2026-10-23">2026-10-23</option><option value="2026-10-22">2026-10-22</option><option value="2026-10-21">2026-10-21</option><option value="2026-10-20">2026-10-20</option><option value="2026-10-19">2026-10-19</option><option value="2026-10-18">2026-10-18</option><option value="2026-10-17">2026-10-17</option><option value="2026-10-16">2026-10-16</option><option value="2026-10-15">2026-10-15</option><option value="2026-10-14">2026-10-14</option><option value="2026-10-13">2026-10-13</option><option value="2026-10-12">2026-10-12</option><option value="2026-10-11">2026-10-11</option><option value="2026-10-10">2026-10-10</option><option value="2026-10-09">2026-10-09</option><option value="2026-10-08">2026-10-08</option><option value="2026-10-07">2026-10-07</option><option value="2026-10-06" selected>2026-10-06</option><option value="2026-10-05">2026-10-05</option><option value="2026-10-04">2026-10-04</option><option value="2026-10-03">2026-10-03</option><option value="2026-10-02">2026-10-02</option></select>
+    </label>
+    <a href="index.html">Today</a>
+    <label>Tour
+      <select id="tour">
+        <option value="">Men &amp; women</option><option value="ATP">ATP</option><option value="WTA">WTA</option></select>
+    </label>
+    <label>Tournament
+      <select id="event">
+        <option value="">All</option><option value="Antofagasta Challenger">Antofagasta Challenger</option><option value="Braga Challenger">Braga Challenger</option><option value="China Open - Beijing">China Open - Beijing</option><option value="Japan Open Tennis Championships - Tokyo">Japan Open Tennis Championships - Tokyo</option><option value="Palermo Challenger">Palermo Challenger</option><option value="Samsun Open - Samsun">Samsun Open - Samsun</option><option value="Shanghai Rolex Masters - Shanghai">Shanghai Rolex Masters - Shanghai</option><option value="Suzhou WTA 125 - Suzhou">Suzhou WTA 125 - Suzhou</option><option value="Villena Challenger">Villena Challenger</option><option value="Wuning 3 Challenger">Wuning 3 Challenger</option></select>
+    </label>
+    <label>Search
+      <input id="q" type="search" placeholder="player or event" autocomplete="off">
+    </label>
+  </div>
+  <p class="count"><span id="n">73</span> matches</p>
+  
+  <table>
+    <thead><tr>
+      <th class="when">Time</th><th>Match</th>
+      <th class="n">Open</th><th class="n">Now</th><th class="n">Close</th>
+    </tr></thead>
+    <tbody class="m" data-tour="WTA" data-event="China Open - Beijing" data-q="karolina muchova naomi osaka china open - beijing">
+      <tr class="ev"><td colspan="5"><span>China Open - Beijing</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">00:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Karolina Muchova</span>
+          <span class="pl lose">Naomi Osaka</span><span class="sc">7-5 1-6 7-6(7)</span>
+        </td>
+        <td class="n"><span>0.551</span><span>0.449</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.579</span><span>0.421</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Suzhou WTA 125 - Suzhou" data-q="emerson jones mai hontama suzhou wta 125 - suzhou">
+      <tr class="ev"><td colspan="5"><span>Suzhou WTA 125 - Suzhou</span> · <span>R32</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">00:45</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Emerson Jones</span>
+          <span class="pl lose">Mai Hontama</span><span class="sc">6-4 6-0</span>
+        </td>
+        <td class="n"><span>0.575</span><span>0.425</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.577</span><span>0.423</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="chak lam coleman wong lloyd harris shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>Q3</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">00:48</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Chak Lam Coleman Wong</span>
+          <span class="pl lose">Lloyd Harris</span><span class="sc">6-4 3-6 6-2</span>
+        </td>
+        <td class="n"><span>0.422</span><span>0.578</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.406</span><span>0.594</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="kyrian jacquet rei sakamoto shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>Q3</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">00:52</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Kyrian Jacquet</span>
+          <span class="pl win">Rei Sakamoto</span><span class="sc">7-6(6) 4-6 7-6(8)</span>
+        </td>
+        <td class="n"><span>0.519</span><span>0.481</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.570</span><span>0.430</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Samsun Open - Samsun" data-q="teodora kostovic noma akugue noha samsun open - samsun">
+      <tr class="ev"><td colspan="5"><span>Samsun Open - Samsun</span> · <span>R32</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Teodora Kostovic</span>
+          <span class="pl">Noma Akugue Noha</span>
+        </td>
+        <td class="n"><span>0.678</span><span>0.322</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Wuning 3 Challenger" data-q="kasidit samrej enzo aguiard wuning 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Wuning 3 Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Kasidit Samrej</span>
+          <span class="pl lose">Enzo Aguiard</span><span class="sc">6-1 2-0</span>
+        </td>
+        <td class="n"><span>0.466</span><span>0.534</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.479</span><span>0.521</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Palermo Challenger" data-q="samuele pieri martin krumich palermo challenger">
+      <tr class="ev"><td colspan="5"><span>Palermo Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:05</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Samuele Pieri</span>
+          <span class="pl win">Martin Krumich</span><span class="sc">0-6 4-6</span>
+        </td>
+        <td class="n"><span>0.393</span><span>0.607</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.354</span><span>0.646</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Palermo Challenger" data-q="buvaysar gadamauri pedro vives marcos palermo challenger">
+      <tr class="ev"><td colspan="5"><span>Palermo Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:09</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Buvaysar Gadamauri</span>
+          <span class="pl lose">Pedro Vives Marcos</span><span class="sc">7-5 3-5</span>
+        </td>
+        <td class="n"><span>0.458</span><span>0.542</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.450</span><span>0.550</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Palermo Challenger" data-q="michele ribecai benito sanchez martinez palermo challenger">
+      <tr class="ev"><td colspan="5"><span>Palermo Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:09</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Michele Ribecai</span>
+          <span class="pl lose">Benito Sanchez Martinez</span><span class="sc">5-7 7-5 6-0</span>
+        </td>
+        <td class="n"><span>0.571</span><span>0.429</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.608</span><span>0.392</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="mattia bellucci alexandre muller shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>Q3</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:12</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Mattia Bellucci</span>
+          <span class="pl lose">Alexandre Muller</span><span class="sc">6-4 6-2</span>
+        </td>
+        <td class="n"><span>0.732</span><span>0.268</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.665</span><span>0.335</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Wuning 3 Challenger" data-q="jay dylan hara friend yuta kikuchi wuning 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Wuning 3 Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Jay Dylan Hara Friend</span>
+          <span class="pl lose">Yuta Kikuchi</span><span class="sc">6-1 6-4</span>
+        </td>
+        <td class="n"><span>0.907</span><span>0.093</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.905</span><span>0.095</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Samsun Open - Samsun" data-q="antonia ruzic alicia dudeney samsun open - samsun">
+      <tr class="ev"><td colspan="5"><span>Samsun Open - Samsun</span> · <span>R32</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:09</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Antonia Ruzic</span>
+          <span class="pl win">Alicia Dudeney</span><span class="sc">6-3 3-6 4-3</span>
+        </td>
+        <td class="n"><span>0.690</span><span>0.310</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.726</span><span>0.274</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Samsun Open - Samsun" data-q="emiliana arango ayla aksu samsun open - samsun">
+      <tr class="ev"><td colspan="5"><span>Samsun Open - Samsun</span> · <span>R32</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:09</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Emiliana Arango</span>
+          <span class="pl win">Ayla Aksu</span><span class="sc">3-6 2-6</span>
+        </td>
+        <td class="n"><span>0.701</span><span>0.299</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.689</span><span>0.311</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Japan Open Tennis Championships - Tokyo" data-q="carlos alcaraz jiri lehecka japan open tennis championships - tokyo">
+      <tr class="ev"><td colspan="5"><span>Japan Open Tennis Championships - Tokyo</span> · <span>F</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:20</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Carlos Alcaraz</span>
+          <span class="pl lose">Jiri Lehecka</span><span class="sc">7-6(4) 6-4</span>
+        </td>
+        <td class="n"><span>0.786</span><span>0.214</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.769</span><span>0.231</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="dane sweeny kimmer coppejans shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>Q3</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:56</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Dane Sweeny</span>
+          <span class="pl win">Kimmer Coppejans</span><span class="sc">3-6 2-6</span>
+        </td>
+        <td class="n"><span>0.557</span><span>0.443</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.579</span><span>0.421</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Palermo Challenger" data-q="pierluigi basile massimo giunta palermo challenger">
+      <tr class="ev"><td colspan="5"><span>Palermo Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:56</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Pierluigi Basile</span>
+          <span class="pl win">Massimo Giunta</span><span class="sc">4-6 6-4 6-1</span>
+        </td>
+        <td class="n"><span>0.511</span><span>0.489</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.495</span><span>0.505</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Wuning 3 Challenger" data-q="alibek kachmazov charles broom wuning 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Wuning 3 Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Alibek Kachmazov</span>
+          <span class="pl lose">Charles Broom</span><span class="sc">4-6 7-6 2-0</span>
+        </td>
+        <td class="n"><span>0.505</span><span>0.495</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.536</span><span>0.464</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Villena Challenger" data-q="daniil glinka gauthier onclin villena challenger">
+      <tr class="ev"><td colspan="5"><span>Villena Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:05</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Daniil Glinka</span>
+          <span class="pl lose">Gauthier Onclin</span><span class="sc">4-6 6-2 6-3</span>
+        </td>
+        <td class="n"><span>0.559</span><span>0.441</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.546</span><span>0.454</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Suzhou WTA 125 - Suzhou" data-q="jia-jing lu tamara korpatsch suzhou wta 125 - suzhou">
+      <tr class="ev"><td colspan="5"><span>Suzhou WTA 125 - Suzhou</span> · <span>R32</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:10</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Jia-Jing Lu</span>
+          <span class="pl win">Tamara Korpatsch</span><span class="sc">2-6 5-7</span>
+        </td>
+        <td class="n"><span>0.333</span><span>0.667</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.322</span><span>0.678</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="China Open - Beijing" data-q="sinja kraus nikola bartunkova china open - beijing">
+      <tr class="ev"><td colspan="5"><span>China Open - Beijing</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:25</span><span class="mv">*</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Sinja Kraus</span>
+          <span class="pl win">Nikola Bartunkova</span><span class="sc">6-0 4-6 6-3</span>
+        </td>
+        <td class="n"><span>0.188</span><span>0.812</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.191</span><span>0.809</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="pavel kotov aleksandar vukic shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>Q3</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:25</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Pavel Kotov</span>
+          <span class="pl lose">Aleksandar Vukic</span><span class="sc">6-3 6-3</span>
+        </td>
+        <td class="n"><span>0.543</span><span>0.457</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.599</span><span>0.401</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Palermo Challenger" data-q="carlos sanchez jover francesco forti palermo challenger">
+      <tr class="ev"><td colspan="5"><span>Palermo Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:26</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Carlos Sanchez Jover</span>
+          <span class="pl lose">Francesco Forti</span><span class="sc">6-4 3-6 6-4</span>
+        </td>
+        <td class="n"><span>0.449</span><span>0.551</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.469</span><span>0.531</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Samsun Open - Samsun" data-q="aysegul mert viktoria hruncakova samsun open - samsun">
+      <tr class="ev"><td colspan="5"><span>Samsun Open - Samsun</span> · <span>R32</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:39</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Aysegul Mert</span>
+          <span class="pl win">Viktoria Hruncakova</span><span class="sc">2-6 6-4 2-6</span>
+        </td>
+        <td class="n"><span>0.310</span><span>0.690</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.326</span><span>0.674</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Villena Challenger" data-q="felix balshaw joel schwaerzler villena challenger">
+      <tr class="ev"><td colspan="5"><span>Villena Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:40</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Felix Balshaw</span>
+          <span class="pl win">Joel Schwaerzler</span><span class="sc">7-6(1) 3-6 5-7</span>
+        </td>
+        <td class="n"><span>0.548</span><span>0.452</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.524</span><span>0.476</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Villena Challenger" data-q="diego dedura jack pinnington jones villena challenger">
+      <tr class="ev"><td colspan="5"><span>Villena Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:41</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Diego Dedura</span>
+          <span class="pl win">Jack Pinnington Jones</span><span class="sc">4-6 2-6</span>
+        </td>
+        <td class="n"><span>0.389</span><span>0.611</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.433</span><span>0.567</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Palermo Challenger" data-q="gianluca cadenasso filippo moroni palermo challenger">
+      <tr class="ev"><td colspan="5"><span>Palermo Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:50</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Gianluca Cadenasso</span>
+          <span class="pl lose">Filippo Moroni</span><span class="sc">3-6 6-4 6-3</span>
+        </td>
+        <td class="n"><span>0.749</span><span>0.251</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.749</span><span>0.251</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Samsun Open - Samsun" data-q="lola radivojevic oksana selekhmeteva samsun open - samsun">
+      <tr class="ev"><td colspan="5"><span>Samsun Open - Samsun</span> · <span>R32</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:53</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Lola Radivojevic</span>
+          <span class="pl win">Oksana Selekhmeteva</span><span class="sc">5-7 6-7(0)</span>
+        </td>
+        <td class="n"><span>0.320</span><span>0.680</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.290</span><span>0.710</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="China Open - Beijing" data-q="novak djokovic alex de minaur china open - beijing">
+      <tr class="ev"><td colspan="5"><span>China Open - Beijing</span> · <span>F</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:20</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Novak Djokovic</span>
+          <span class="pl lose">Alex De Minaur</span><span class="sc">7-6(3) 0-1 RET</span>
+        </td>
+        <td class="n"><span>0.610</span><span>0.390</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.617</span><span>0.383</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Samsun Open - Samsun" data-q="lucrezia stefanini carole monnet samsun open - samsun">
+      <tr class="ev"><td colspan="5"><span>Samsun Open - Samsun</span> · <span>R32</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:30</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Lucrezia Stefanini</span>
+          <span class="pl lose">Carole Monnet</span><span class="sc">7-5 5-4</span>
+        </td>
+        <td class="n"><span>0.753</span><span>0.247</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.749</span><span>0.251</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="miguel tobon thiago cigarran antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Miguel Tobon</span>
+          <span class="pl lose">Thiago Cigarran</span><span class="sc">4-6 6-4 6-1</span>
+        </td>
+        <td class="n"><span>0.772</span><span>0.228</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.772</span><span>0.228</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="samuel heredia eduardo ribeiro antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Samuel Heredia</span>
+          <span class="pl win">Eduardo Ribeiro</span><span class="sc">3-6 4-6</span>
+        </td>
+        <td class="n"><span>0.230</span><span>0.770</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.239</span><span>0.761</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="thiago seyboth wild matias soto antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Thiago Seyboth Wild</span>
+          <span class="pl lose">Matias Soto</span><span class="sc">6-3 6-4</span>
+        </td>
+        <td class="n"><span>0.817</span><span>0.183</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.827</span><span>0.173</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Palermo Challenger" data-q="carlo alberto caniato max wiskandt palermo challenger">
+      <tr class="ev"><td colspan="5"><span>Palermo Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:15</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Carlo Alberto Caniato</span>
+          <span class="pl lose">Max Wiskandt</span><span class="sc">6-2 6-3</span>
+        </td>
+        <td class="n"><span>0.733</span><span>0.267</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.786</span><span>0.214</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Palermo Challenger" data-q="kalin ivanovski alejandro moro canas palermo challenger">
+      <tr class="ev"><td colspan="5"><span>Palermo Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:38</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Kalin Ivanovski</span>
+          <span class="pl win">Alejandro Moro Canas</span><span class="sc">6-2 6-3</span>
+        </td>
+        <td class="n"><span>0.275</span><span>0.725</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.274</span><span>0.726</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Samsun Open - Samsun" data-q="bianca vanessa andreescu alana smith samsun open - samsun">
+      <tr class="ev"><td colspan="5"><span>Samsun Open - Samsun</span> · <span>R32</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:38</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Bianca Vanessa Andreescu</span>
+          <span class="pl lose">Alana Smith</span><span class="sc">6-0 6-0</span>
+        </td>
+        <td class="n"><span>0.870</span><span>0.130</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.879</span><span>0.121</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Palermo Challenger" data-q="zdenek kolar dimitris sakellaridis palermo challenger">
+      <tr class="ev"><td colspan="5"><span>Palermo Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Zdenek Kolar</span>
+          <span class="pl lose">Dimitris Sakellaridis</span><span class="sc">6-4 6-4</span>
+        </td>
+        <td class="n"><span>0.832</span><span>0.168</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.829</span><span>0.171</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Samsun Open - Samsun" data-q="simona waltert melisa ercan samsun open - samsun">
+      <tr class="ev"><td colspan="5"><span>Samsun Open - Samsun</span> · <span>R32</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:25</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Simona Waltert</span>
+          <span class="pl lose">Melisa Ercan</span><span class="sc">6-2 3-2</span>
+        </td>
+        <td class="n"><span>0.808</span><span>0.192</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.798</span><span>0.202</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="franco roncadelli tomas barrios vera antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:56</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Franco Roncadelli</span>
+          <span class="pl win">Tomas Barrios Vera</span><span class="sc">4-6 2-6</span>
+        </td>
+        <td class="n"><span>0.276</span><span>0.724</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.260</span><span>0.740</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="alex barrena matheus pucinelli de almeida antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Alex Barrena</span>
+          <span class="pl win">Matheus Pucinelli De Almeida</span><span class="sc">5-7 3-6</span>
+        </td>
+        <td class="n"><span>0.459</span><span>0.541</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.425</span><span>0.575</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Samsun Open - Samsun" data-q="cagla buyukakcay linda klimovicova samsun open - samsun">
+      <tr class="ev"><td colspan="5"><span>Samsun Open - Samsun</span> · <span>R32</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:23</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Cagla Buyukakcay</span>
+          <span class="pl win">Linda Klimovicova</span><span class="sc">6-3 6-7(2) 1-6</span>
+        </td>
+        <td class="n"><span>0.195</span><span>0.805</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.259</span><span>0.741</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Villena Challenger" data-q="carles hernandez petr nesterov villena challenger">
+      <tr class="ev"><td colspan="5"><span>Villena Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:32</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Carles Hernandez</span>
+          <span class="pl win">Petr Nesterov</span><span class="sc">3-6 6-7(4)</span>
+        </td>
+        <td class="n"><span>0.200</span><span>0.800</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.196</span><span>0.804</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="juan bautista torres pedro boscardin dias antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:35</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Juan Bautista Torres</span>
+          <span class="pl win">Pedro Boscardin Dias</span><span class="sc">2-6 6-7(2)</span>
+        </td>
+        <td class="n"><span>0.505</span><span>0.495</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.514</span><span>0.486</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Palermo Challenger" data-q="christian langmo lorenzo giustino palermo challenger">
+      <tr class="ev"><td colspan="5"><span>Palermo Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:14</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Christian Langmo</span>
+          <span class="pl win">Lorenzo Giustino</span><span class="sc">4-6 1-6</span>
+        </td>
+        <td class="n"><span>0.235</span><span>0.765</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.245</span><span>0.755</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Villena Challenger" data-q="francesco maestrelli oliver tarvet villena challenger">
+      <tr class="ev"><td colspan="5"><span>Villena Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:44</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Francesco Maestrelli</span>
+          <span class="pl win">Oliver Tarvet</span><span class="sc">6-4 3-6 4-6</span>
+        </td>
+        <td class="n"><span>0.284</span><span>0.716</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.259</span><span>0.741</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="felipe meligeni alves juan pablo varillas antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Felipe Meligeni Alves</span>
+          <span class="pl lose">Juan Pablo Varillas</span><span class="sc">6-3 6-1</span>
+        </td>
+        <td class="n"><span>0.435</span><span>0.565</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.466</span><span>0.534</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="juan carlos prado angelo joao eduardo schiessl antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Juan Carlos Prado Angelo</span>
+          <span class="pl lose">Joao Eduardo Schiessl</span><span class="sc">6-2 6-2</span>
+        </td>
+        <td class="n"><span>0.809</span><span>0.191</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.814</span><span>0.186</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Villena Challenger" data-q="philip henning maks kasnikowski villena challenger">
+      <tr class="ev"><td colspan="5"><span>Villena Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:13</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Philip Henning</span>
+          <span class="pl lose">Maks Kasnikowski</span><span class="sc">7-6(3) 6-1</span>
+        </td>
+        <td class="n"><span>0.435</span><span>0.565</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.448</span><span>0.552</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="bernardo munk mesa joao lucas reis da silva antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:44</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Bernardo Munk Mesa</span>
+          <span class="pl win">Joao Lucas Reis Da Silva</span><span class="sc">2-6 2-6</span>
+        </td>
+        <td class="n"><span>0.167</span><span>0.833</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.154</span><span>0.846</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Villena Challenger" data-q="august holmgren pedro martinez portero villena challenger">
+      <tr class="ev"><td colspan="5"><span>Villena Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:44</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">August Holmgren</span>
+          <span class="pl win">Pedro Martinez Portero</span><span class="sc">6-2 6-7(1) 5-7</span>
+        </td>
+        <td class="n"><span>0.564</span><span>0.436</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.515</span><span>0.485</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Palermo Challenger" data-q="luca potenza enrico dalla valle palermo challenger">
+      <tr class="ev"><td colspan="5"><span>Palermo Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:45</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Luca Potenza</span>
+          <span class="pl win">Enrico Dalla Valle</span><span class="sc">1-6 5-7</span>
+        </td>
+        <td class="n"><span>0.205</span><span>0.795</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.188</span><span>0.812</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="guido ivan justo francisco comesana antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Guido Ivan Justo</span>
+          <span class="pl lose">Francisco Comesana</span><span class="sc">6-7(6) 7-6(4) 6-1</span>
+        </td>
+        <td class="n"><span>0.328</span><span>0.672</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.328</span><span>0.672</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="jose pereira lautaro midon antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Jose Pereira</span>
+          <span class="pl win">Lautaro Midon</span><span class="sc">6-3 4-6 6-0</span>
+        </td>
+        <td class="n"><span>0.130</span><span>0.870</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.129</span><span>0.871</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="gustavo heide maximo zeitune antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:08</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Gustavo Heide</span>
+          <span class="pl lose">Maximo Zeitune</span><span class="sc">6-3 1-6 6-4</span>
+        </td>
+        <td class="n"><span>0.867</span><span>0.133</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.879</span><span>0.121</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Palermo Challenger" data-q="jay clarke gabriele piraino palermo challenger">
+      <tr class="ev"><td colspan="5"><span>Palermo Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">13:58</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Jay Clarke</span>
+          <span class="pl win">Gabriele Piraino</span><span class="sc">3-6 1-6</span>
+        </td>
+        <td class="n"><span>0.673</span><span>0.327</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.654</span><span>0.346</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Antofagasta Challenger" data-q="joaquin aguilar cardozo nicolas villalon antofagasta challenger">
+      <tr class="ev"><td colspan="5"><span>Antofagasta Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">15:30</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Joaquin Aguilar Cardozo</span>
+          <span class="pl lose">Nicolas Villalon</span><span class="sc">6-2 7-5</span>
+        </td>
+        <td class="n"><span>0.912</span><span>0.088</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.924</span><span>0.076</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="cameron norrie denis shapovalov shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">19:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Cameron Norrie</span>
+          <span class="pl">Denis Shapovalov</span>
+        </td>
+        <td class="n"><span>0.461</span><span>0.539</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.471</span><span>0.529</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Suzhou WTA 125 - Suzhou" data-q="darya astakhova renata zarazua suzhou wta 125 - suzhou">
+      <tr class="ev"><td colspan="5"><span>Suzhou WTA 125 - Suzhou</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Darya Astakhova</span>
+          <span class="pl win">Renata Zarazua</span><span class="sc">0-0</span>
+        </td>
+        <td class="n"><span>0.378</span><span>0.622</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.364</span><span>0.636</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Suzhou WTA 125 - Suzhou" data-q="rebecca sramkova claire liu suzhou wta 125 - suzhou">
+      <tr class="ev"><td colspan="5"><span>Suzhou WTA 125 - Suzhou</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Rebecca Sramkova</span>
+          <span class="pl lose">Claire Liu</span><span class="sc">7-5 5-3</span>
+        </td>
+        <td class="n"><span>0.349</span><span>0.651</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.341</span><span>0.659</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Wuning 3 Challenger" data-q="omar jasika marat sharipov wuning 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Wuning 3 Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Omar Jasika</span>
+          <span class="pl lose">Marat Sharipov</span><span class="sc">2-1</span>
+        </td>
+        <td class="n"><span>0.184</span><span>0.816</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.179</span><span>0.821</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Wuning 3 Challenger" data-q="hiroki moriya keisuke saitoh wuning 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Wuning 3 Challenger</span> · <span>R16</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:14</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Hiroki Moriya</span>
+          <span class="pl win">Keisuke Saitoh</span><span class="sc">2-6 3-6</span>
+        </td>
+        <td class="n"><span>0.514</span><span>0.486</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.484</span><span>0.516</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Suzhou WTA 125 - Suzhou" data-q="linda fruhvirtova aliaksandra sasnovich suzhou wta 125 - suzhou">
+      <tr class="ev"><td colspan="5"><span>Suzhou WTA 125 - Suzhou</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:30</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Linda Fruhvirtova</span>
+          <span class="pl win">Aliaksandra Sasnovich</span><span class="sc">0-6 2-6</span>
+        </td>
+        <td class="n"><span>0.353</span><span>0.647</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.303</span><span>0.697</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Suzhou WTA 125 - Suzhou" data-q="tatiana prozorova kyoka okamura suzhou wta 125 - suzhou">
+      <tr class="ev"><td colspan="5"><span>Suzhou WTA 125 - Suzhou</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:45</span><span class="mv">*</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Tatiana Prozorova</span>
+          <span class="pl win">Kyoka Okamura</span><span class="sc">4-6 6-3 6-7(5)</span>
+        </td>
+        <td class="n"><span>0.777</span><span>0.223</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.772</span><span>0.228</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="aleksandar kovacevic matteo berrettini shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">21:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Aleksandar Kovacevic</span>
+          <span class="pl win">Matteo Berrettini</span><span class="sc">7-6(3) 1-6 4-6</span>
+        </td>
+        <td class="n"><span>0.323</span><span>0.677</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.361</span><span>0.639</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="arthur gea jaime faria shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">21:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Arthur Gea</span>
+          <span class="pl lose">Jaime Faria</span><span class="sc">6-7(3) 6-1 6-2</span>
+        </td>
+        <td class="n"><span>0.613</span><span>0.387</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.643</span><span>0.357</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="sho shimabukuro miomir kecmanovic shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">21:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Sho Shimabukuro</span>
+          <span class="pl win">Miomir Kecmanovic</span><span class="sc">2-6 4-6</span>
+        </td>
+        <td class="n"><span>0.332</span><span>0.668</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.311</span><span>0.689</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Suzhou WTA 125 - Suzhou" data-q="maxwell smith zhan zheng suzhou wta 125 - suzhou">
+      <tr class="ev"><td colspan="5"><span>Suzhou WTA 125 - Suzhou</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Maxwell Smith</span>
+          <span class="pl">Zhan Zheng</span>
+        </td>
+        <td class="n"><span>0.336</span><span>0.664</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.337</span><span>0.663</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Wuning 3 Challenger" data-q="timofei derepasko filip peliwo wuning 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Wuning 3 Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:00</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Timofei Derepasko</span>
+          <span class="pl lose">Filip Peliwo</span><span class="sc">6-3 7-6(10)</span>
+        </td>
+        <td class="n"><span>0.422</span><span>0.578</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.473</span><span>0.527</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="China Open - Beijing" data-q="iva jovic iga swiatek china open - beijing">
+      <tr class="ev"><td colspan="5"><span>China Open - Beijing</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:14</span><span class="mv">*</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Iva Jovic</span>
+          <span class="pl win">Iga Swiatek</span><span class="sc">1-6 3-6</span>
+        </td>
+        <td class="n"><span>0.351</span><span>0.649</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.345</span><span>0.655</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="yannick hanfmann kamil majchrzak shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:40</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Yannick Hanfmann</span>
+          <span class="pl lose">Kamil Majchrzak</span><span class="sc">6-7(4) 7-6(3) 7-6(7)</span>
+        </td>
+        <td class="n"><span>0.375</span><span>0.625</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.393</span><span>0.607</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="alex molcan federico cina shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">23:17</span>
+          <span class="d">Tue 06 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Alex Molcan</span>
+          <span class="pl lose">Federico Cina</span><span class="sc">4-6 6-1 6-2</span>
+        </td>
+        <td class="n"><span>0.571</span><span>0.429</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.598</span><span>0.402</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Braga Challenger" data-q="sumit nagal luka mikrut braga challenger">
+      <tr class="ev"><td colspan="5"><span>Braga Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:44</span><span class="mv">*</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Sumit Nagal</span>
+          <span class="pl win">Luka Mikrut</span><span class="sc">6-2 6-4</span>
+        </td>
+        <td class="n"><span>0.276</span><span>0.724</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.247</span><span>0.753</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Wuning 3 Challenger" data-q="yaroslav demin akira santillan wuning 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Wuning 3 Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:00</span><span class="mv">*</span>
+          <span class="d">Tue 20 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Yaroslav Demin</span>
+          <span class="pl win">Akira Santillan</span><span class="sc">3-6 3-6</span>
+        </td>
+        <td class="n"><span>0.404</span><span>0.596</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.442</span><span>0.558</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="adrian mannarino nikoloz basilashvili shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">00:00</span><span class="mv">*</span>
+          <span class="d">Fri 23 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Adrian Mannarino</span>
+          <span class="pl lose">Nikoloz Basilashvili</span><span class="sc">6-3 0-1</span>
+        </td>
+        <td class="n"><span>0.433</span><span>0.567</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.518</span><span>0.482</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <p class="foot">Prices are implied probabilities with the margin removed, first player on top. Open is the
+    opening line; Now is Pinnacle at build time (tap for the American price); Close is the last pre-match price.
+    Times are PDT; an asterisk marks a match Pinnacle has moved later.</p>
+</main>
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('tbody.m'));
+  var tour = document.getElementById('tour'), ev = document.getElementById('event'),
+      q = document.getElementById('q'), n = document.getElementById('n');
+  if (!tour) return;
+  function fold(s) { return (s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+  function apply() {
+    var t = tour.value, e = ev.value, terms = fold(q.value).split(/\s+/).filter(Boolean), shown = 0;
+    rows.forEach(function (r) {
+      var ok = (!t || r.getAttribute('data-tour') === t) && (!e || r.getAttribute('data-event') === e);
+      if (ok) { var hay = r.getAttribute('data-q'); ok = terms.every(function (w) { return hay.indexOf(w) >= 0; }); }
+      r.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+    n.textContent = shown;
+  }
+  tour.addEventListener('change', apply); ev.addEventListener('change', apply); q.addEventListener('input', apply);
+})();
+</script>
+</body>
+</html>

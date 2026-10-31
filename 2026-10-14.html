@@ -1,0 +1,1051 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+<title>Tennis board</title>
+<style>
+:root {
+  --bg: #151a21; --surface: #1d242e; --line: #2b3441; --line-soft: #232b36;
+  --ink: #e4e9ef; --ink-dim: #9aa7b8; --ink-faint: #6b7889; --live: #e0a458;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px;
+       line-height: 1.45; font-feature-settings: "tnum" 1; }
+header { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding: .8rem 16px;
+         border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 2; }
+header h1 { margin: 0; font-size: 1rem; font-weight: 600; }
+header .built { margin-left: auto; font: .78rem var(--mono); color: var(--ink-faint); }
+main { padding: 12px 16px 32px; max-width: 900px; }
+.bar { display: flex; flex-wrap: wrap; gap: .5rem .9rem; align-items: end; margin-bottom: .8rem; }
+.bar label { display: flex; flex-direction: column; font-size: .72rem; color: var(--ink-dim); gap: .15rem; }
+.bar select, .bar input { font: inherit; font-size: .86rem; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 4px; padding: .3rem .4rem; max-width: 100%; }
+.bar input { width: 11rem; }
+.bar a { font-size: .86rem; color: var(--ink-dim); padding-bottom: .35rem; }
+.count { font-size: .78rem; color: var(--ink-faint); margin: 0 0 .4rem; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th { font-size: .7rem; font-weight: 500; color: var(--ink-faint); text-align: left; padding: .3rem .3rem;
+     border-bottom: 1px solid var(--line); }
+td { padding: .1rem .3rem .45rem; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+tr.ev td { padding: .5rem .3rem 0; border-bottom: 0; font-size: .72rem; color: var(--ink-faint); }
+th.n, td.n { text-align: right; font-family: var(--mono); font-size: .82rem; width: 3.6rem; }
+th.when, td.when { width: 4.4rem; }
+td.when .t { font-family: var(--mono); font-size: .86rem; }
+td.when .d, .sc { display: block; font-size: .72rem; color: var(--ink-faint); }
+.win { font-weight: 600; }
+.lose { color: var(--ink-dim); }
+td.n span, td.match .pl { display: block; line-height: 1.45rem; }
+/* One line per player, always, or the prices beside a long name stop sitting level with it. */
+td.match .pl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st { display: inline-block; font-size: .66rem; padding: 0 .3rem; border-radius: 3px; margin-top: .15rem;
+      border: 1px solid var(--line); color: var(--ink-dim); }
+.st.live { color: var(--live); border-color: var(--live); }
+.mv { color: var(--live); }
+.dash { color: var(--ink-faint); }
+.foot { margin-top: 1.2rem; font-size: .74rem; color: var(--ink-faint); max-width: 40rem; }
+@media (max-width: 520px) {
+  body { font-size: 14px; }
+  th.n, td.n { width: 3.1rem; font-size: .76rem; }
+  th.when, td.when { width: 3.6rem; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tennis board</h1>
+  <span class="built">31 Oct 04:57 PDT · built</span>
+</header>
+<main>
+  <div class="bar">
+    <label>Day
+      <select id="day" onchange="location.href = this.value + '.html'"><option value="2026-10-31">2026-10-31</option><option value="2026-10-30">2026-10-30</option><option value="2026-10-29">2026-10-29</option><option value="2026-10-28">2026-10-28</option><option value="2026-10-27">2026-10-27</option><option value="2026-10-26">2026-10-26</option><option value="2026-10-25">2026-10-25</option><option value="2026-10-24">2026-10-24</option><option value="2026-10-23">2026-10-23</option><option value="2026-10-22">2026-10-22</option><option value="2026-10-21">2026-10-21</option><option value="2026-10-20">2026-10-20</option><option value="2026-10-19">2026-10-19</option><option value="2026-10-18">2026-10-18</option><option value="2026-10-17">2026-10-17</option><option value="2026-10-16">2026-10-16</option><option value="2026-10-15">2026-10-15</option><option value="2026-10-14" selected>2026-10-14</option><option value="2026-10-13">2026-10-13</option><option value="2026-10-12">2026-10-12</option><option value="2026-10-11">2026-10-11</option><option value="2026-10-10">2026-10-10</option><option value="2026-10-09">2026-10-09</option><option value="2026-10-08">2026-10-08</option><option value="2026-10-07">2026-10-07</option><option value="2026-10-06">2026-10-06</option><option value="2026-10-05">2026-10-05</option><option value="2026-10-04">2026-10-04</option><option value="2026-10-03">2026-10-03</option><option value="2026-10-02">2026-10-02</option></select>
+    </label>
+    <a href="index.html">Today</a>
+    <label>Tour
+      <select id="tour">
+        <option value="">Men &amp; women</option><option value="ATP">ATP</option><option value="WTA">WTA</option></select>
+    </label>
+    <label>Tournament
+      <select id="event">
+        <option value="">All</option><option value="Jinan Challenger">Jinan Challenger</option><option value="Lisboa Belem Open - Lisbon">Lisboa Belem Open - Lisbon</option><option value="Maia Challenger">Maia Challenger</option><option value="Mallorca Women&#39;s Championships - Mallorca">Mallorca Women&#39;s Championships - Mallorca</option><option value="Olbia Challenger">Olbia Challenger</option><option value="Roanne Challenger">Roanne Challenger</option><option value="RoveretOpen Citta della Pace - Rovereto">RoveretOpen Citta della Pace - Rovereto</option><option value="San Gregorio di Catania Challenger">San Gregorio di Catania Challenger</option><option value="Santa Cruz de la Sierra 2 Challenger">Santa Cruz de la Sierra 2 Challenger</option><option value="Shanghai Rolex Masters - Shanghai">Shanghai Rolex Masters - Shanghai</option><option value="Wuhan Open - Wuhan">Wuhan Open - Wuhan</option></select>
+    </label>
+    <label>Search
+      <input id="q" type="search" placeholder="player or event" autocomplete="off">
+    </label>
+  </div>
+  <p class="count"><span id="n">55</span> matches</p>
+  
+  <table>
+    <thead><tr>
+      <th class="when">Time</th><th>Match</th>
+      <th class="n">Open</th><th class="n">Now</th><th class="n">Close</th>
+    </tr></thead>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="casper ruud felix auger aliassime shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">00:00</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Casper Ruud</span>
+          <span class="pl lose">Felix Auger Aliassime</span><span class="sc">5-2 RET</span>
+        </td>
+        <td class="n"><span>0.432</span><span>0.568</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.428</span><span>0.572</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Wuhan Open - Wuhan" data-q="janice tjen daria snigur wuhan open - wuhan">
+      <tr class="ev"><td colspan="5"><span>Wuhan Open - Wuhan</span> · <span>R16</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">00:00</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Janice Tjen</span>
+          <span class="pl lose">Daria Snigur</span><span class="sc">7-5 6-3</span>
+        </td>
+        <td class="n"><span>0.411</span><span>0.589</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.385</span><span>0.615</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Jinan Challenger" data-q="keegan smith vit kopriva jinan challenger">
+      <tr class="ev"><td colspan="5"><span>Jinan Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">00:45</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Keegan Smith</span>
+          <span class="pl lose">Vit Kopriva</span><span class="sc">6-3 3-6 6-3</span>
+        </td>
+        <td class="n"><span>0.373</span><span>0.627</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.351</span><span>0.649</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Wuhan Open - Wuhan" data-q="jelena ostapenko jessica pegula wuhan open - wuhan">
+      <tr class="ev"><td colspan="5"><span>Wuhan Open - Wuhan</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:15</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Jelena Ostapenko</span>
+          <span class="pl lose">Jessica Pegula</span><span class="sc">2-6 7-6(7) 6-3</span>
+        </td>
+        <td class="n"><span>0.286</span><span>0.714</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.261</span><span>0.739</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Wuhan Open - Wuhan" data-q="katie volynets hanyu guo wuhan open - wuhan">
+      <tr class="ev"><td colspan="5"><span>Wuhan Open - Wuhan</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:25</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Katie Volynets</span>
+          <span class="pl win">Hanyu Guo</span><span class="sc">4-6 6-4 6-7(3)</span>
+        </td>
+        <td class="n"><span>0.819</span><span>0.181</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.793</span><span>0.207</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Mallorca Women&#39;s Championships - Mallorca" data-q="marina bassols ribera francesca curmi mallorca women&#39;s championships - mallorca">
+      <tr class="ev"><td colspan="5"><span>Mallorca Women&#39;s Championships - Mallorca</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:30</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Marina Bassols Ribera</span>
+          <span class="pl win">Francesca Curmi</span><span class="sc">6-3 3-6 3-6</span>
+        </td>
+        <td class="n"><span>0.561</span><span>0.439</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.604</span><span>0.396</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="San Gregorio di Catania Challenger" data-q="filip cristian jianu zdenek kolar san gregorio di catania challenger">
+      <tr class="ev"><td colspan="5"><span>San Gregorio di Catania Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:41</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Filip Cristian Jianu</span>
+          <span class="pl win">Zdenek Kolar</span><span class="sc">4-6 2-6</span>
+        </td>
+        <td class="n"><span>0.420</span><span>0.580</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.443</span><span>0.557</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="San Gregorio di Catania Challenger" data-q="izan almazan valiente felix gill san gregorio di catania challenger">
+      <tr class="ev"><td colspan="5"><span>San Gregorio di Catania Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:42</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Izan Almazan Valiente</span>
+          <span class="pl win">Felix Gill</span><span class="sc">4-6 1-6</span>
+        </td>
+        <td class="n"><span>0.268</span><span>0.732</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.286</span><span>0.714</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Roanne Challenger" data-q="dominic stricker philip henning roanne challenger">
+      <tr class="ev"><td colspan="5"><span>Roanne Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:43</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Dominic Stricker</span>
+          <span class="pl lose">Philip Henning</span><span class="sc">6-2 6-3</span>
+        </td>
+        <td class="n"><span>0.727</span><span>0.273</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.664</span><span>0.336</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Mallorca Women&#39;s Championships - Mallorca" data-q="carole monnet elizara yaneva mallorca women&#39;s championships - mallorca">
+      <tr class="ev"><td colspan="5"><span>Mallorca Women&#39;s Championships - Mallorca</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:00</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Carole Monnet</span>
+          <span class="pl win">Elizara Yaneva</span><span class="sc">2-6 2-6</span>
+        </td>
+        <td class="n"><span>0.394</span><span>0.606</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.392</span><span>0.608</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Olbia Challenger" data-q="stefano travaglia valentin royer olbia challenger">
+      <tr class="ev"><td colspan="5"><span>Olbia Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:00</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Stefano Travaglia</span>
+          <span class="pl lose">Valentin Royer</span><span class="sc">6-2 7-5</span>
+        </td>
+        <td class="n"><span>0.272</span><span>0.728</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.269</span><span>0.731</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="daniil medvedev stefanos tsitsipas shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:09</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Daniil Medvedev</span>
+          <span class="pl lose">Stefanos Tsitsipas</span><span class="sc">6-4 7-5</span>
+        </td>
+        <td class="n"><span>0.677</span><span>0.323</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.670</span><span>0.330</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Lisboa Belem Open - Lisbon" data-q="selena janicijevic fiona ferro lisboa belem open - lisbon">
+      <tr class="ev"><td colspan="5"><span>Lisboa Belem Open - Lisbon</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:12</span><span class="mv">*</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Selena Janicijevic</span>
+          <span class="pl win">Fiona Ferro</span><span class="sc">5-7 1-5</span>
+        </td>
+        <td class="n"><span>0.115</span><span>0.885</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.114</span><span>0.886</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Roanne Challenger" data-q="remy bertola otto virtanen roanne challenger">
+      <tr class="ev"><td colspan="5"><span>Roanne Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:13</span><span class="mv">*</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Remy Bertola</span>
+          <span class="pl win">Otto Virtanen</span><span class="sc">5-7 5-7</span>
+        </td>
+        <td class="n"><span>0.284</span><span>0.716</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.307</span><span>0.693</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Lisboa Belem Open - Lisbon" data-q="polona hercog jazmin ortenzi lisboa belem open - lisbon">
+      <tr class="ev"><td colspan="5"><span>Lisboa Belem Open - Lisbon</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:18</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Polona Hercog</span>
+          <span class="pl lose">Jazmin Ortenzi</span><span class="sc">6-3 3-6 6-3</span>
+        </td>
+        <td class="n"><span>0.518</span><span>0.482</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.492</span><span>0.508</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Roanne Challenger" data-q="matisse bobichon billy harris roanne challenger">
+      <tr class="ev"><td colspan="5"><span>Roanne Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:21</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Matisse Bobichon</span>
+          <span class="pl lose">Billy Harris</span><span class="sc">7-5 5-5</span>
+        </td>
+        <td class="n"><span>0.278</span><span>0.722</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.293</span><span>0.707</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Olbia Challenger" data-q="andrea guerrieri maks kasnikowski olbia challenger">
+      <tr class="ev"><td colspan="5"><span>Olbia Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:58</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Andrea Guerrieri</span>
+          <span class="pl win">Maks Kasnikowski</span><span class="sc">3-6 4-6</span>
+        </td>
+        <td class="n"><span>0.531</span><span>0.469</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.600</span><span>0.400</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Maia Challenger" data-q="elmer moller lukas neumayer maia challenger">
+      <tr class="ev"><td colspan="5"><span>Maia Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:00</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Elmer Moller</span>
+          <span class="pl win">Lukas Neumayer</span><span class="sc">4-6 6-4 2-6</span>
+        </td>
+        <td class="n"><span>0.456</span><span>0.544</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.465</span><span>0.535</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Maia Challenger" data-q="pedro martinez portero matej dodig maia challenger">
+      <tr class="ev"><td colspan="5"><span>Maia Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:00</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Pedro Martinez Portero</span>
+          <span class="pl win">Matej Dodig</span><span class="sc">2-6 1-6</span>
+        </td>
+        <td class="n"><span>0.361</span><span>0.639</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.388</span><span>0.612</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="RoveretOpen Citta della Pace - Rovereto" data-q="gabriela andrea knutson susan bandecchi roveretopen citta della pace - rovereto">
+      <tr class="ev"><td colspan="5"><span>RoveretOpen Citta della Pace - Rovereto</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:15</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Gabriela Andrea Knutson</span>
+          <span class="pl lose">Susan Bandecchi</span><span class="sc">3-6 7-6 5-5</span>
+        </td>
+        <td class="n"><span>0.511</span><span>0.489</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.530</span><span>0.470</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Maia Challenger" data-q="pol martin tiffon zsombor piros maia challenger">
+      <tr class="ev"><td colspan="5"><span>Maia Challenger</span> · <span>R16</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:30</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Pol Martin Tiffon</span>
+          <span class="pl win">Zsombor Piros</span><span class="sc">3-6 2-6</span>
+        </td>
+        <td class="n"><span>0.287</span><span>0.713</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.271</span><span>0.729</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Mallorca Women&#39;s Championships - Mallorca" data-q="ariana geerlings lucia cortez llorca mallorca women&#39;s championships - mallorca">
+      <tr class="ev"><td colspan="5"><span>Mallorca Women&#39;s Championships - Mallorca</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:30</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Ariana Geerlings</span>
+          <span class="pl lose">Lucia Cortez Llorca</span><span class="sc">6-4 6-2</span>
+        </td>
+        <td class="n"><span>0.692</span><span>0.308</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.682</span><span>0.318</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Wuhan Open - Wuhan" data-q="aryna sabalenka ann li wuhan open - wuhan">
+      <tr class="ev"><td colspan="5"><span>Wuhan Open - Wuhan</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:30</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Aryna Sabalenka</span>
+          <span class="pl win">Ann Li</span><span class="sc">3-6 6-4 7-6(5)</span>
+        </td>
+        <td class="n"><span>0.825</span><span>0.175</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.841</span><span>0.159</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Maia Challenger" data-q="luka mikrut sumit nagal maia challenger">
+      <tr class="ev"><td colspan="5"><span>Maia Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:44</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Luka Mikrut</span>
+          <span class="pl lose">Sumit Nagal</span><span class="sc">6-4 3-2</span>
+        </td>
+        <td class="n"><span>0.775</span><span>0.225</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.749</span><span>0.251</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Roanne Challenger" data-q="clement chidekh jerome kym roanne challenger">
+      <tr class="ev"><td colspan="5"><span>Roanne Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:59</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Clement Chidekh</span>
+          <span class="pl win">Jerome Kym</span><span class="sc">7-6(6) 7-6(3)</span>
+        </td>
+        <td class="n"><span>0.572</span><span>0.428</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.579</span><span>0.421</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Mallorca Women&#39;s Championships - Mallorca" data-q="julia grabher lidia encheva mallorca women&#39;s championships - mallorca">
+      <tr class="ev"><td colspan="5"><span>Mallorca Women&#39;s Championships - Mallorca</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:00</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Julia Grabher</span>
+          <span class="pl lose">Lidia Encheva</span><span class="sc">4-6 7-5 6-4</span>
+        </td>
+        <td class="n"><span>0.750</span><span>0.250</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.757</span><span>0.243</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Shanghai Rolex Masters - Shanghai" data-q="tommy paul zizou bergs shanghai rolex masters - shanghai">
+      <tr class="ev"><td colspan="5"><span>Shanghai Rolex Masters - Shanghai</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:07</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Tommy Paul</span>
+          <span class="pl lose">Zizou Bergs</span><span class="sc">7-6 5-4</span>
+        </td>
+        <td class="n"><span>0.657</span><span>0.343</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.663</span><span>0.337</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Lisboa Belem Open - Lisbon" data-q="jessica bouzas maneiro irene burillo lisboa belem open - lisbon">
+      <tr class="ev"><td colspan="5"><span>Lisboa Belem Open - Lisbon</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:58</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Jessica Bouzas Maneiro</span>
+          <span class="pl lose">Irene Burillo</span><span class="sc">6-3 3-6 6-5</span>
+        </td>
+        <td class="n"><span>0.805</span><span>0.195</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.812</span><span>0.188</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Maia Challenger" data-q="lorenzo giustino michael vrbensky maia challenger">
+      <tr class="ev"><td colspan="5"><span>Maia Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:00</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Lorenzo Giustino</span>
+          <span class="pl lose">Michael Vrbensky</span><span class="sc">7-5 7-5</span>
+        </td>
+        <td class="n"><span>0.707</span><span>0.293</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.704</span><span>0.296</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="San Gregorio di Catania Challenger" data-q="buvaysar gadamauri enrico dalla valle san gregorio di catania challenger">
+      <tr class="ev"><td colspan="5"><span>San Gregorio di Catania Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:00</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Buvaysar Gadamauri</span>
+          <span class="pl lose">Enrico Dalla Valle</span><span class="sc">1-6 6-3 6-2</span>
+        </td>
+        <td class="n"><span>0.382</span><span>0.618</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.414</span><span>0.586</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Olbia Challenger" data-q="michael mmoh daniel rincon olbia challenger">
+      <tr class="ev"><td colspan="5"><span>Olbia Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:12</span><span class="mv">*</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Michael Mmoh</span>
+          <span class="pl lose">Daniel Rincon</span><span class="sc">7-5 6-2</span>
+        </td>
+        <td class="n"><span>0.527</span><span>0.473</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.519</span><span>0.481</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Roanne Challenger" data-q="sascha gueymard wayenburg clement tabur roanne challenger">
+      <tr class="ev"><td colspan="5"><span>Roanne Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:23</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Sascha Gueymard Wayenburg</span>
+          <span class="pl lose">Clement Tabur</span><span class="sc">7-6(10) 6-3</span>
+        </td>
+        <td class="n"><span>0.599</span><span>0.401</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.604</span><span>0.396</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="RoveretOpen Citta della Pace - Rovereto" data-q="jil teichmann lucia bronzetti roveretopen citta della pace - rovereto">
+      <tr class="ev"><td colspan="5"><span>RoveretOpen Citta della Pace - Rovereto</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:30</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Jil Teichmann</span>
+          <span class="pl lose">Lucia Bronzetti</span><span class="sc">6-4 5-4</span>
+        </td>
+        <td class="n"><span>0.482</span><span>0.518</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.484</span><span>0.516</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="San Gregorio di Catania Challenger" data-q="radu mihai papoe luca potenza san gregorio di catania challenger">
+      <tr class="ev"><td colspan="5"><span>San Gregorio di Catania Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:30</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Radu Mihai Papoe</span>
+          <span class="pl lose">Luca Potenza</span><span class="sc">6-3 6-4</span>
+        </td>
+        <td class="n"><span>0.776</span><span>0.224</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.729</span><span>0.271</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Wuhan Open - Wuhan" data-q="han shi leylah annie fernandez wuhan open - wuhan">
+      <tr class="ev"><td colspan="5"><span>Wuhan Open - Wuhan</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:30</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Han Shi</span>
+          <span class="pl win">Leylah Annie Fernandez</span><span class="sc">6-3 6-4</span>
+        </td>
+        <td class="n"><span>0.245</span><span>0.755</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.239</span><span>0.761</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Maia Challenger" data-q="francesco passaro tiago torres maia challenger">
+      <tr class="ev"><td colspan="5"><span>Maia Challenger</span> · <span>R32</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:00</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Francesco Passaro</span>
+          <span class="pl lose">Tiago Torres</span><span class="sc">6-3 6-0</span>
+        </td>
+        <td class="n"><span>0.749</span><span>0.251</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.736</span><span>0.264</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Olbia Challenger" data-q="luca nardi lorenzo carboni olbia challenger">
+      <tr class="ev"><td colspan="5"><span>Olbia Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:16</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Luca Nardi</span>
+          <span class="pl lose">Lorenzo Carboni</span><span class="sc">6-4 6-1</span>
+        </td>
+        <td class="n"><span>0.740</span><span>0.260</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.748</span><span>0.252</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Maia Challenger" data-q="alejo sanchez quilez andrej nedic maia challenger">
+      <tr class="ev"><td colspan="5"><span>Maia Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:17</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Alejo Sanchez Quilez</span>
+          <span class="pl lose">Andrej Nedic</span><span class="sc">6-3 6-4</span>
+        </td>
+        <td class="n"><span>0.466</span><span>0.534</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.488</span><span>0.512</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="RoveretOpen Citta della Pace - Rovereto" data-q="harmony tan lucrezia stefanini roveretopen citta della pace - rovereto">
+      <tr class="ev"><td colspan="5"><span>RoveretOpen Citta della Pace - Rovereto</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:30</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Harmony Tan</span>
+          <span class="pl win">Lucrezia Stefanini</span><span class="sc">2-6 3-6</span>
+        </td>
+        <td class="n"><span>0.353</span><span>0.647</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.363</span><span>0.637</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Roanne Challenger" data-q="mika brunold benjamin bonzi roanne challenger">
+      <tr class="ev"><td colspan="5"><span>Roanne Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:30</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Mika Brunold</span>
+          <span class="pl lose">Benjamin Bonzi</span><span class="sc">6-2 2-6 6-4</span>
+        </td>
+        <td class="n"><span>0.293</span><span>0.707</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.291</span><span>0.709</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="RoveretOpen Citta della Pace - Rovereto" data-q="lisa pigato lucie havlickova roveretopen citta della pace - rovereto">
+      <tr class="ev"><td colspan="5"><span>RoveretOpen Citta della Pace - Rovereto</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:46</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Lisa Pigato</span>
+          <span class="pl win">Lucie Havlickova</span><span class="sc">0-6 1-6</span>
+        </td>
+        <td class="n"><span>0.590</span><span>0.410</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.547</span><span>0.453</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Lisboa Belem Open - Lisbon" data-q="martha matoula guiomar zuleta de reales lisboa belem open - lisbon">
+      <tr class="ev"><td colspan="5"><span>Lisboa Belem Open - Lisbon</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">11:08</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Martha Matoula</span>
+          <span class="pl win">Guiomar Zuleta De Reales</span><span class="sc">0-6 6-7(4)</span>
+        </td>
+        <td class="n"><span>0.174</span><span>0.826</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.159</span><span>0.841</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Santa Cruz de la Sierra 2 Challenger" data-q="genaro alberto olivieri alex barrena santa cruz de la sierra 2 challenger">
+      <tr class="ev"><td colspan="5"><span>Santa Cruz de la Sierra 2 Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:00</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Genaro Alberto Olivieri</span>
+          <span class="pl lose">Alex Barrena</span><span class="sc">3-6 6-3 6-4</span>
+        </td>
+        <td class="n"><span>0.351</span><span>0.649</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.350</span><span>0.650</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Santa Cruz de la Sierra 2 Challenger" data-q="maximo zeitune luis queiroz miguel santa cruz de la sierra 2 challenger">
+      <tr class="ev"><td colspan="5"><span>Santa Cruz de la Sierra 2 Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:00</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Maximo Zeitune</span>
+          <span class="pl win">Luis Queiroz Miguel</span><span class="sc">2-6 4-6</span>
+        </td>
+        <td class="n"><span>0.397</span><span>0.603</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.392</span><span>0.608</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Roanne Challenger" data-q="hugo gaston pierre-hugues herbert roanne challenger">
+      <tr class="ev"><td colspan="5"><span>Roanne Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:11</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Hugo Gaston</span>
+          <span class="pl lose">Pierre-Hugues Herbert</span><span class="sc">3-6 6-3 6-4</span>
+        </td>
+        <td class="n"><span>0.690</span><span>0.310</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.694</span><span>0.306</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Santa Cruz de la Sierra 2 Challenger" data-q="francisco comesana felipe meligeni alves santa cruz de la sierra 2 challenger">
+      <tr class="ev"><td colspan="5"><span>Santa Cruz de la Sierra 2 Challenger</span> · <span>R16</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">15:33</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Francisco Comesana</span>
+          <span class="pl lose">Felipe Meligeni Alves</span><span class="sc">6-1 6-4</span>
+        </td>
+        <td class="n"><span>0.655</span><span>0.345</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.659</span><span>0.341</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Wuhan Open - Wuhan" data-q="karolina muchova diana shnaider wuhan open - wuhan">
+      <tr class="ev"><td colspan="5"><span>Wuhan Open - Wuhan</span> · <span>R32</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:10</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Karolina Muchova</span>
+          <span class="pl win">Diana Shnaider</span><span class="sc">5-7 3-6</span>
+        </td>
+        <td class="n"><span>0.507</span><span>0.493</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.490</span><span>0.510</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Jinan Challenger" data-q="shintaro mochizuki dane sweeny jinan challenger">
+      <tr class="ev"><td colspan="5"><span>Jinan Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">21:05</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Shintaro Mochizuki</span>
+          <span class="pl lose">Dane Sweeny</span><span class="sc">6-3 7-6(5)</span>
+        </td>
+        <td class="n"><span>0.570</span><span>0.430</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.563</span><span>0.437</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Jinan Challenger" data-q="alexander shevchenko jay dylan hara friend jinan challenger">
+      <tr class="ev"><td colspan="5"><span>Jinan Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:05</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Alexander Shevchenko</span>
+          <span class="pl lose">Jay Dylan Hara Friend</span><span class="sc">6-0 6-4</span>
+        </td>
+        <td class="n"><span>0.504</span><span>0.496</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.529</span><span>0.471</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Wuhan Open - Wuhan" data-q="elina svitolina hanyu guo wuhan open - wuhan">
+      <tr class="ev"><td colspan="5"><span>Wuhan Open - Wuhan</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:30</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Elina Svitolina</span>
+          <span class="pl lose">Hanyu Guo</span><span class="sc">6-1 6-4</span>
+        </td>
+        <td class="n"><span>0.916</span><span>0.084</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.857</span><span>0.143</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Jinan Challenger" data-q="yosuke watanuki marin cilic jinan challenger">
+      <tr class="ev"><td colspan="5"><span>Jinan Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:51</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Yosuke Watanuki</span>
+          <span class="pl lose">Marin Cilic</span><span class="sc">7-5 6-4</span>
+        </td>
+        <td class="n"><span>0.412</span><span>0.588</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.383</span><span>0.617</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Jinan Challenger" data-q="luka pavlovic mattia bellucci jinan challenger">
+      <tr class="ev"><td colspan="5"><span>Jinan Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">23:38</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Luka Pavlovic</span>
+          <span class="pl win">Mattia Bellucci</span><span class="sc">4-6 4-6</span>
+        </td>
+        <td class="n"><span>0.204</span><span>0.796</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.216</span><span>0.784</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Wuhan Open - Wuhan" data-q="iva jovic maja chwalinska wuhan open - wuhan">
+      <tr class="ev"><td colspan="5"><span>Wuhan Open - Wuhan</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">23:50</span>
+          <span class="d">Wed 14 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Iva Jovic</span>
+          <span class="pl win">Maja Chwalinska</span><span class="sc">4-6 1-6</span>
+        </td>
+        <td class="n"><span>0.743</span><span>0.257</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.736</span><span>0.264</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Wuhan Open - Wuhan" data-q="ashlyn krueger lanlana tararudee wuhan open - wuhan">
+      <tr class="ev"><td colspan="5"><span>Wuhan Open - Wuhan</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">19:40</span><span class="mv">*</span>
+          <span class="d">Tue 20 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Ashlyn Krueger</span>
+          <span class="pl lose">Lanlana Tararudee</span><span class="sc">2-6 6-1 6-1</span>
+        </td>
+        <td class="n"><span>0.529</span><span>0.471</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.532</span><span>0.468</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Santa Cruz de la Sierra 2 Challenger" data-q="rodrigo pacheco mendez hugo dellien santa cruz de la sierra 2 challenger">
+      <tr class="ev"><td colspan="5"><span>Santa Cruz de la Sierra 2 Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:10</span><span class="mv">*</span>
+          <span class="d">Thu 29 Oct</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Rodrigo Pacheco Mendez</span>
+          <span class="pl win">Hugo Dellien</span><span class="sc">6-3 7-5</span>
+        </td>
+        <td class="n"><span>0.382</span><span>0.618</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.368</span><span>0.632</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <p class="foot">Prices are implied probabilities with the margin removed, first player on top. Open is the
+    opening line; Now is Pinnacle at build time (tap for the American price); Close is the last pre-match price.
+    Times are PDT; an asterisk marks a match Pinnacle has moved later.</p>
+</main>
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('tbody.m'));
+  var tour = document.getElementById('tour'), ev = document.getElementById('event'),
+      q = document.getElementById('q'), n = document.getElementById('n');
+  if (!tour) return;
+  function fold(s) { return (s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+  function apply() {
+    var t = tour.value, e = ev.value, terms = fold(q.value).split(/\s+/).filter(Boolean), shown = 0;
+    rows.forEach(function (r) {
+      var ok = (!t || r.getAttribute('data-tour') === t) && (!e || r.getAttribute('data-event') === e);
+      if (ok) { var hay = r.getAttribute('data-q'); ok = terms.every(function (w) { return hay.indexOf(w) >= 0; }); }
+      r.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+    n.textContent = shown;
+  }
+  tour.addEventListener('change', apply); ev.addEventListener('change', apply); q.addEventListener('input', apply);
+})();
+</script>
+</body>
+</html>
