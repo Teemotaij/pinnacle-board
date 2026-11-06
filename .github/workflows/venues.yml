@@ -1,0 +1,46 @@
+name: venues
+
+# Novig's and Polymarket's public tennis order books, every five minutes (venues.py). Both venues publish their
+# trades after the fact; neither keeps the order book, so it has to be read as it stands. Public repository:
+# the minutes are free, as for poll.yml. Offset two minutes from poll.yml so the two pushes rarely meet.
+
+on:
+  schedule:
+    - cron: "2-59/5 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: venues
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      # Standard library only, like poll.py: no setup-python, no pip.
+      - name: Record
+        run: python3 venues.py
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name  "board-poller"
+          git config user.email "board-poller@users.noreply.github.com"
+          if git diff --quiet -- venues && [ -z "$(git ls-files --others --exclude-standard venues)" ]; then
+            echo "no change"; exit 0
+          fi
+          git add venues
+          git commit -q -m "venues $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do
+            git pull --rebase --autostash -q && git push -q && exit 0
+            echo "push attempt $i failed, retrying"; sleep $((i * 5))
+          done
+          exit 1

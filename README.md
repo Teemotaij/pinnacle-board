@@ -44,3 +44,18 @@ python3 poll.py
 ```
 
 Standard library only. No dependencies, no configuration, no environment variables.
+
+## Other venues
+
+`venues.py` (workflow `venues`, every five minutes) mirrors the **public** tennis moneyline order books of Novig and
+Polymarket. Both publish their trades after the fact; neither keeps the order book, so it is read as it stands. Like
+the rest of this repository it reads only what any logged-out visitor can, and authenticates nothing.
+
+| Path | What it is |
+|---|---|
+| `venues/novig/catalog.csv` | Every Novig ATP/WTA moneyline seen: ids, players, start, status, first and last seen. |
+| `venues/novig/books/YYYY-MM-DD.csv` | A row each time a book changed: each outcome's resting bids, best first, as `price:qty`. A Novig contract pays 1 cent. |
+| `venues/polymarket/catalog.csv` | The same for Polymarket's tennis moneylines (condition id, tokens, players). ITF and doubles are left out. |
+| `venues/polymarket/books/YYYY-MM-DD.csv` | The first outcome's bids and asks, best first, as `price:size` (shares paying $1). |
+
+Books are kept for matches starting within 36 hours or in play.
