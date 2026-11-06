@@ -48,14 +48,15 @@ Standard library only. No dependencies, no configuration, no environment variabl
 ## Other venues
 
 `venues.py` (workflow `venues`, every five minutes) mirrors the **public** tennis moneyline order books of Novig and
-Polymarket. Both publish their trades after the fact; neither keeps the order book, so it is read as it stands. Like
-the rest of this repository it reads only what any logged-out visitor can, and authenticates nothing.
+Polymarket US. Both publish their trades or prices after the fact; neither keeps the order book, so it is read as it
+stands. Like the rest of this repository it reads only what any logged-out visitor can, and authenticates nothing.
 
 | Path | What it is |
 |---|---|
 | `venues/novig/catalog.csv` | Every Novig ATP/WTA moneyline seen: ids, players, start, status, first and last seen. |
 | `venues/novig/books/YYYY-MM-DD.csv` | A row each time a book changed: each outcome's resting bids, best first, as `price:qty`. A Novig contract pays 1 cent. |
-| `venues/polymarket/catalog.csv` | The same for Polymarket's tennis moneylines (condition id, tokens, players). ITF and doubles are left out. |
-| `venues/polymarket/books/YYYY-MM-DD.csv` | The first outcome's bids and asks, best first, as `price:size` (shares paying $1). |
+| `venues/polymarket_us/catalog.csv` | Every Polymarket US ATP/WTA moneyline seen: market slug, players, start, listing time, taker fee coefficient. |
+| `venues/polymarket_us/books/YYYY-MM-DD.csv` | The first-named player's bids and offers, best first, as `price:qty` (contracts paying $1), with volume traded. |
+| `venues/polymarket/` | The international Polymarket's books, 6 Nov 2026 22:45-23:10 UTC only (US accounts cannot trade it). |
 
 Books are kept for matches starting within 36 hours or in play.
