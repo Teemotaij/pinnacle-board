@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+<title>Tennis board</title>
+<style>
+:root {
+  --bg: #151a21; --surface: #1d242e; --line: #2b3441; --line-soft: #232b36;
+  --ink: #e4e9ef; --ink-dim: #9aa7b8; --ink-faint: #6b7889; --live: #e0a458;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px;
+       line-height: 1.45; font-feature-settings: "tnum" 1; }
+header { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding: .8rem 16px;
+         border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 2; }
+header h1 { margin: 0; font-size: 1rem; font-weight: 600; }
+header .built { margin-left: auto; font: .78rem var(--mono); color: var(--ink-faint); }
+main { padding: 12px 16px 32px; max-width: 900px; }
+.bar { display: flex; flex-wrap: wrap; gap: .5rem .9rem; align-items: end; margin-bottom: .8rem; }
+.bar label { display: flex; flex-direction: column; font-size: .72rem; color: var(--ink-dim); gap: .15rem; }
+.bar select, .bar input { font: inherit; font-size: .86rem; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 4px; padding: .3rem .4rem; max-width: 100%; }
+.bar input { width: 11rem; }
+.bar a { font-size: .86rem; color: var(--ink-dim); padding-bottom: .35rem; }
+.count { font-size: .78rem; color: var(--ink-faint); margin: 0 0 .4rem; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th { font-size: .7rem; font-weight: 500; color: var(--ink-faint); text-align: left; padding: .3rem .3rem;
+     border-bottom: 1px solid var(--line); }
+td { padding: .1rem .3rem .45rem; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+tr.ev td { padding: .5rem .3rem 0; border-bottom: 0; font-size: .72rem; color: var(--ink-faint); }
+th.n, td.n { text-align: right; font-family: var(--mono); font-size: .82rem; width: 3.6rem; }
+th.when, td.when { width: 4.4rem; }
+td.when .t { font-family: var(--mono); font-size: .86rem; }
+td.when .d, .sc { display: block; font-size: .72rem; color: var(--ink-faint); }
+.win { font-weight: 600; }
+.lose { color: var(--ink-dim); }
+td.n span, td.match .pl { display: block; line-height: 1.45rem; }
+/* One line per player, always, or the prices beside a long name stop sitting level with it. */
+td.match .pl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st { display: inline-block; font-size: .66rem; padding: 0 .3rem; border-radius: 3px; margin-top: .15rem;
+      border: 1px solid var(--line); color: var(--ink-dim); }
+.st.live { color: var(--live); border-color: var(--live); }
+.mv { color: var(--live); }
+.dash { color: var(--ink-faint); }
+.foot { margin-top: 1.2rem; font-size: .74rem; color: var(--ink-faint); max-width: 40rem; }
+@media (max-width: 520px) {
+  body { font-size: 14px; }
+  th.n, td.n { width: 3.1rem; font-size: .76rem; }
+  th.when, td.when { width: 3.6rem; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tennis board</h1>
+  <span class="built">07 Nov 12:21 PST · built</span>
+</header>
+<main>
+  <div class="bar">
+    <label>Day
+      <select id="day" onchange="location.href = this.value + '.html'"><option value="2026-11-09">2026-11-09</option><option value="2026-11-08">2026-11-08</option><option value="2026-11-07">2026-11-07</option><option value="2026-11-06" selected>2026-11-06</option><option value="2026-11-05">2026-11-05</option><option value="2026-11-04">2026-11-04</option><option value="2026-11-03">2026-11-03</option><option value="2026-11-02">2026-11-02</option><option value="2026-11-01">2026-11-01</option><option value="2026-10-31">2026-10-31</option><option value="2026-10-30">2026-10-30</option><option value="2026-10-29">2026-10-29</option><option value="2026-10-28">2026-10-28</option><option value="2026-10-27">2026-10-27</option><option value="2026-10-26">2026-10-26</option><option value="2026-10-25">2026-10-25</option><option value="2026-10-24">2026-10-24</option><option value="2026-10-23">2026-10-23</option><option value="2026-10-22">2026-10-22</option><option value="2026-10-21">2026-10-21</option><option value="2026-10-20">2026-10-20</option><option value="2026-10-19">2026-10-19</option><option value="2026-10-18">2026-10-18</option><option value="2026-10-17">2026-10-17</option><option value="2026-10-16">2026-10-16</option><option value="2026-10-15">2026-10-15</option><option value="2026-10-14">2026-10-14</option><option value="2026-10-13">2026-10-13</option><option value="2026-10-12">2026-10-12</option><option value="2026-10-11">2026-10-11</option></select>
+    </label>
+    <a href="index.html">Today</a>
+    <label>Tour
+      <select id="tour">
+        <option value="">Men &amp; women</option><option value="ATP">ATP</option><option value="WTA">WTA</option></select>
+    </label>
+    <label>Tournament
+      <select id="event">
+        <option value="">All</option><option value="Angola Ladies Open - Luanda">Angola Ladies Open - Luanda</option><option value="Bratislava 2 Challenger">Bratislava 2 Challenger</option><option value="Cali Open - Cali">Cali Open - Cali</option><option value="Charlottesville Challenger">Charlottesville Challenger</option><option value="Chennai Open - Chennai">Chennai Open - Chennai</option><option value="Costa do Sauipe Challenger">Costa do Sauipe Challenger</option><option value="Hong Kong Tennis Open - Hong Kong">Hong Kong Tennis Open - Hong Kong</option><option value="Rolex Paris Masters - Paris">Rolex Paris Masters - Paris</option><option value="Taipei Challenger">Taipei Challenger</option><option value="Taranto Challenger">Taranto Challenger</option><option value="Villa Maria Challenger">Villa Maria Challenger</option></select>
+    </label>
+    <label>Search
+      <input id="q" type="search" placeholder="player or event" autocomplete="off">
+    </label>
+  </div>
+  <p class="count"><span id="n">39</span> matches</p>
+  
+  <table>
+    <thead><tr>
+      <th class="when">Time</th><th>Match</th>
+      <th class="n">Open</th><th class="n">Now</th><th class="n">Close</th>
+    </tr></thead>
+    <tbody class="m" data-tour="ATP" data-event="Taipei Challenger" data-q="chak lam coleman wong kasidit samrej taipei challenger">
+      <tr class="ev"><td colspan="5"><span>Taipei Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:00</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Chak Lam Coleman Wong</span>
+          <span class="pl lose">Kasidit Samrej</span><span class="sc">7-5 6-2</span>
+        </td>
+        <td class="n"><span>0.847</span><span>0.153</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.841</span><span>0.159</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Hong Kong Tennis Open - Hong Kong" data-q="sorana cirstea alexandra shubladze hong kong tennis open - hong kong">
+      <tr class="ev"><td colspan="5"><span>Hong Kong Tennis Open - Hong Kong</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:03</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Sorana Cirstea</span>
+          <span class="pl win">Alexandra Shubladze</span><span class="sc">2-6 3-6</span>
+        </td>
+        <td class="n"><span>0.723</span><span>0.277</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.726</span><span>0.274</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Chennai Open - Chennai" data-q="janice tjen polina kudermetova chennai open - chennai">
+      <tr class="ev"><td colspan="5"><span>Chennai Open - Chennai</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:43</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Janice Tjen</span>
+          <span class="pl lose">Polina Kudermetova</span><span class="sc">6-2 6-2</span>
+        </td>
+        <td class="n"><span>0.617</span><span>0.383</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.643</span><span>0.357</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Taranto Challenger" data-q="maxim mrva matteo martineau taranto challenger">
+      <tr class="ev"><td colspan="5"><span>Taranto Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:47</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Maxim Mrva</span>
+          <span class="pl win">Matteo Martineau</span><span class="sc">5-7 7-5 4-3</span>
+        </td>
+        <td class="n"><span>0.565</span><span>0.435</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.562</span><span>0.438</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Hong Kong Tennis Open - Hong Kong" data-q="aliaksandra sasnovich maria sakkari hong kong tennis open - hong kong">
+      <tr class="ev"><td colspan="5"><span>Hong Kong Tennis Open - Hong Kong</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:48</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Aliaksandra Sasnovich</span>
+          <span class="pl win">Maria Sakkari</span><span class="sc">6-2 6-3</span>
+        </td>
+        <td class="n"><span>0.438</span><span>0.562</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.382</span><span>0.618</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Angola Ladies Open - Luanda" data-q="sofya lansere martyna kubka angola ladies open - luanda">
+      <tr class="ev"><td colspan="5"><span>Angola Ladies Open - Luanda</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:05</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Sofya Lansere</span>
+          <span class="pl lose">Martyna Kubka</span><span class="sc">7-6(4) 7-5</span>
+        </td>
+        <td class="n"><span>0.342</span><span>0.658</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.359</span><span>0.641</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Angola Ladies Open - Luanda" data-q="ksenia zaytseva gina feistel angola ladies open - luanda">
+      <tr class="ev"><td colspan="5"><span>Angola Ladies Open - Luanda</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:00</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Ksenia Zaytseva</span>
+          <span class="pl win">Gina Feistel</span><span class="sc">1-6 5-6</span>
+        </td>
+        <td class="n"><span>0.529</span><span>0.471</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.563</span><span>0.437</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Charlottesville Challenger" data-q="andres andrade james kent trotter charlottesville challenger">
+      <tr class="ev"><td colspan="5"><span>Charlottesville Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:00</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Andres Andrade</span>
+          <span class="pl lose">James Kent Trotter</span><span class="sc">3-6 6-3 6-1</span>
+        </td>
+        <td class="n"><span>0.514</span><span>0.486</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.505</span><span>0.495</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Costa do Sauipe Challenger" data-q="thiago moura monteiro marco cecchinato costa do sauipe challenger">
+      <tr class="ev"><td colspan="5"><span>Costa do Sauipe Challenger</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:00</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Thiago Moura Monteiro</span>
+          <span class="pl win">Marco Cecchinato</span><span class="sc">6-7(5) 4-6</span>
+        </td>
+        <td class="n"><span>0.562</span><span>0.438</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.572</span><span>0.428</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Taranto Challenger" data-q="felix gill jay clarke taranto challenger">
+      <tr class="ev"><td colspan="5"><span>Taranto Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:13</span><span class="mv">*</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Felix Gill</span>
+          <span class="pl lose">Jay Clarke</span><span class="sc">6-4 4-6 6-2</span>
+        </td>
+        <td class="n"><span>0.503</span><span>0.497</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.504</span><span>0.496</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Chennai Open - Chennai" data-q="robin montgomery maaya rajeshwaran revathi chennai open - chennai">
+      <tr class="ev"><td colspan="5"><span>Chennai Open - Chennai</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:30</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Robin Montgomery</span>
+          <span class="pl lose">Maaya Rajeshwaran Revathi</span><span class="sc">6-3 6-3</span>
+        </td>
+        <td class="n"><span>0.840</span><span>0.160</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.827</span><span>0.173</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Bratislava 2 Challenger" data-q="matej dodig laslo djere bratislava 2 challenger">
+      <tr class="ev"><td colspan="5"><span>Bratislava 2 Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:40</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Matej Dodig</span>
+          <span class="pl lose">Laslo Djere</span><span class="sc">6-4 6-4</span>
+        </td>
+        <td class="n"><span>0.495</span><span>0.505</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.553</span><span>0.447</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Hong Kong Tennis Open - Hong Kong" data-q="antonia ruzic alexandra eala hong kong tennis open - hong kong">
+      <tr class="ev"><td colspan="5"><span>Hong Kong Tennis Open - Hong Kong</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:30</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Antonia Ruzic</span>
+          <span class="pl win">Alexandra Eala</span><span class="sc">6-7(7) 5-7</span>
+        </td>
+        <td class="n"><span>0.223</span><span>0.777</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.213</span><span>0.787</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Angola Ladies Open - Luanda" data-q="justina mikulskyte noma akugue noha angola ladies open - luanda">
+      <tr class="ev"><td colspan="5"><span>Angola Ladies Open - Luanda</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:45</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Justina Mikulskyte</span>
+          <span class="pl win">Noma Akugue Noha</span><span class="sc">2-6 3-3</span>
+        </td>
+        <td class="n"><span>0.155</span><span>0.845</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.161</span><span>0.839</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Chennai Open - Chennai" data-q="mai hontama magda linette chennai open - chennai">
+      <tr class="ev"><td colspan="5"><span>Chennai Open - Chennai</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:00</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Mai Hontama</span>
+          <span class="pl win">Magda Linette</span><span class="sc">6-4 5-7 4-6</span>
+        </td>
+        <td class="n"><span>0.321</span><span>0.679</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.315</span><span>0.685</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Bratislava 2 Challenger" data-q="nishesh basavareddy jerome kym bratislava 2 challenger">
+      <tr class="ev"><td colspan="5"><span>Bratislava 2 Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:06</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Nishesh Basavareddy</span>
+          <span class="pl win">Jerome Kym</span><span class="sc">4-6 4-6</span>
+        </td>
+        <td class="n"><span>0.457</span><span>0.543</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.483</span><span>0.517</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="ben shelton tommy paul rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:10</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Ben Shelton</span>
+          <span class="pl lose">Tommy Paul</span><span class="sc">6-4 4-6 4-2</span>
+        </td>
+        <td class="n"><span>0.453</span><span>0.547</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.457</span><span>0.543</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Taranto Challenger" data-q="kilian feldbausch sumit nagal taranto challenger">
+      <tr class="ev"><td colspan="5"><span>Taranto Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:45</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Kilian Feldbausch</span>
+          <span class="pl lose">Sumit Nagal</span><span class="sc">6-3 5-7 7-6(4)</span>
+        </td>
+        <td class="n"><span>0.586</span><span>0.414</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.565</span><span>0.435</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Villa Maria Challenger" data-q="oriol roca batalla nicolas kicker villa maria challenger">
+      <tr class="ev"><td colspan="5"><span>Villa Maria Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:00</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Oriol Roca Batalla</span>
+          <span class="pl win">Nicolas Kicker</span><span class="sc">3-6 1-6</span>
+        </td>
+        <td class="n"><span>0.636</span><span>0.364</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.638</span><span>0.362</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Villa Maria Challenger" data-q="juan manuel la serna carlos maria zarate villa maria challenger">
+      <tr class="ev"><td colspan="5"><span>Villa Maria Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:51</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Juan Manuel La Serna</span>
+          <span class="pl lose">Carlos Maria Zarate</span><span class="sc">6-3 6-4</span>
+        </td>
+        <td class="n"><span>0.646</span><span>0.354</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.616</span><span>0.384</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="luca van assche rinky hijikata rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:00</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Luca Van Assche</span>
+          <span class="pl lose">Rinky Hijikata</span><span class="sc">6-4 6-7 4-4</span>
+        </td>
+        <td class="n"><span>0.598</span><span>0.402</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.609</span><span>0.391</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Bratislava 2 Challenger" data-q="dalibor svrcina zsombor piros bratislava 2 challenger">
+      <tr class="ev"><td colspan="5"><span>Bratislava 2 Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:09</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Dalibor Svrcina</span>
+          <span class="pl lose">Zsombor Piros</span><span class="sc">4-6 6-0 6-4</span>
+        </td>
+        <td class="n"><span>0.486</span><span>0.514</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.570</span><span>0.430</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Charlottesville Challenger" data-q="max hans rehberg aidan mayo charlottesville challenger">
+      <tr class="ev"><td colspan="5"><span>Charlottesville Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:15</span><span class="mv">*</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Max Hans Rehberg</span>
+          <span class="pl win">Aidan Mayo</span><span class="sc">7-6(5) 6-3</span>
+        </td>
+        <td class="n"><span>0.411</span><span>0.589</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.392</span><span>0.608</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Chennai Open - Chennai" data-q="anastasia zakharova lucrezia stefanini chennai open - chennai">
+      <tr class="ev"><td colspan="5"><span>Chennai Open - Chennai</span> · <span>QF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:53</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Anastasia Zakharova</span>
+          <span class="pl lose">Lucrezia Stefanini</span><span class="sc">6-2 4-1</span>
+        </td>
+        <td class="n"><span>0.476</span><span>0.524</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.474</span><span>0.526</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Taranto Challenger" data-q="francesco maestrelli carlo alberto caniato taranto challenger">
+      <tr class="ev"><td colspan="5"><span>Taranto Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:46</span><span class="mv">*</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Francesco Maestrelli</span>
+          <span class="pl win">Carlo Alberto Caniato</span><span class="sc">6-7(5) 4-6</span>
+        </td>
+        <td class="n"><span>0.550</span><span>0.450</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.568</span><span>0.432</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Cali Open - Cali" data-q="leyre romero gormaz julia riera cali open - cali">
+      <tr class="ev"><td colspan="5"><span>Cali Open - Cali</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:00</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Leyre Romero Gormaz</span>
+          <span class="pl lose">Julia Riera</span><span class="sc">3-6 7-5 5-4</span>
+        </td>
+        <td class="n"><span>0.550</span><span>0.450</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.542</span><span>0.458</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Villa Maria Challenger" data-q="juan bautista torres genaro alberto olivieri villa maria challenger">
+      <tr class="ev"><td colspan="5"><span>Villa Maria Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:00</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Juan Bautista Torres</span>
+          <span class="pl win">Genaro Alberto Olivieri</span><span class="sc">6-4 6-2</span>
+        </td>
+        <td class="n"><span>0.490</span><span>0.510</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.480</span><span>0.520</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Charlottesville Challenger" data-q="stefan kozlov braden shick charlottesville challenger">
+      <tr class="ev"><td colspan="5"><span>Charlottesville Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:27</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Stefan Kozlov</span>
+          <span class="pl lose">Braden Shick</span><span class="sc">6-4 6-1</span>
+        </td>
+        <td class="n"><span>0.590</span><span>0.410</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.624</span><span>0.376</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Bratislava 2 Challenger" data-q="kimmer coppejans jurij rodionov bratislava 2 challenger">
+      <tr class="ev"><td colspan="5"><span>Bratislava 2 Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:45</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Kimmer Coppejans</span>
+          <span class="pl win">Jurij Rodionov</span><span class="sc">1-6 7-6(3) 3-6</span>
+        </td>
+        <td class="n"><span>0.278</span><span>0.722</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.293</span><span>0.707</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Costa do Sauipe Challenger" data-q="juan carlos prado angelo camilo ugo carabelli costa do sauipe challenger">
+      <tr class="ev"><td colspan="5"><span>Costa do Sauipe Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">11:00</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Juan Carlos Prado Angelo</span>
+          <span class="pl win">Camilo Ugo Carabelli</span><span class="sc">2-6 3-6</span>
+        </td>
+        <td class="n"><span>0.405</span><span>0.595</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.376</span><span>0.624</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Rolex Paris Masters - Paris" data-q="taylor harry fritz carlos alcaraz rolex paris masters - paris">
+      <tr class="ev"><td colspan="5"><span>Rolex Paris Masters - Paris</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">11:09</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Taylor Harry Fritz</span>
+          <span class="pl win">Carlos Alcaraz</span><span class="sc">6-7(10) 7-5 6-3</span>
+        </td>
+        <td class="n"><span>0.263</span><span>0.737</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.270</span><span>0.730</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Charlottesville Challenger" data-q="maks kasnikowski andres andrade charlottesville challenger">
+      <tr class="ev"><td colspan="5"><span>Charlottesville Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">11:40</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Maks Kasnikowski</span>
+          <span class="pl win">Andres Andrade</span><span class="sc">6-3 4-6 2-4</span>
+        </td>
+        <td class="n"><span>0.638</span><span>0.362</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.641</span><span>0.359</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Costa do Sauipe Challenger" data-q="facundo diaz acosta marco cecchinato costa do sauipe challenger">
+      <tr class="ev"><td colspan="5"><span>Costa do Sauipe Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:30</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Facundo Diaz Acosta</span>
+          <span class="pl lose">Marco Cecchinato</span><span class="sc">6-4 6-4</span>
+        </td>
+        <td class="n"><span>0.740</span><span>0.260</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.721</span><span>0.279</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Costa do Sauipe Challenger" data-q="gonzalo bueno lautaro midon costa do sauipe challenger">
+      <tr class="ev"><td colspan="5"><span>Costa do Sauipe Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:30</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Gonzalo Bueno</span>
+          <span class="pl lose">Lautaro Midon</span><span class="sc">6-1 6-2</span>
+        </td>
+        <td class="n"><span>0.343</span><span>0.657</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.342</span><span>0.658</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Cali Open - Cali" data-q="alice tubello bianca vanessa andreescu cali open - cali">
+      <tr class="ev"><td colspan="5"><span>Cali Open - Cali</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:50</span>
+          <span class="d">Fri 06 Nov</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Alice Tubello</span>
+          <span class="pl">Bianca Vanessa Andreescu</span>
+        </td>
+        <td class="n"><span>0.276</span><span>0.724</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.272</span><span>0.728</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Villa Maria Challenger" data-q="juan pablo ficovich federico coria villa maria challenger">
+      <tr class="ev"><td colspan="5"><span>Villa Maria Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">13:00</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Juan Pablo Ficovich</span>
+          <span class="pl win">Federico Coria</span><span class="sc">2-6 1-6</span>
+        </td>
+        <td class="n"><span>0.502</span><span>0.498</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.466</span><span>0.534</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Taipei Challenger" data-q="yuta shimizu jan kumstat taipei challenger">
+      <tr class="ev"><td colspan="5"><span>Taipei Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:00</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Yuta Shimizu</span>
+          <span class="pl win">Jan Kumstat</span><span class="sc">5-7 4-6</span>
+        </td>
+        <td class="n"><span>0.393</span><span>0.607</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.403</span><span>0.597</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Hong Kong Tennis Open - Hong Kong" data-q="alexandra shubladze claire liu hong kong tennis open - hong kong">
+      <tr class="ev"><td colspan="5"><span>Hong Kong Tennis Open - Hong Kong</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:14</span><span class="mv">*</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Alexandra Shubladze</span>
+          <span class="pl win">Claire Liu</span><span class="sc">7-5 6-4</span>
+        </td>
+        <td class="n"><span>0.525</span><span>0.475</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.466</span><span>0.534</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Taipei Challenger" data-q="chak lam coleman wong yosuke watanuki taipei challenger">
+      <tr class="ev"><td colspan="5"><span>Taipei Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:30</span>
+          <span class="d">Fri 06 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Chak Lam Coleman Wong</span>
+          <span class="pl win">Yosuke Watanuki</span><span class="sc">6-7(5) 6-7(6)</span>
+        </td>
+        <td class="n"><span>0.534</span><span>0.466</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.544</span><span>0.456</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <p class="foot">Prices are implied probabilities with the margin removed, first player on top. Open is the
+    opening line; Now is Pinnacle at build time (tap for the American price); Close is the last pre-match price.
+    Times are PST; an asterisk marks a match Pinnacle has moved later.</p>
+</main>
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('tbody.m'));
+  var tour = document.getElementById('tour'), ev = document.getElementById('event'),
+      q = document.getElementById('q'), n = document.getElementById('n');
+  if (!tour) return;
+  function fold(s) { return (s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+  function apply() {
+    var t = tour.value, e = ev.value, terms = fold(q.value).split(/\s+/).filter(Boolean), shown = 0;
+    rows.forEach(function (r) {
+      var ok = (!t || r.getAttribute('data-tour') === t) && (!e || r.getAttribute('data-event') === e);
+      if (ok) { var hay = r.getAttribute('data-q'); ok = terms.every(function (w) { return hay.indexOf(w) >= 0; }); }
+      r.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+    n.textContent = shown;
+  }
+  tour.addEventListener('change', apply); ev.addEventListener('change', apply); q.addEventListener('input', apply);
+})();
+</script>
+</body>
+</html>
