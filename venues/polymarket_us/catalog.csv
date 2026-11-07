@@ -1,37 +1,37 @@
 market_id,league,event,start,created,outcome1,outcome2,fee,tick,min_qty,first_seen,last_seen
-aec-atp-adrman-jansim-2026-11-07,atp,Adrian Mannarino vs. Jan Simonsson,2026-11-07T13:50:00Z,2026-11-06T21:15:21Z,Adrian Mannarino,Jan Simonsson,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-aidmay-andand-2026-11-07,atp,Aidan Mayo vs. Andres Andrade,2026-11-07T18:30:00Z,2026-11-06T22:15:19Z,Aidan Mayo,Andres Andrade,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-carcan-kilfel-2026-11-07,atp,Carlo Alberto Caniato vs. Kilian Feldbausch,2026-11-07T12:20:00Z,2026-11-06T19:30:23Z,Carlo Alberto Caniato,Kilian Feldbausch,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
+aec-atp-adrman-jansim-2026-11-07,atp,Adrian Mannarino vs. Jan Simonsson,2026-11-07T13:50:00Z,2026-11-06T21:15:21Z,Adrian Mannarino,Jan Simonsson,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-aidmay-andand-2026-11-07,atp,Aidan Mayo vs. Andres Andrade,2026-11-07T18:30:00Z,2026-11-06T22:15:19Z,Aidan Mayo,Andres Andrade,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-carcan-kilfel-2026-11-07,atp,Carlo Alberto Caniato vs. Kilian Feldbausch,2026-11-07T12:20:00Z,2026-11-06T19:30:23Z,Carlo Alberto Caniato,Kilian Feldbausch,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
 aec-atp-casruu-nunbor-2026-11-06,atp,Casper Ruud vs. Nuno Borges,2026-11-06T21:55:00Z,2026-11-05T21:15:20Z,Casper Ruud,Nuno Borges,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-06T23:43:23Z
-aec-atp-colwon-yoswat-2026-11-06,atp,Coleman Wong vs. Yosuke Watanuki,2026-11-07T06:10:00Z,2026-11-06T10:00:25Z,Coleman Wong,Yosuke Watanuki,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-dalsvr-jurrod-2026-11-07,atp,Dalibor Svrcina vs. Jurij Rodionov,2026-11-07T13:20:00Z,2026-11-06T21:00:28Z,Dalibor Svrcina,Jurij Rodionov,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-damdzu-inamon-2026-11-07,atp,Damir Dzumhur vs. Inaki Montes-de la Torre,2026-11-07T11:10:00Z,2026-11-06T17:30:22Z,Damir Dzumhur,Inaki Montes,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-fedcor-genoli-2026-11-07,atp,Federico Coria vs. Genaro Alberto Olivieri,2026-11-07T15:10:00Z,2026-11-06T21:45:18Z,Federico Coria,Genaro Alberto Olivieri,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-felgil-matmar-2026-11-07,atp,Felix Gill vs. Matteo Martineau,2026-11-07T11:10:00Z,2026-11-06T14:45:24Z,Felix Gill,Matteo Martineau,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-gonbue-camcar-2026-11-07,atp,Gonzalo Bueno vs. Camilo Ugo Carabelli,2026-11-07T18:00:00Z,2026-11-06T21:15:20Z,Gonzalo Bueno,Camilo Ugo Carabelli,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-jacfea-artnag-2026-11-07,atp,Jacob Fearnley vs. Arthur Nagel,2026-11-07T13:30:00Z,2026-11-06T17:30:21Z,Jacob Fearnley,Arthur Nagel,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-jerkym-matdod-2026-11-07,atp,Jerome Kym vs. Matej Dodig,2026-11-07T12:10:00Z,2026-11-06T15:30:20Z,Jerome Kym,Matej Dodig,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-juaser-nickic-2026-11-07,atp,Juan Manuel La Serna vs. Nicolas Kicker,2026-11-07T14:00:00Z,2026-11-06T17:15:16Z,Juan Manuel La Serna,Nicolas Kicker,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-karfri-tobsam-2026-11-07,atp,Karl Friberg vs. Toby Samuel,2026-11-07T12:40:00Z,2026-11-06T17:30:24Z,Karl Friberg,Toby Samuel,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-lucass-benshe-2026-11-07,atp,Luca Van Assche vs. Ben Shelton,2026-11-07T13:30:00Z,2026-11-06T18:15:19Z,Luca Van Assche,Ben Shelton,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
+aec-atp-colwon-yoswat-2026-11-06,atp,Coleman Wong vs. Yosuke Watanuki,2026-11-07T06:10:00Z,2026-11-06T10:00:25Z,Coleman Wong,Yosuke Watanuki,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-dalsvr-jurrod-2026-11-07,atp,Dalibor Svrcina vs. Jurij Rodionov,2026-11-07T13:20:00Z,2026-11-06T21:00:28Z,Dalibor Svrcina,Jurij Rodionov,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-damdzu-inamon-2026-11-07,atp,Damir Dzumhur vs. Inaki Montes-de la Torre,2026-11-07T11:10:00Z,2026-11-06T17:30:22Z,Damir Dzumhur,Inaki Montes,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-fedcor-genoli-2026-11-07,atp,Federico Coria vs. Genaro Alberto Olivieri,2026-11-07T15:10:00Z,2026-11-06T21:45:18Z,Federico Coria,Genaro Alberto Olivieri,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-felgil-matmar-2026-11-07,atp,Felix Gill vs. Matteo Martineau,2026-11-07T11:10:00Z,2026-11-06T14:45:24Z,Felix Gill,Matteo Martineau,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-gonbue-camcar-2026-11-07,atp,Gonzalo Bueno vs. Camilo Ugo Carabelli,2026-11-07T18:00:00Z,2026-11-06T21:15:20Z,Gonzalo Bueno,Camilo Ugo Carabelli,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-jacfea-artnag-2026-11-07,atp,Jacob Fearnley vs. Arthur Nagel,2026-11-07T13:30:00Z,2026-11-06T17:30:21Z,Jacob Fearnley,Arthur Nagel,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-jerkym-matdod-2026-11-07,atp,Jerome Kym vs. Matej Dodig,2026-11-07T12:10:00Z,2026-11-06T15:30:20Z,Jerome Kym,Matej Dodig,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-juaser-nickic-2026-11-07,atp,Juan Manuel La Serna vs. Nicolas Kicker,2026-11-07T14:00:00Z,2026-11-06T17:15:16Z,Juan Manuel La Serna,Nicolas Kicker,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-karfri-tobsam-2026-11-07,atp,Karl Friberg vs. Toby Samuel,2026-11-07T12:40:00Z,2026-11-06T17:30:24Z,Karl Friberg,Toby Samuel,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-lucass-benshe-2026-11-07,atp,Luca Van Assche vs. Ben Shelton,2026-11-07T13:30:00Z,2026-11-06T18:15:19Z,Luca Van Assche,Ben Shelton,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
 aec-atp-margir-clechi-2026-11-06,atp,Marcos Giron vs. Clement Chidekh,2026-11-06T23:00:00Z,2026-11-05T00:00:25Z,Marcos Giron,Clement Chidekh,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T00:09:30Z
-aec-atp-mikbru-borgoj-2026-11-07,atp,Mika Brunold vs. Borna Gojo,2026-11-07T10:00:00Z,2026-11-06T17:30:23Z,Mika Brunold,Borna Gojo,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-nikbas-frapas-2026-11-07,atp,Nikoloz Basilashvili vs. Francesco Passaro,2026-11-07T10:00:00Z,2026-11-06T17:30:24Z,Nikoloz Basilashvili,Francesco Passaro,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-ollwal-lorson-2026-11-07,atp,Olle Wallin vs. Lorenzo Sonego,2026-11-07T11:30:00Z,2026-11-06T17:30:22Z,Olle Wallin,Lorenzo Sonego,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
+aec-atp-mikbru-borgoj-2026-11-07,atp,Mika Brunold vs. Borna Gojo,2026-11-07T10:00:00Z,2026-11-06T17:30:23Z,Mika Brunold,Borna Gojo,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-nikbas-frapas-2026-11-07,atp,Nikoloz Basilashvili vs. Francesco Passaro,2026-11-07T10:00:00Z,2026-11-06T17:30:24Z,Nikoloz Basilashvili,Francesco Passaro,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-ollwal-lorson-2026-11-07,atp,Olle Wallin vs. Lorenzo Sonego,2026-11-07T11:30:00Z,2026-11-06T17:30:22Z,Olle Wallin,Lorenzo Sonego,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
 aec-atp-thiwil-joasil-2026-11-06,atp,Thiago Seyboth Wild vs. Joao Lucas Reis Da Silva,2026-11-06T22:00:00Z,2026-11-06T02:15:17Z,Thiago Seyboth Wild,Joao Lucas Da Silva,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-06T23:43:23Z
-aec-atp-vikdur-aleshe-2026-11-07,atp,Viktor Durasovic vs. Aleksandr Shevchenko,2026-11-07T12:20:00Z,2026-11-06T17:30:19Z,Viktor Durasovic,Alexander Shevchenko,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-yutshi-jankum-2026-11-06,atp,Yuta Shimizu vs. Jan Kumstat,2026-11-07T05:00:00Z,2026-11-06T05:30:22Z,Yuta Shimizu,Jan Kumstat,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-wta-aleshu-claliu-2026-11-07,wta,Alexandra Shubladze vs. Claire Liu,2026-11-07T06:00:00Z,2026-11-06T10:45:24Z,Alexandra Shubladze,Claire Liu,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-wta-alitub-biaand-2026-11-06,wta,Alice Tubello vs. Bianca Andreescu,2026-11-06T20:10:00Z,2026-11-06T00:15:19Z,Alice Tubello,Bianca Andreescu,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-wta-annbli-yaskab-2026-11-06,wta,Anna Blinkova vs. Yasmine Kabbaj,2026-11-06T15:30:00Z,2026-11-05T12:35:59Z,Anna Blinkova,Yasmine Kabbaj,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-wta-arysab-karmuc-2026-11-09,wta,Aryna Sabalenka vs. Karolina Muchova,2026-11-09T20:00:00Z,2026-11-04T08:15:24Z,Aryna Sabalenka,Karolina Muchova,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-wta-cocgau-jespeg-2026-11-08,wta,Coco Gauff vs. Jessica Pegula,2026-11-08T21:10:00Z,2026-11-04T08:15:23Z,Coco Gauff,Jessica Pegula,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-wta-eleryb-linnos-2026-11-08,wta,Elena Rybakina vs. Linda Noskova,2026-11-08T20:00:00Z,2026-11-04T08:15:23Z,Elena Rybakina,Linda Noskova,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-wta-jantje-robmon-2026-11-07,wta,Janice Tjen vs. Robin Montgomery,2026-11-07T12:30:00Z,2026-11-06T13:45:20Z,Janice Tjen,Robin Montgomery,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-wta-maglin-anazak-2026-11-07,wta,Magda Linette vs. Anastasia Zakharova,2026-11-07T13:40:00Z,2026-11-06T19:00:28Z,Magda Linette,Anastasia Zakharova,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-wta-marsak-aleeal-2026-11-07,wta,Maria Sakkari vs. Alexandra Eala,2026-11-07T08:00:00Z,2026-11-06T15:45:22Z,Maria Sakkari,Alexandra Eala,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-wta-mirand-elisvi-2026-11-09,wta,Mirra Andreeva vs. Elina Svitolina,2026-11-09T21:10:00Z,2026-11-04T08:15:25Z,Mirra Andreeva,Elina Svitolina,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-wta-soflan-nomaku-2026-11-07,wta,Sofya Lansere vs. Noma Noha Akugue,2026-11-07T12:30:00Z,2026-11-06T15:15:23Z,Sofya Lansere,Noma Noha Akugue,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:43:52Z
-aec-atp-casruu-caralc-2026-11-07,atp,Casper Ruud vs. Carlos Alcaraz,2026-11-07T16:00:00Z,2026-11-07T00:00:29Z,Casper Ruud,Carlos Alcaraz,0.095,0.01,0.01,2026-11-07T00:09:30Z,2026-11-07T01:43:52Z
-aec-atp-facaco-thiwil-2026-11-07,atp,Facundo Diaz Acosta vs. Thiago Seyboth Wild,2026-11-07T19:10:00Z,2026-11-07T00:00:29Z,Facundo Acosta,Thiago Seyboth Wild,0.095,0.01,0.01,2026-11-07T00:09:30Z,2026-11-07T01:43:52Z
-aec-atp-clechi-stekoz-2026-11-07,atp,Clement Chidekh vs. Stefan Kozlov,2026-11-07T19:40:00Z,2026-11-07T00:45:22Z,Clement Chidekh,Stefan Kozlov,0.095,0.01,0.01,2026-11-07T00:49:19Z,2026-11-07T01:43:52Z
+aec-atp-vikdur-aleshe-2026-11-07,atp,Viktor Durasovic vs. Aleksandr Shevchenko,2026-11-07T12:20:00Z,2026-11-06T17:30:19Z,Viktor Durasovic,Alexander Shevchenko,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-yutshi-jankum-2026-11-06,atp,Yuta Shimizu vs. Jan Kumstat,2026-11-07T05:00:00Z,2026-11-06T05:30:22Z,Yuta Shimizu,Jan Kumstat,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-wta-aleshu-claliu-2026-11-07,wta,Alexandra Shubladze vs. Claire Liu,2026-11-07T06:00:00Z,2026-11-06T10:45:24Z,Alexandra Shubladze,Claire Liu,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-wta-alitub-biaand-2026-11-06,wta,Alice Tubello vs. Bianca Andreescu,2026-11-06T20:10:00Z,2026-11-06T00:15:19Z,Alice Tubello,Bianca Andreescu,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-wta-annbli-yaskab-2026-11-06,wta,Anna Blinkova vs. Yasmine Kabbaj,2026-11-06T15:30:00Z,2026-11-05T12:35:59Z,Anna Blinkova,Yasmine Kabbaj,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-wta-arysab-karmuc-2026-11-09,wta,Aryna Sabalenka vs. Karolina Muchova,2026-11-09T20:00:00Z,2026-11-04T08:15:24Z,Aryna Sabalenka,Karolina Muchova,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-wta-cocgau-jespeg-2026-11-08,wta,Coco Gauff vs. Jessica Pegula,2026-11-08T21:10:00Z,2026-11-04T08:15:23Z,Coco Gauff,Jessica Pegula,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-wta-eleryb-linnos-2026-11-08,wta,Elena Rybakina vs. Linda Noskova,2026-11-08T20:00:00Z,2026-11-04T08:15:23Z,Elena Rybakina,Linda Noskova,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-wta-jantje-robmon-2026-11-07,wta,Janice Tjen vs. Robin Montgomery,2026-11-07T12:30:00Z,2026-11-06T13:45:20Z,Janice Tjen,Robin Montgomery,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-wta-maglin-anazak-2026-11-07,wta,Magda Linette vs. Anastasia Zakharova,2026-11-07T13:40:00Z,2026-11-06T19:00:28Z,Magda Linette,Anastasia Zakharova,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-wta-marsak-aleeal-2026-11-07,wta,Maria Sakkari vs. Alexandra Eala,2026-11-07T08:00:00Z,2026-11-06T15:45:22Z,Maria Sakkari,Alexandra Eala,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-wta-mirand-elisvi-2026-11-09,wta,Mirra Andreeva vs. Elina Svitolina,2026-11-09T21:10:00Z,2026-11-04T08:15:25Z,Mirra Andreeva,Elina Svitolina,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-wta-soflan-nomaku-2026-11-07,wta,Sofya Lansere vs. Noma Noha Akugue,2026-11-07T12:30:00Z,2026-11-06T15:15:23Z,Sofya Lansere,Noma Noha Akugue,0.095,0.01,0.01,2026-11-06T23:05:07Z,2026-11-07T01:53:14Z
+aec-atp-casruu-caralc-2026-11-07,atp,Casper Ruud vs. Carlos Alcaraz,2026-11-07T16:00:00Z,2026-11-07T00:00:29Z,Casper Ruud,Carlos Alcaraz,0.095,0.01,0.01,2026-11-07T00:09:30Z,2026-11-07T01:53:14Z
+aec-atp-facaco-thiwil-2026-11-07,atp,Facundo Diaz Acosta vs. Thiago Seyboth Wild,2026-11-07T19:10:00Z,2026-11-07T00:00:29Z,Facundo Acosta,Thiago Seyboth Wild,0.095,0.01,0.01,2026-11-07T00:09:30Z,2026-11-07T01:53:14Z
+aec-atp-clechi-stekoz-2026-11-07,atp,Clement Chidekh vs. Stefan Kozlov,2026-11-07T19:40:00Z,2026-11-07T00:45:22Z,Clement Chidekh,Stefan Kozlov,0.095,0.01,0.01,2026-11-07T00:49:19Z,2026-11-07T01:53:14Z
