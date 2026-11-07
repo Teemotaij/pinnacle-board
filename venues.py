@@ -15,7 +15,7 @@ WHAT THIS WRITES
    cannot trade it, so TJ switched the recorder to Polymarket US the same evening)
   venues/state.json                    each market's last recorded book, so an unchanged book writes nothing
 
-Books are written only for markets starting within LOOKAHEAD_H or already in play: that is where the bets are,
+Books are written only for markets starting within LOOKAHEAD_H (72 h since 7 Nov 2026; was 36) or already in play: that is where the bets are,
 and it keeps the files small. A book level is "price:quantity", best first, joined by "|".
   Novig: every resting order is a BID for one outcome (buying A at p is offering B at 1 - p), so each outcome's
          bids are kept. A contract pays 1 cent: dollars = quantity x price x 0.01.
@@ -31,7 +31,7 @@ PMUS = "https://gateway.polymarket.us"           # public: 20 requests a second 
 PMUS_LEAGUES = ("atp", "atpcq", "wta")            # singles; atpdb / wtadb are doubles
 LEAGUES = ("ATP", "WTA")
 STATUSES = ("OPEN_PREGAME", "OPEN_INGAME")       # the public vocabulary: /v3/public/types/event-statuses
-LOOKAHEAD_H = 36
+LOOKAHEAD_H = 72                  # 9% of our picks are struck 36h+ before play (p95 41h): their strike-time book is needed
 LEVELS = 6
 NOW = dt.datetime.now(dt.timezone.utc)
 STAMP = NOW.strftime("%Y-%m-%dT%H:%M:%SZ")
