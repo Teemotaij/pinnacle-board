@@ -372,11 +372,22 @@ def update_open(board: dict) -> int:
     in-play price as an open — the one error that would be invisible afterwards.
     """
     have = _read(OPEN_CSV, OPEN_COLS)
+    lives = _lives_by_pair()
     now_s = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     new = 0
+    replaced = []
     for pair, m in board.items():
         st = m["start_time"]
         if not st or st <= now_s:
+            continue
+        played = _played_since(lives.get(pair, ()), have[pair].get("seen_at"), st, m.get("matchup_id")) if pair in have else None
+        if played:
+            # A LATER MEETING of the pair: the stored price is the open of a match Pinnacle has since shown live. The
+            # row is replaced by THIS meeting's own first sighting -- its earliest tick after that match, or this
+            # poll's price when there is none yet. The old row is kept in the archive, never dropped.
+            replaced.append(have.pop(pair))
+            have[pair] = dict(m, **_first_tick(pair, played, st))
+            new += 1
             continue
         if pair in have:
             have[pair]["start_time"] = st          # clock only; every price column untouched
@@ -387,8 +398,93 @@ def update_open(board: dict) -> int:
         else:
             have[pair] = dict(m)
             new += 1
+    if replaced:
+        _append_replaced(replaced)
     _write(OPEN_CSV, OPEN_COLS, [have[k] for k in sorted(have)])
     return new
+
+
+# REMATCHES (16 Nov 2026). pin_open is one row per name pair, and two players meet more than once a season. Until
+# now the row of a pair's FIRST meeting stood forever and only its clock moved, so a rematch carried the old match's
+# price and sighting under the new match's start: Boyer v Dellien at Montevideo on 16 Nov held their 9 Nov Lima
+# open. The book refuses such a row (tracker.pinnacle.sighting_belongs), so the rematch had no Pinnacle open at all
+# and never reached the slate -- 3 Challenger matches that day.
+#
+# The price columns are insert-only so that an open can never walk forward onto a later price of the SAME match.
+# So a row is replaced only on proof that its match is over: Pinnacle showed the pair LIVE under a different
+# matchup id, after the stored sighting and more than MEETINGS_APART_H before this listing's start. A clock rule
+# alone is not enough: replayed over every tick since 16 Sep, the book's 96h rule (tracker.pinnacle.new_meeting)
+# also fires on a match first hung more than four days out, and on quick rematches only once the new match is
+# nearly under way, with a late price. With this test the open taken is the new meeting's FIRST tick.
+#
+# The book still applies its own new_meeting when it merges this file (ops/board_ingest.py), so a replacement
+# reaches the book only when both tests agree; otherwise the book keeps what it holds, as before this change.
+MEETINGS_APART_H = 12
+REPLACED_CSV = os.path.join(ARCHIVE_DIR, "pin_open_replaced.csv")
+FIRST_TICK_COLS = ("seen_at", "obs_at", "fair1", "fair2", "quote1", "quote2", "limit_usd", "version")
+
+
+def _ts(v):
+    try:
+        return datetime.strptime(str(v)[:19], "%Y-%m-%d %H:%M:%S")
+    except (TypeError, ValueError):
+        return None
+
+
+def _lives_by_pair() -> dict:
+    """pin_live.csv -> pair -> [(matchup_id, first_live)]. An absent file is an empty register (no replacement)."""
+    out = {}
+    if os.path.exists(LIVE_CSV):
+        with open(LIVE_CSV, newline="", encoding="utf-8") as fh:
+            for r in csv.DictReader(fh):
+                if r.get("pair"):
+                    out.setdefault(r["pair"], []).append((str(r.get("matchup_id") or ""), r.get("first_live")))
+    return out
+
+
+def _played_since(lives, old_seen, start, matchup_id):
+    """The latest moment a DIFFERENT matchup of the pair was seen live after the stored sighting `old_seen` and
+    more than MEETINGS_APART_H before `start`; None when there is no such proof (the stored row then stands)."""
+    o, t = _ts(old_seen), _ts(start)
+    if o is None or t is None or not matchup_id:
+        return None
+    hi = t - timedelta(hours=MEETINGS_APART_H)
+    hits = [d for mid, v in lives if mid and mid != str(matchup_id) and (d := _ts(v)) is not None and o < d < hi]
+    return max(hits) if hits else None
+
+
+def _first_tick(pair: str, after: datetime, start: str) -> dict:
+    """This meeting's earliest recorded price: the first tick of `pair` seen after `after` (the earlier meeting
+    under way) whose clock sits more than MEETINGS_APART_H past it. {} when none, and the caller keeps this poll's."""
+    lo = after + timedelta(hours=MEETINGS_APART_H)
+    best = None
+    day = after.date()
+    while day <= datetime.now(timezone.utc).date():
+        path = os.path.join(TICK_DIR, f"{day:%Y-%m-%d}.csv")
+        if os.path.exists(path):
+            with open(path, newline="", encoding="utf-8") as fh:
+                for r in csv.DictReader(fh):
+                    if r.get("pair") != pair:
+                        continue
+                    s, t = _ts(r.get("seen_at")), _ts(r.get("start_time"))
+                    if s is None or t is None or s <= after or t <= lo or (best and s >= _ts(best["seen_at"])):
+                        continue
+                    best = r
+        day += timedelta(days=1)
+    return {c: best[c] for c in FIRST_TICK_COLS if best.get(c) not in (None, "")} if best else {}
+
+
+def _append_replaced(rows: list[dict]) -> None:
+    """The rows a new meeting displaced, append-only, so no open ever leaves the repository."""
+    os.makedirs(ARCHIVE_DIR, exist_ok=True)
+    fresh = not os.path.exists(REPLACED_CSV)
+    with open(REPLACED_CSV, "a", newline="", encoding="utf-8") as fh:
+        w = csv.DictWriter(fh, fieldnames=OPEN_COLS + ["replaced_at"], extrasaction="ignore")
+        if fresh:
+            w.writeheader()
+        at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+        for r in rows:
+            w.writerow({**{c: ("" if r.get(c) is None else r.get(c)) for c in OPEN_COLS}, "replaced_at": at})
 
 
 def update_close(board: dict) -> tuple[int, int]:
