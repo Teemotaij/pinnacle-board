@@ -4,15 +4,14 @@ name: novig-capture
 # clock, health log. Public endpoints only, no key, places nothing. Output goes to the separate branch
 # novig-tennis-data (gzipped day files), never to main, so the board's history stays small.
 #
-# NO SCHEDULE YET (TJ approves first). Proposed:
-#     schedule:
-#       - cron: "4-59/5 * * * *"
-# Minutes 4, 9, 14, ...: poll.yml runs at 0, 5, ... (Pinnacle, not Novig), venues.py at 2, 7, ... (Novig, ~1-2 min of
+# SCHEDULED 19 Nov 2026 (TJ approved after the dry run). Minutes 4, 9, 14, ...: poll.yml runs at 0, 5, ... (Pinnacle, not Novig), venues.py at 2, 7, ... (Novig, ~1-2 min of
 # calls 0.8 s apart), Test_Tracker at 3, 23, 43 (Novig tennis since bcfdbe9). Actions starts cron jobs late anyway, so
 # the real guard is the pacing (0.6 s before every call) and the 429 / 5xx back-off; every 429 is counted in
 # capture_log.csv.
 
 on:
+  schedule:
+    - cron: "4-59/5 * * * *"
   workflow_dispatch:
 
 concurrency:
