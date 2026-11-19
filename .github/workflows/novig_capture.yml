@@ -1,0 +1,71 @@
+name: novig-capture
+
+# Novig's tennis moneylines tracked the way the CBB repo tracks Novig (novig_capture.py): books, trade tape, match
+# clock, health log. Public endpoints only, no key, places nothing. Output goes to the separate branch
+# novig-tennis-data (gzipped day files), never to main, so the board's history stays small.
+#
+# NO SCHEDULE YET (TJ approves first). Proposed:
+#     schedule:
+#       - cron: "4-59/5 * * * *"
+# Minutes 4, 9, 14, ...: poll.yml runs at 0, 5, ... (Pinnacle, not Novig), venues.py at 2, 7, ... (Novig, ~1-2 min of
+# calls 0.8 s apart), Test_Tracker at 3, 23, 43 (Novig tennis since bcfdbe9). Actions starts cron jobs late anyway, so
+# the real guard is the pacing (0.6 s before every call) and the 429 / 5xx back-off; every 429 is counted in
+# capture_log.csv.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: novig-capture
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      # The Pinnacle reference is the board on main, whatever ref this run was started from.
+      - name: Board from main
+        run: |
+          set -euo pipefail
+          if [ "${GITHUB_REF_NAME}" != "main" ]; then
+            git fetch -q --depth 1 origin main
+            git checkout -q FETCH_HEAD -- board
+          fi
+
+      - name: Data branch
+        run: |
+          set -euo pipefail
+          if git ls-remote --exit-code --heads origin novig-tennis-data >/dev/null; then
+            git fetch -q --depth 1 origin novig-tennis-data
+            git worktree add -q -B novig-tennis-data data FETCH_HEAD
+          else
+            git worktree add -q --orphan -b novig-tennis-data data
+          fi
+
+      # Standard library only, like poll.py and venues.py: no setup-python, no pip.
+      - name: Capture
+        run: python3 novig_capture.py --out data/novig_tennis --board board
+
+      - name: Commit
+        working-directory: data
+        run: |
+          set -euo pipefail
+          git config user.name  "board-poller"
+          git config user.email "board-poller@users.noreply.github.com"
+          git add -A novig_tennis
+          if git diff --cached --quiet; then echo "no change"; exit 0; fi
+          git commit -q -m "novig tennis $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do
+            git push -q origin HEAD:novig-tennis-data && exit 0
+            echo "push attempt $i failed, retrying"; sleep $((i * 5))
+            git fetch -q --depth 1 origin novig-tennis-data && git rebase -q FETCH_HEAD
+          done
+          exit 1

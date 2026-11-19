@@ -60,3 +60,26 @@ stands. Like the rest of this repository it reads only what any logged-out visit
 | `venues/polymarket/` | The international Polymarket's books, 6 Nov 2026 22:45-23:10 UTC only (US accounts cannot trade it). |
 
 Books are kept for matches starting within 36 hours or in play.
+
+## Novig tennis capture (not scheduled yet)
+
+`novig_capture.py` (workflow `novig-capture`, manual only until approved) records Novig's tennis moneylines more
+fully than `venues.py`: the whole book, the trade tape, when each match was listed and first tradeable, and a health
+line per run. Standard library only, public endpoints only, no key. It writes to the **`novig-tennis-data` branch**,
+under `novig_tennis/`, never to main. Pinnacle prices come from this repo's `board/` files.
+
+| File | What it holds |
+|---|---|
+| `books/YYYY-MM-DD.csv.gz` | One row per match per read: both sides' best bid and ask with dollars, the dollars buyable at or under Pinnacle's no-vig price (`*_le_pin`) and 2c over it (`*_le_pin2`), the full ladders, Novig's volume counter, hours since Novig listed the match, since Pinnacle first priced it, and to the start, and whether it is in play. |
+| `trades/YYYY-MM-DD.csv.gz` | Every print: the resting (maker) side and price that was hit, the taker's side and price (1 - maker), contracts, dollars, and Pinnacle's no-vig price for the maker's side at that moment. |
+| `match_clock.csv` | One row per match: Novig listed, Pinnacle first priced, first two-sided book, first book with $50 at the best bid on both sides, first trade, first seen in play, early-window reads (or why there were none), ticks it was due and unread. |
+| `capture_log.csv` | One line per run: matches listed, due, read and UNREAD, rows written, calls, 429s, retries, errors, seconds. |
+| `tape_gaps.csv` | Any tape read that could not reach back to the prints already held. |
+
+Each run reads matches in their first 3 hours after Novig lists them or Pinnacle first prices them, and matches
+starting within 12 hours or in play, every run; everything else about hourly. A Novig contract pays 1 cent:
+dollars = contracts x 0.01 x price.
+
+    python3 novig_capture.py --out novig_tennis --board board    # one run
+    python3 novig_capture.py --check novig_tennis                 # sanity checks over what is on file
+    python3 -m unittest discover -s tests                          # offline tests
