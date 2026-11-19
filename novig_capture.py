@@ -18,8 +18,8 @@ WHAT EACH RUN DOES (one "tick"; the workflow would run it every 5 minutes)
      PASS_BUDGET_S runs out. What is due and not reached is
      counted as UNREAD in the health log (and per match in the match clock).
   3. For each match read: the full order book (both outcomes' resting bids; the asks to buy a side are the other
-     side's bids at 1 - price) -> one row in books/<UTC date>.csv.gz; and, when Novig's volume counter moved since
-     the last read, the trade tape walked back to what we already hold -> trades/<UTC date>.csv.gz. A read that
+     side's bids at 1 - price) -> one row in books/<UTC date>.csv; and, when Novig's volume counter moved since
+     the last read, the trade tape walked back to what we already hold -> trades/<UTC date>.csv. A read that
      cannot reach back to what we hold is logged in tape_gaps.csv.
   4. Rewrites match_clock.csv (one row per match: when Novig listed it, when Pinnacle first priced it, its first
      two-sided book, first READY_USD book, first trade, first seen in play, how many early-window books it got and,
@@ -277,6 +277,35 @@ CLOCK_COLS = ["event_id", "market_id", "pair", "pin_match", "league", "name1", "
               "pin_open_fair1", "first_read", "reads", "early_reads", "unread_due", "first_two_sided", "two_bid1", "two_bid2",
               "first_ready", "ready_bid1", "ready_bid2", "ready_pin_fair1", "first_trade", "first_trade_side", "first_trade_price",
               "novig_in_play", "pin_first_live", "last_read", "last_status", "early_reason"]
+
+
+def seal_days(out, today):
+    """Gzip every finished day file (books/ and trades/ before `today`) as one stream and remove the plain copy. The
+    current day stays a plain CSV that each run appends to: git stores those appends as small deltas, and one gzip
+    stream per finished day is ~3x smaller than gzip members appended run by run (dry run 19 Nov: 32 KB v 92 KB)."""
+    n = 0
+    for sub in ("books", "trades"):
+        for fn in sorted(glob.glob(os.path.join(out, sub, "*.csv"))):
+            if os.path.basename(fn)[:10] >= today:
+                continue
+            gz = fn + ".gz"
+            with open(fn, "rb") as src:
+                data = src.read()
+            if os.path.exists(gz):                         # never overwrite a sealed day: add its rows, header dropped
+                with gzip.open(gz, "ab", compresslevel=9) as f:
+                    f.write(data.split(b"\n", 1)[1] if b"\n" in data else b"")
+            else:
+                with gzip.open(gz + ".tmp", "wb", compresslevel=9) as f:
+                    f.write(data)
+                os.replace(gz + ".tmp", gz)
+            os.remove(fn)
+            n += 1
+    return n
+
+
+def day_files(out, sub):
+    """A folder's day files, sealed (.csv.gz) and current (.csv), in date order."""
+    return sorted(glob.glob(os.path.join(out, sub, "*.csv.gz")) + glob.glob(os.path.join(out, sub, "*.csv")))
 
 
 def append_gz(fn, cols, rows):
@@ -549,8 +578,9 @@ def run_once(out, board, nc=None, now=None, budget_s=PASS_BUDGET_S, clock=time.m
 
     # 4. write
     day = f"{now:%Y-%m-%d}"
-    append_gz(os.path.join(out, "books", f"{day}.csv.gz"), BOOK_COLS, books)
-    append_gz(os.path.join(out, "trades", f"{day}.csv.gz"), TRADE_COLS, trades)
+    append_csv(os.path.join(out, "books", f"{day}.csv"), BOOK_COLS, books)
+    append_csv(os.path.join(out, "trades", f"{day}.csv"), TRADE_COLS, trades)
+    sealed = seal_days(out, day)
     append_csv(os.path.join(out, "tape_gaps.csv"), GAP_COLS, gaps)
     keep = {k: v for k, v in clock_rows.items() if (parse_t(v.get("start")) or now) > now - dt.timedelta(days=60)}
     write_csv(os.path.join(out, "match_clock.csv"), CLOCK_COLS, sorted(keep.values(), key=lambda r: (r.get("start") or "", r["event_id"])))
@@ -568,7 +598,7 @@ def run_once(out, board, nc=None, now=None, budget_s=PASS_BUDGET_S, clock=time.m
     log = dict(ts=ts, listed=sum(1 for m in mkts if m.get("eventId") in status), pin_matched=n_matched, due=len(todo), read=n_read,
                unread=len(unread), in_play=sum(1 for v in status.values() if v[0] == "OPEN_INGAME"), book_rows=len(books),
                trade_rows=len(trades), tapes_read=n_tapes, gaps=len(gaps), calls=s.get("calls"), http_429=s.get("http_429"),
-               retries=s.get("retries"), errors=len(errors), seconds=secs, note="; ".join(errors)[:500], **stats)
+               retries=s.get("retries"), errors=len(errors), seconds=secs, note="; ".join(([f"sealed {sealed} day files"] if sealed else []) + errors)[:500], **stats)
     append_csv(os.path.join(out, "capture_log.csv"), LOG_COLS, [log])
     print(f"{ts} novig capture: {log['listed']} listed, {n_matched} on the board, due {len(todo)} "
           f"(early {stats['due_early']}, near {stats['due_near']}, hourly {stats['due_hourly']}, live {stats['due_live']}), read {n_read}, UNREAD {len(unread)}, "
@@ -584,8 +614,8 @@ def run_once(out, board, nc=None, now=None, budget_s=PASS_BUDGET_S, clock=time.m
 def checks(out):
     """The checks over what is on file: asks = 1 - other side's best bid; prices on the grid; dollars = contracts x
     0.01 x price; trades ~ volume-counter moves; match-clock rows have an early-window book or a reason."""
-    books = [r for f in sorted(glob.glob(os.path.join(out, "books", "*.csv.gz"))) for r in read_rows(f)]
-    trades = [r for f in sorted(glob.glob(os.path.join(out, "trades", "*.csv.gz"))) for r in read_rows(f)]
+    books = [r for f in day_files(out, "books") for r in read_rows(f)]
+    trades = [r for f in day_files(out, "trades") for r in read_rows(f)]
     clock = read_rows(os.path.join(out, "match_clock.csv"))
     res = {}
     fl = lambda v: float(v) if v not in ("", None) else None

@@ -70,11 +70,13 @@ under `novig_tennis/`, never to main. Pinnacle prices come from this repo's `boa
 
 | File | What it holds |
 |---|---|
-| `books/YYYY-MM-DD.csv.gz` | One row per match per read: both sides' best bid and ask with dollars, the dollars buyable at or under Pinnacle's no-vig price (`*_le_pin`) and 2c over it (`*_le_pin2`), the full ladders, Novig's volume counter, hours since Novig listed the match, since Pinnacle first priced it, and to the start, and whether it is in play. |
-| `trades/YYYY-MM-DD.csv.gz` | Every print: the resting (maker) side and price that was hit, the taker's side and price (1 - maker), contracts, dollars, and Pinnacle's no-vig price for the maker's side at that moment. |
+| `books/YYYY-MM-DD.csv(.gz)` | One row per match per read: both sides' best bid and ask with dollars, the dollars buyable at or under Pinnacle's no-vig price (`*_le_pin`) and 2c over it (`*_le_pin2`), the full ladders, Novig's volume counter, hours since Novig listed the match, since Pinnacle first priced it, and to the start, and whether it is in play. |
+| `trades/YYYY-MM-DD.csv(.gz)` | Every print: the resting (maker) side and price that was hit, the taker's side and price (1 - maker), contracts, dollars, and Pinnacle's no-vig price for the maker's side at that moment. |
 | `match_clock.csv` | One row per match: Novig listed, Pinnacle first priced, first two-sided book, first book with $50 at the best bid on both sides, first trade, first seen in play, early-window reads (or why there were none), ticks it was due and unread. |
 | `capture_log.csv` | One line per run: matches listed, due, read and UNREAD, rows written, calls, 429s, retries, errors, seconds. |
 | `tape_gaps.csv` | Any tape read that could not reach back to the prints already held. |
+
+The current UTC day is a plain CSV that each run appends to; the first run of the next day gzips it (`.csv.gz`).
 
 Each run reads matches in their first 3 hours after Novig lists them or Pinnacle first prices them, and matches
 starting within 12 hours, every run; everything else before play about hourly. Matches in play are read at most
