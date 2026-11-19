@@ -2184,3 +2184,49 @@ seen_at,market_id,live,outcome1,bids,offers,last,shares_traded,usd_traded
 2026-11-19T10:59:27Z,aec-wta-anazol-ireesc-2026-11-18,0,Anastasia Zolotareva,0.2600:1320|0.2500:4159.33|0.2400:1824|0.2300:859|0.2200:348|0.2100:348,0.2800:2032|0.2900:520.93|0.3000:2743.4|0.3100:1430.95|0.3200:328|0.4000:61,0.2800,226.2300,65.2528
 2026-11-19T10:59:27Z,aec-wta-ferlab-andgar-2026-11-19,0,Fernanda Labrana,0.0700:2100|0.0600:2258|0.0500:2624.72|0.0400:1684|0.0300:335|0.0200:435,0.0900:3240.05|0.1000:2463.6|0.1100:30|0.1200:91|0.1300:178|0.2800:13,0.0900,260.0000,23.4000
 2026-11-19T10:59:27Z,aec-wta-rebmas-lausam-2026-11-20,0,Rebeka Masarova,0.5000:571.08|0.4900:100|0.4800:60|0.4500:9|0.4300:2|0.4200:5,0.5100:15|0.5200:169|0.5300:9|0.5400:9|0.5500:600|0.6600:29,0.5000,31.9200,15.9600
+2026-11-19T11:13:31Z,aec-atp-borgoj-nisbas-2026-11-19,0,Borna Gojo,,,0.4000,6475.1600,2485.9289
+2026-11-19T11:13:31Z,aec-atp-matdon-sookwo-2026-11-19,0,Matthew William Donald,,,0.2100,299.0500,65.9398
+2026-11-19T11:13:31Z,aec-atp-dalsvr-stetra-2026-11-19,0,Dalibor Svrcina,,,0.6500,371.9100,236.2512
+2026-11-19T11:13:31Z,aec-atp-sasgue-artnag-2026-11-19,0,Sascha Gueymard-Wayenburg,,,0.8000,87.6100,69.2143
+2026-11-19T11:13:31Z,aec-atp-eervas-edabut-2026-11-19,0,Eero Vasa,,,0.2500,8037.4000,2031.9553
+2026-11-19T11:13:31Z,aec-atp-benshe-rafjod-2026-11-15,0,Ben Shelton,,,0.7200,68536.3100,47075.6476
+2026-11-19T11:13:31Z,aec-atp-lucnar-kyrjac-2026-11-19,0,Luca Nardi,,,0.4000,2876.6800,1121.7769
+2026-11-19T11:13:31Z,aec-atp-alerit-ottvir-2026-11-19,0,Alexander Ritschard,,,0.2300,2625.4300,670.8507
+2026-11-19T11:13:31Z,aec-atp-borart-alagra-2026-11-18,0,Bor Artnak,,,0.3500,2435.4700,805.4632
+2026-11-19T11:13:31Z,aec-atp-stekoz-viggog-2026-11-19,0,Stefan Kozlov,,,0.8100,13.7200,11.1132
+2026-11-19T11:13:31Z,aec-atp-patzah-clechi-2026-11-19,0,Patrick Zahraj,,,0.1000,142.8500,15.8095
+2026-11-19T11:13:31Z,aec-atp-oribat-zdekol-2026-11-19,0,Oriol Roca Batalla,,,0.6800,722.7100,488.2327
+2026-11-19T11:13:31Z,aec-atp-harmay-huggas-2026-11-19,0,Harold Mayot,,,0.4600,1547.5200,755.5007
+2026-11-19T11:13:31Z,aec-atp-sebdom-gavyou-2026-11-19,0,Sebastian Dominko,,,0.6200,603.9500,376.4360
+2026-11-19T11:13:31Z,aec-atp-aidmay-hynbar-2026-11-19,0,Aidan Mayo,,,0.7200,450.5400,331.5252
+2026-11-19T11:13:31Z,aec-atp-harwen-geobla-2026-11-19,0,Harry Wendelken,,,0.7000,479.0400,330.7480
+2026-11-19T11:13:31Z,aec-atp-louwes-jamtro-2026-11-19,0,Louis Wessels,,,0.2200,180.9400,44.8646
+2026-11-19T11:13:31Z,aec-atp-carjov-thiwil-2026-11-19,0,Carlos Sanchez Jover,,,0.1100,242.2100,28.2356
+2026-11-19T11:13:31Z,aec-atp-pieher-zsopir-2026-11-19,0,Pierre-Hugues Herbert,,,0.5500,18110.9500,9108.2923
+2026-11-19T11:13:31Z,aec-atp-jorlee-andmar-2026-11-18,0,Jordan Lee,,,0.4300,1298.4000,467.6791
+2026-11-19T11:13:31Z,aec-atp-alezve-artfil-2026-11-15,0,Alexander Zverev,,,0.7100,22898.9500,16237.0461
+2026-11-19T11:13:31Z,aec-atp-henroc-guijus-2026-11-18,0,Henrique Rocha,,,0.7500,0.6500,0.4875
+2026-11-19T11:13:31Z,aec-atp-dyldie-jusbou-2026-11-19,0,Dylan Dietrich,,,0.8500,617.0000,524.7900
+2026-11-19T11:13:31Z,aec-atp-fraron-juaser-2026-11-19,0,Franco Roncadelli,,,0.4400,1211.7600,511.4785
+2026-11-19T11:13:31Z,aec-atp-danmil-liadra-2026-11-19,0,Daniel Milavsky,,,0.4400,2361.8500,1029.2952
+2026-11-19T11:13:31Z,aec-atp-chrlan-sebgor-2026-11-19,0,Christian Langmo,,,0.3300,1432.0400,616.3790
+2026-11-19T11:13:31Z,aec-atp-trisch-litu-2026-11-19,0,Tristan Schoolkate,,,0.7100,735.7500,466.1533
+2026-11-19T11:13:31Z,aec-atp-phisek-enzagu-2026-11-20,0,Philip Sekulic,,,0.7100,1456.8800,1034.3848
+2026-11-19T11:13:31Z,aec-atp-hirmor-omajas-2026-11-19,0,Hiroki Moriya,,,0.2800,0.6800,0.1904
+2026-11-19T11:13:31Z,aec-atp-kassam-liabro-2026-11-19,0,Kasidit Samrej,,,0.2800,0.6800,0.1904
+2026-11-19T11:13:31Z,aec-atp-yizho-jayfri-2026-11-19,0,Yi Zhou,,,,0.0000,0.0000
+2026-11-19T11:13:31Z,aec-atp-bilhar-benhas-2026-11-19,0,Billy Harris,,,0.7100,13.7400,9.7554
+2026-11-19T11:13:31Z,aec-atp-yoswat-tardan-2026-11-19,0,Yosuke Watanuki,,,0.6800,35.1500,23.9626
+2026-11-19T11:13:31Z,aec-atp-svygul-tobsam-2026-11-19,0,Svyatoslav Gulin,,,0.1500,170.8700,55.3627
+2026-11-19T11:13:31Z,aec-atp-nickja-lasdje-2026-11-20,0,Nicolai Budkov Kjaer,,,0.5200,1.0400,0.5408
+2026-11-19T11:13:31Z,aec-atp-caralc-flacob-2026-11-15,0,Carlos Alcaraz,,,0.8600,15775.9700,14021.0711
+2026-11-19T11:13:31Z,aec-atp-olitar-spejoh-2026-11-20,0,Oliver Tarvet,,,0.7400,839.5000,647.3136
+2026-11-19T11:13:31Z,aec-atp-luimax-shumit-2026-11-20,0,Lui Maxted,,,,0.0000,0.0000
+2026-11-19T11:13:31Z,aec-atp-felalv-matalm-2026-11-20,0,Felipe Meligeni Alves,,,0.3600,499.7000,173.1025
+2026-11-19T11:13:31Z,aec-atp-elmmoe-triboy-2026-11-20,0,Elmer Moeller,,,,0.0000,0.0000
+2026-11-19T11:13:31Z,aec-atp-danmed-fratia-2026-11-15,0,Daniil Medvedev,,,0.7000,1267.5500,805.4727
+2026-11-19T11:13:31Z,aec-wta-lucbro-carmon-2026-11-18,0,Lucia Bronzetti,,,0.5600,3963.6000,2150.4500
+2026-11-19T11:13:31Z,aec-wta-valstr-vererj-2026-11-18,0,Valeriya Strakhova,,,0.2400,823.1500,203.1192
+2026-11-19T11:13:31Z,aec-wta-anazol-ireesc-2026-11-18,0,Anastasia Zolotareva,,,0.2800,226.2300,65.2528
+2026-11-19T11:13:31Z,aec-wta-ferlab-andgar-2026-11-19,0,Fernanda Labrana,,,0.0900,260.0000,23.4000
+2026-11-19T11:13:31Z,aec-wta-rebmas-lausam-2026-11-20,0,Rebeka Masarova,,,0.5000,31.9200,15.9600
