@@ -164,10 +164,10 @@ class Tick(unittest.TestCase):
         return Fake(self.events, [self.A, self.B, self.C], self.books, self.trades, **kw)
 
     def books_on_file(self):
-        return NC.read_rows(os.path.join(self.out, "books", "2026-11-19.csv.gz"))
+        return NC.read_rows(os.path.join(self.out, "books", "2026-11-19.csv"))
 
     def trades_on_file(self):
-        return NC.read_rows(os.path.join(self.out, "trades", "2026-11-19.csv.gz"))
+        return NC.read_rows(os.path.join(self.out, "trades", "2026-11-19.csv"))
 
     def test_one_tick_reads_early_first_and_writes_books_trades_clock_and_log(self):
         nc = self.fake()
@@ -269,6 +269,22 @@ class Tick(unittest.TestCase):
         nc.book = boom
         log = NC.run_once(self.out, self.bd, nc=nc, now=NOW)
         self.assertEqual((log["read"], log["unread"], log["errors"]), (0, 3, 3))
+
+    def test_a_finished_day_is_sealed_to_gzip_on_the_next_days_first_run(self):
+        NC.run_once(self.out, self.bd, nc=self.fake(), now=NOW)
+        n = len(self.books_on_file())
+        log = NC.run_once(self.out, self.bd, nc=self.fake(), now=NOW + dt.timedelta(days=1))
+        self.assertFalse(os.path.exists(os.path.join(self.out, "books", "2026-11-19.csv")))
+        self.assertEqual(len(NC.read_rows(os.path.join(self.out, "books", "2026-11-19.csv.gz"))), n)
+        self.assertEqual(len(NC.read_rows(os.path.join(self.out, "trades", "2026-11-19.csv.gz"))), 2)
+        self.assertTrue(os.path.exists(os.path.join(self.out, "books", "2026-11-20.csv")))
+        self.assertIn("sealed 2 day files", log["note"])
+        # a late row for a sealed day is added, never overwrites it
+        NC.append_csv(os.path.join(self.out, "books", "2026-11-19.csv"), NC.BOOK_COLS, [dict(ts="late")])
+        NC.seal_days(self.out, "2026-11-20")
+        self.assertEqual(len(NC.read_rows(os.path.join(self.out, "books", "2026-11-19.csv.gz"))), n + 1)
+        with mock.patch("sys.stdout", io.StringIO()):
+            self.assertTrue(NC.checks(self.out)["ask = 1 - other best bid (rows off)"].startswith("0 of"))
 
     def test_checks_pass_on_a_tick(self):
         NC.run_once(self.out, self.bd, nc=self.fake(), now=NOW)
