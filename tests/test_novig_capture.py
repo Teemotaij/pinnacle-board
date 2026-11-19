@@ -250,8 +250,17 @@ class Tick(unittest.TestCase):
         board(self.bd, open_rows=[pin_row("donald|m|kwon|s", "2026-11-10 16:00:00", "2026-11-09 14:00:00", 0.33)])
         NC.run_once(self.out, self.bd, nc=self.fake(), now=NOW)
         b = {r["market_id"]: r for r in self.books_on_file()}
-        self.assertEqual(b[self.B["marketId"]]["in_play"], "1")
+        self.assertEqual((b[self.B["marketId"]]["in_play"], b[self.B["marketId"]]["why_due"]), ("1", "live"))
         self.assertEqual((b[self.A["marketId"]]["pin_match"], b[self.A["marketId"]]["pin_fair1"]), ("stale", ""))
+
+    def test_in_play_is_read_last_and_never_crowds_out_pre_match(self):
+        self.events[1]["status"] = "OPEN_INGAME"                  # B in play, starts "in 5 h" by Novig's clock
+        nc = self.fake()
+        NC.run_once(self.out, self.bd, nc=nc, now=NOW)
+        self.assertEqual([x[1] for x in nc.log if x[0] == "book"], [self.A["marketId"], self.C["marketId"], self.B["marketId"]])
+        ticks = iter(range(0, 10000, 90))                        # room for two reads: early A and hourly C, not live B
+        log = NC.run_once(os.path.join(self.out, "2"), self.bd, nc=self.fake(), now=NOW, budget_s=200, clock=lambda: next(ticks))
+        self.assertEqual((log["read_early"], log["read_hourly"], log["read_live"], log["due_live"], log["unread"]), (1, 1, 0, 1, 1))
 
     def test_a_failing_endpoint_is_logged_not_raised(self):
         nc = self.fake()
