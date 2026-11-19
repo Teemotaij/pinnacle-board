@@ -77,7 +77,8 @@ under `novig_tennis/`, never to main. Pinnacle prices come from this repo's `boa
 | `tape_gaps.csv` | Any tape read that could not reach back to the prints already held. |
 
 Each run reads matches in their first 3 hours after Novig lists them or Pinnacle first prices them, and matches
-starting within 12 hours or in play, every run; everything else about hourly. A Novig contract pays 1 cent:
+starting within 12 hours, every run; everything else before play about hourly. Matches in play are read at most
+once a run and last, so they never crowd out a pre-match read when a run is short of time. A Novig contract pays 1 cent:
 dollars = contracts x 0.01 x price.
 
     python3 novig_capture.py --out novig_tennis --board board    # one run

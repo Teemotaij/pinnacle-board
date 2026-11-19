@@ -10,9 +10,12 @@ WHAT EACH RUN DOES (one "tick"; the workflow would run it every 5 minutes)
   2. Decides which matches are DUE this tick:
        early   inside EARLY_H hours after Novig listed the market (its id is a UUIDv7: the creation time is in the
                id) OR after Pinnacle first priced the pair (pin_open seen_at): every tick
-       near    starting within NEAR_H hours, or in play: every tick
-       hourly  everything else Novig lists: once every EVERY_MIN minutes
-     and reads them early first, then nearest start, until PASS_BUDGET_S runs out. What is due and not reached is
+       near    starting within NEAR_H hours (not yet in play): every tick
+       hourly  everything else Novig lists before play: once every EVERY_MIN minutes
+       live    in play: at most once a tick (no faster live cadence), and LAST in the order (TJ 19 Nov: in-play
+               Novig matters little; it must never crowd out a pre-match read when a tick runs short)
+     and reads them early first, then near, then hourly (each nearest start first), then live, until
+     PASS_BUDGET_S runs out. What is due and not reached is
      counted as UNREAD in the health log (and per match in the match clock).
   3. For each match read: the full order book (both outcomes' resting bids; the asks to buy a side are the other
      side's bids at 1 - price) -> one row in books/<UTC date>.csv.gz; and, when Novig's volume counter moved since
@@ -267,8 +270,8 @@ BOOK_COLS = ["ts", "event_id", "market_id", "pair", "pin_match", "league", "name
 TRADE_COLS = ["trade_id", "take_id", "ts", "logged", "event_id", "market_id", "pair", "maker_side", "maker_name", "maker_price",
               "taker_side", "taker_price", "qty", "usd", "taker_usd", "pin_novig", "pin_src", "h_to_start", "in_play"]
 GAP_COLS = ["logged", "market_id", "pair", "gap_from", "gap_to", "minutes", "pages"]
-LOG_COLS = ["ts", "listed", "pin_matched", "due", "read", "unread", "due_early", "due_near", "due_hourly", "read_early",
-            "read_near", "read_hourly", "in_play", "book_rows", "trade_rows", "tapes_read", "gaps", "calls", "http_429",
+LOG_COLS = ["ts", "listed", "pin_matched", "due", "read", "unread", "due_early", "due_near", "due_hourly", "due_live",
+            "read_early", "read_near", "read_hourly", "read_live", "in_play", "book_rows", "trade_rows", "tapes_read", "gaps", "calls", "http_429",
             "retries", "errors", "seconds", "note"]
 CLOCK_COLS = ["event_id", "market_id", "pair", "pin_match", "league", "name1", "name2", "start", "novig_listed", "pin_first",
               "pin_open_fair1", "first_read", "reads", "early_reads", "unread_due", "first_two_sided", "two_bid1", "two_bid2",
@@ -362,11 +365,13 @@ def tape_new(prints, mark):
 # --------------------------------------------------------------------------------------------- one tick
 
 def due_reason(now, start, in_play, listed, pin_first, last_read):
-    """('early' | 'near' | 'hourly' | None, early flag)."""
+    """('early' | 'near' | 'hourly' | 'live' | None, early flag). In play is 'live' whatever its windows say."""
+    if in_play:
+        return "live", False
     early = any(t and dt.timedelta(0) <= now - t <= dt.timedelta(hours=EARLY_H) for t in (listed, pin_first))
     if early:
         return "early", True
-    if in_play or (start and start - now <= dt.timedelta(hours=NEAR_H)):
+    if (start and start - now <= dt.timedelta(hours=NEAR_H)):
         return "near", False
     if last_read is None or now - last_read >= dt.timedelta(minutes=EVERY_MIN) - dt.timedelta(seconds=30):
         return "hourly", False
@@ -377,6 +382,7 @@ def run_once(out, board, nc=None, now=None, budget_s=PASS_BUDGET_S, clock=time.m
     t0 = clock()
     now = now or utcnow()
     nc = nc or Client()
+    os.makedirs(out, exist_ok=True)
     st_fn = os.path.join(out, "state.json")
     try:
         state = json.load(open(st_fn))
@@ -403,7 +409,7 @@ def run_once(out, board, nc=None, now=None, budget_s=PASS_BUDGET_S, clock=time.m
 
     # 2. who is due
     todo, n_matched = [], 0
-    stats = dict(due_early=0, due_near=0, due_hourly=0, read_early=0, read_near=0, read_hourly=0)
+    stats = dict(due_early=0, due_near=0, due_hourly=0, due_live=0, read_early=0, read_near=0, read_hourly=0, read_live=0)
     for m in mkts:
         ev = m.get("eventId")
         if ev not in status or len(m.get("outcomes") or []) != 2:
@@ -442,7 +448,7 @@ def run_once(out, board, nc=None, now=None, budget_s=PASS_BUDGET_S, clock=time.m
             if fl:
                 c["pin_first_live"] = iso(fl)
 
-    rank = {"early": 0, "near": 1, "hourly": 2}
+    rank = {"early": 0, "near": 1, "hourly": 2, "live": 3}          # in play last: never ahead of a pre-match read
     todo.sort(key=lambda x: (rank[x["why"]], x["start"] or now))
 
     # 3. read in priority order until the budget runs out
@@ -565,7 +571,7 @@ def run_once(out, board, nc=None, now=None, budget_s=PASS_BUDGET_S, clock=time.m
                retries=s.get("retries"), errors=len(errors), seconds=secs, note="; ".join(errors)[:500], **stats)
     append_csv(os.path.join(out, "capture_log.csv"), LOG_COLS, [log])
     print(f"{ts} novig capture: {log['listed']} listed, {n_matched} on the board, due {len(todo)} "
-          f"(early {stats['due_early']}, near {stats['due_near']}, hourly {stats['due_hourly']}), read {n_read}, UNREAD {len(unread)}, "
+          f"(early {stats['due_early']}, near {stats['due_near']}, hourly {stats['due_hourly']}, live {stats['due_live']}), read {n_read}, UNREAD {len(unread)}, "
           f"{len(books)} books, {len(trades)} new trades, {n_tapes} tapes, {len(gaps)} gaps, {s.get('calls')} calls, "
           f"{s.get('http_429')} x 429, {len(errors)} errors, {secs}s", flush=True)
     for e in errors[:5]:
