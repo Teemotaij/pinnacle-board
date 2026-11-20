@@ -552,7 +552,7 @@ def run_once(out, board, nc=None, now=None, budget_s=PASS_BUDGET_S, clock=time.m
                                pair=pair, maker_side=side, maker_name=o[i1 if side == 1 else 1 - i1].get("name"), maker_price=px,
                                taker_side=3 - side, taker_price=round(1 - px, 3), qty=q, usd=usd(px, q), taker_usd=usd(1 - px, q),
                                pin_novig=(g1 if side == 1 else g2), pin_src=gsrc, h_to_start=hours(x["start"], tt),
-                               in_play=(int(tt >= fl) if fl else "")))
+                               in_play=(int(tt >= fl) if fl else 0)))  # no live sighting yet at logging = pre-match)
             if not c.get("first_trade") or iso(tt) < c["first_trade"]:
                 c.update(first_trade=iso(tt), first_trade_side=side, first_trade_price=px)
 
