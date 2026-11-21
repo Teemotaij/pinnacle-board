@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+<title>Tennis board</title>
+<style>
+:root {
+  --bg: #151a21; --surface: #1d242e; --line: #2b3441; --line-soft: #232b36;
+  --ink: #e4e9ef; --ink-dim: #9aa7b8; --ink-faint: #6b7889; --live: #e0a458;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px;
+       line-height: 1.45; font-feature-settings: "tnum" 1; }
+header { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding: .8rem 16px;
+         border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 2; }
+header h1 { margin: 0; font-size: 1rem; font-weight: 600; }
+header .built { margin-left: auto; font: .78rem var(--mono); color: var(--ink-faint); }
+main { padding: 12px 16px 32px; max-width: 900px; }
+.bar { display: flex; flex-wrap: wrap; gap: .5rem .9rem; align-items: end; margin-bottom: .8rem; }
+.bar label { display: flex; flex-direction: column; font-size: .72rem; color: var(--ink-dim); gap: .15rem; }
+.bar select, .bar input { font: inherit; font-size: .86rem; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 4px; padding: .3rem .4rem; max-width: 100%; }
+.bar input { width: 11rem; }
+.bar a { font-size: .86rem; color: var(--ink-dim); padding-bottom: .35rem; }
+.count { font-size: .78rem; color: var(--ink-faint); margin: 0 0 .4rem; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th { font-size: .7rem; font-weight: 500; color: var(--ink-faint); text-align: left; padding: .3rem .3rem;
+     border-bottom: 1px solid var(--line); }
+td { padding: .1rem .3rem .45rem; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+tr.ev td { padding: .5rem .3rem 0; border-bottom: 0; font-size: .72rem; color: var(--ink-faint); }
+th.n, td.n { text-align: right; font-family: var(--mono); font-size: .82rem; width: 3.6rem; }
+th.when, td.when { width: 4.4rem; }
+td.when .t { font-family: var(--mono); font-size: .86rem; }
+td.when .d, .sc { display: block; font-size: .72rem; color: var(--ink-faint); }
+.win { font-weight: 600; }
+.lose { color: var(--ink-dim); }
+td.n span, td.match .pl { display: block; line-height: 1.45rem; }
+/* One line per player, always, or the prices beside a long name stop sitting level with it. */
+td.match .pl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st { display: inline-block; font-size: .66rem; padding: 0 .3rem; border-radius: 3px; margin-top: .15rem;
+      border: 1px solid var(--line); color: var(--ink-dim); }
+.st.live { color: var(--live); border-color: var(--live); }
+.mv { color: var(--live); }
+.dash { color: var(--ink-faint); }
+.foot { margin-top: 1.2rem; font-size: .74rem; color: var(--ink-faint); max-width: 40rem; }
+@media (max-width: 520px) {
+  body { font-size: 14px; }
+  th.n, td.n { width: 3.1rem; font-size: .76rem; }
+  th.when, td.when { width: 3.6rem; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tennis board</h1>
+  <span class="built">21 Nov 08:28 PST · built</span>
+</header>
+<main>
+  <div class="bar">
+    <label>Day
+      <select id="day" onchange="location.href = this.value + '.html'"><option value="2026-11-21">2026-11-21</option><option value="2026-11-20">2026-11-20</option><option value="2026-11-19">2026-11-19</option><option value="2026-11-18">2026-11-18</option><option value="2026-11-17">2026-11-17</option><option value="2026-11-16">2026-11-16</option><option value="2026-11-15">2026-11-15</option><option value="2026-11-14" selected>2026-11-14</option><option value="2026-11-13">2026-11-13</option><option value="2026-11-12">2026-11-12</option><option value="2026-11-11">2026-11-11</option><option value="2026-11-10">2026-11-10</option><option value="2026-11-09">2026-11-09</option><option value="2026-11-08">2026-11-08</option><option value="2026-11-07">2026-11-07</option><option value="2026-11-06">2026-11-06</option><option value="2026-11-05">2026-11-05</option><option value="2026-11-04">2026-11-04</option><option value="2026-11-03">2026-11-03</option><option value="2026-11-02">2026-11-02</option><option value="2026-11-01">2026-11-01</option><option value="2026-10-31">2026-10-31</option><option value="2026-10-30">2026-10-30</option><option value="2026-10-29">2026-10-29</option><option value="2026-10-28">2026-10-28</option><option value="2026-10-27">2026-10-27</option><option value="2026-10-26">2026-10-26</option><option value="2026-10-25">2026-10-25</option><option value="2026-10-24">2026-10-24</option><option value="2026-10-23">2026-10-23</option></select>
+    </label>
+    <a href="index.html">Today</a>
+    <label>Tour
+      <select id="tour">
+        <option value="">Men &amp; women</option><option value="ATP">ATP</option><option value="WTA">WTA</option></select>
+    </label>
+    <label>Tournament
+      <select id="event">
+        <option value="">All</option><option value="BNP Paribas Nordic Open - Stockholm">BNP Paribas Nordic Open - Stockholm</option><option value="Brisbane 3 Challenger">Brisbane 3 Challenger</option><option value="Cundinamarca Open - Sopo">Cundinamarca Open - Sopo</option><option value="Hersonissos 3 Challenger">Hersonissos 3 Challenger</option><option value="Knoxville Challenger">Knoxville Challenger</option><option value="Kobe Challenger">Kobe Challenger</option><option value="Lima 3 Challenger">Lima 3 Challenger</option><option value="Matsuyama Challenger">Matsuyama Challenger</option><option value="Monastir 1 Challenger">Monastir 1 Challenger</option><option value="Orleans Challenger">Orleans Challenger</option><option value="Sydney Challenger">Sydney Challenger</option><option value="WTA Finals - Indian Wells">WTA Finals - Indian Wells</option></select>
+    </label>
+    <label>Search
+      <input id="q" type="search" placeholder="player or event" autocomplete="off">
+    </label>
+  </div>
+  <p class="count"><span id="n">38</span> matches</p>
+  
+  <table>
+    <thead><tr>
+      <th class="when">Time</th><th>Match</th>
+      <th class="n">Open</th><th class="n">Now</th><th class="n">Close</th>
+    </tr></thead>
+    <tbody class="m" data-tour="ATP" data-event="Hersonissos 3 Challenger" data-q="michele ribecai henry searle hersonissos 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Hersonissos 3 Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Michele Ribecai</span>
+          <span class="pl lose">Henry Searle</span><span class="sc">6-3 6-1</span>
+        </td>
+        <td class="n"><span>0.377</span><span>0.623</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.375</span><span>0.625</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Hersonissos 3 Challenger" data-q="francesco maestrelli philip henning hersonissos 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Hersonissos 3 Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Francesco Maestrelli</span>
+          <span class="pl win">Philip Henning</span><span class="sc">7-5 3-6 7-6(3)</span>
+        </td>
+        <td class="n"><span>0.533</span><span>0.467</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.527</span><span>0.473</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Monastir 1 Challenger" data-q="jonas forejtek marvin moeller monastir 1 challenger">
+      <tr class="ev"><td colspan="5"><span>Monastir 1 Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Jonas Forejtek</span>
+          <span class="pl win">Marvin Moeller</span><span class="sc">7-6(1) 6-1</span>
+        </td>
+        <td class="n"><span>0.623</span><span>0.377</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.669</span><span>0.331</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Knoxville Challenger" data-q="stefan kozlov michael zheng knoxville challenger">
+      <tr class="ev"><td colspan="5"><span>Knoxville Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Stefan Kozlov</span>
+          <span class="pl win">Michael Zheng</span><span class="sc">6-3 7-5</span>
+        </td>
+        <td class="n"><span>0.403</span><span>0.597</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.378</span><span>0.622</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Lima 3 Challenger" data-q="nikolas sanchez-izquierdo miguel tobon lima 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Lima 3 Challenger</span> · <span>QF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Nikolas Sanchez-Izquierdo</span>
+          <span class="pl lose">Miguel Tobon</span><span class="sc">6-7(7) 6-4 6-2</span>
+        </td>
+        <td class="n"><span>0.691</span><span>0.309</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.670</span><span>0.330</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="WTA Finals - Indian Wells" data-q="aryna sabalenka elina svitolina wta finals - indian wells">
+      <tr class="ev"><td colspan="5"><span>WTA Finals - Indian Wells</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Aryna Sabalenka</span>
+          <span class="pl win">Elina Svitolina</span><span class="sc">6-3 3-6 6-1</span>
+        </td>
+        <td class="n"><span>0.628</span><span>0.372</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.686</span><span>0.314</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="BNP Paribas Nordic Open - Stockholm" data-q="taylor harry fritz thiago agustin tirante bnp paribas nordic open - stockholm">
+      <tr class="ev"><td colspan="5"><span>BNP Paribas Nordic Open - Stockholm</span> · <span>F</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:10</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Taylor Harry Fritz</span>
+          <span class="pl lose">Thiago Agustin Tirante</span><span class="sc">6-2 4-6 7-6(3)</span>
+        </td>
+        <td class="n"><span>0.835</span><span>0.165</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.842</span><span>0.158</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Monastir 1 Challenger" data-q="pedro vives marcos kilian feldbausch monastir 1 challenger">
+      <tr class="ev"><td colspan="5"><span>Monastir 1 Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">04:30</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Pedro Vives Marcos</span>
+          <span class="pl win">Kilian Feldbausch</span><span class="sc">6-3 6-2</span>
+        </td>
+        <td class="n"><span>0.389</span><span>0.611</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.388</span><span>0.612</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Orleans Challenger" data-q="nishesh basavareddy daniel altmaier orleans challenger">
+      <tr class="ev"><td colspan="5"><span>Orleans Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">06:35</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Nishesh Basavareddy</span>
+          <span class="pl lose">Daniel Altmaier</span><span class="sc">6-2 6-3</span>
+        </td>
+        <td class="n"><span>0.632</span><span>0.368</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.619</span><span>0.381</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Orleans Challenger" data-q="pedro martinez portero otto virtanen orleans challenger">
+      <tr class="ev"><td colspan="5"><span>Orleans Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">08:25</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Pedro Martinez Portero</span>
+          <span class="pl win">Otto Virtanen</span><span class="sc">6-2 6-2</span>
+        </td>
+        <td class="n"><span>0.188</span><span>0.812</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.226</span><span>0.774</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Knoxville Challenger" data-q="abedallah shelbayh daniel milavsky knoxville challenger">
+      <tr class="ev"><td colspan="5"><span>Knoxville Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:03</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Abedallah Shelbayh</span>
+          <span class="pl lose">Daniel Milavsky</span><span class="sc">7-6(6) 6-3</span>
+        </td>
+        <td class="n"><span>0.419</span><span>0.581</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.392</span><span>0.608</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Cundinamarca Open - Sopo" data-q="bianca vanessa andreescu elizabeth mandlik cundinamarca open - sopo">
+      <tr class="ev"><td colspan="5"><span>Cundinamarca Open - Sopo</span> · <span>F</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:06</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Bianca Vanessa Andreescu</span>
+          <span class="pl lose">Elizabeth Mandlik</span><span class="sc">6-3 6-3</span>
+        </td>
+        <td class="n"><span>0.853</span><span>0.147</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.831</span><span>0.169</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Knoxville Challenger" data-q="clement chidekh michael zheng knoxville challenger">
+      <tr class="ev"><td colspan="5"><span>Knoxville Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:56</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Clement Chidekh</span>
+          <span class="pl lose">Michael Zheng</span><span class="sc">3-6 6-3 7-5</span>
+        </td>
+        <td class="n"><span>0.538</span><span>0.462</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.552</span><span>0.448</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Lima 3 Challenger" data-q="franco roncadelli max alcala gurri lima 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Lima 3 Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Franco Roncadelli</span>
+          <span class="pl lose">Max Alcala Gurri</span><span class="sc">6-1 6-2</span>
+        </td>
+        <td class="n"><span>0.250</span><span>0.750</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.266</span><span>0.734</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="WTA Finals - Indian Wells" data-q="mirra andreeva jessica pegula wta finals - indian wells">
+      <tr class="ev"><td colspan="5"><span>WTA Finals - Indian Wells</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">12:10</span><span class="mv">*</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Mirra Andreeva</span>
+          <span class="pl lose">Jessica Pegula</span><span class="sc">6-3 6-4</span>
+        </td>
+        <td class="n"><span>0.679</span><span>0.321</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.298</span><span>0.702</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Lima 3 Challenger" data-q="joao lucas reis da silva nikolas sanchez-izquierdo lima 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Lima 3 Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">14:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">void</span></td>
+        <td class="match">
+          <span class="pl">Joao Lucas Reis Da Silva</span>
+          <span class="pl">Nikolas Sanchez-Izquierdo</span>
+        </td>
+        <td class="n"><span>0.525</span><span>0.475</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sydney Challenger" data-q="benjamin o&#39;connell chase ferguson sydney challenger">
+      <tr class="ev"><td colspan="5"><span>Sydney Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">15:15</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Benjamin O&#39;Connell</span>
+          <span class="pl win">Chase Ferguson</span><span class="sc">6-2 7-6(1)</span>
+        </td>
+        <td class="n"><span>0.303</span><span>0.697</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.299</span><span>0.701</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sydney Challenger" data-q="harrison satara dominik palan sydney challenger">
+      <tr class="ev"><td colspan="5"><span>Sydney Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">16:45</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Harrison Satara</span>
+          <span class="pl win">Dominik Palan</span><span class="sc">6-4 6-4</span>
+        </td>
+        <td class="n"><span>0.220</span><span>0.780</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.257</span><span>0.743</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sydney Challenger" data-q="ymerali ibraimi thomas fancutt sydney challenger">
+      <tr class="ev"><td colspan="5"><span>Sydney Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">17:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Ymerali Ibraimi</span>
+          <span class="pl win">Thomas Fancutt</span><span class="sc">6-3 6-3</span>
+        </td>
+        <td class="n"><span>0.209</span><span>0.791</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.271</span><span>0.729</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sydney Challenger" data-q="evan zhu daniel jovanovski sydney challenger">
+      <tr class="ev"><td colspan="5"><span>Sydney Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">17:13</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Evan Zhu</span>
+          <span class="pl lose">Daniel Jovanovski</span><span class="sc">6-3 6-3</span>
+        </td>
+        <td class="n"><span>0.818</span><span>0.182</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.808</span><span>0.192</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Kobe Challenger" data-q="kanta watanabe s d prajwal dev kobe challenger">
+      <tr class="ev"><td colspan="5"><span>Kobe Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">18:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Kanta Watanabe</span>
+          <span class="pl lose">S D Prajwal Dev</span><span class="sc">6-4 6-4</span>
+        </td>
+        <td class="n"><span>0.350</span><span>0.650</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.333</span><span>0.667</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sydney Challenger" data-q="tai sach derek pham sydney challenger">
+      <tr class="ev"><td colspan="5"><span>Sydney Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">18:30</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Tai Sach</span>
+          <span class="pl win">Derek Pham</span><span class="sc">6-4 6-2</span>
+        </td>
+        <td class="n"><span>0.509</span><span>0.491</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.489</span><span>0.511</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Brisbane 3 Challenger" data-q="christian langmo august holmgren brisbane 3 challenger">
+      <tr class="ev"><td colspan="5"><span>Brisbane 3 Challenger</span> · <span>F</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">19:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Christian Langmo</span>
+          <span class="pl win">August Holmgren</span><span class="sc">7-6(5) 6-2</span>
+        </td>
+        <td class="n"><span>0.238</span><span>0.762</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.253</span><span>0.747</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Kobe Challenger" data-q="koki matsuda shintaro imai kobe challenger">
+      <tr class="ev"><td colspan="5"><span>Kobe Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">19:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Koki Matsuda</span>
+          <span class="pl lose">Shintaro Imai</span><span class="sc">6-3 1-6 6-4</span>
+        </td>
+        <td class="n"><span>0.483</span><span>0.517</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.487</span><span>0.513</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Kobe Challenger" data-q="maxim zhukov takuya kumasaka kobe challenger">
+      <tr class="ev"><td colspan="5"><span>Kobe Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">19:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Maxim Zhukov</span>
+          <span class="pl win">Takuya Kumasaka</span><span class="sc">6-1 4-1 ret.</span>
+        </td>
+        <td class="n"><span>0.436</span><span>0.564</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.425</span><span>0.575</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sydney Challenger" data-q="hayden jones naoki nakagawa sydney challenger">
+      <tr class="ev"><td colspan="5"><span>Sydney Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">19:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Hayden Jones</span>
+          <span class="pl lose">Naoki Nakagawa</span><span class="sc">4-6 6-2 6-1</span>
+        </td>
+        <td class="n"><span>0.410</span><span>0.590</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.476</span><span>0.524</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sydney Challenger" data-q="isaac becroft shinji hazawa sydney challenger">
+      <tr class="ev"><td colspan="5"><span>Sydney Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">19:16</span><span class="mv">*</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Isaac Becroft</span>
+          <span class="pl lose">Shinji Hazawa</span><span class="sc">7-6(6) 6-7(4) 6-2</span>
+        </td>
+        <td class="n"><span>0.776</span><span>0.224</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.779</span><span>0.221</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Kobe Challenger" data-q="constantin bittoun kouzmine nitin kumar sinha kobe challenger">
+      <tr class="ev"><td colspan="5"><span>Kobe Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Constantin Bittoun Kouzmine</span>
+          <span class="pl lose">Nitin Kumar Sinha</span><span class="sc">6-2 6-4</span>
+        </td>
+        <td class="n"><span>0.952</span><span>0.048</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.883</span><span>0.117</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Kobe Challenger" data-q="yusuke takahashi kosuke ogura kobe challenger">
+      <tr class="ev"><td colspan="5"><span>Kobe Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Yusuke Takahashi</span>
+          <span class="pl lose">Kosuke Ogura</span><span class="sc">6-4 6-2</span>
+        </td>
+        <td class="n"><span>0.607</span><span>0.393</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.605</span><span>0.395</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sydney Challenger" data-q="ajeet rai pavle marinkov sydney challenger">
+      <tr class="ev"><td colspan="5"><span>Sydney Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Ajeet Rai</span>
+          <span class="pl win">Pavle Marinkov</span><span class="sc">6-3 7-5</span>
+        </td>
+        <td class="n"><span>0.347</span><span>0.653</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.333</span><span>0.667</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Kobe Challenger" data-q="masamichi imamura hiromasa koyama kobe challenger">
+      <tr class="ev"><td colspan="5"><span>Kobe Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:29</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Masamichi Imamura</span>
+          <span class="pl lose">Hiromasa Koyama</span><span class="sc">6-2 6-3</span>
+        </td>
+        <td class="n"><span>0.824</span><span>0.176</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.808</span><span>0.192</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Matsuyama Challenger" data-q="billy harris yu hsiou hsu matsuyama challenger">
+      <tr class="ev"><td colspan="5"><span>Matsuyama Challenger</span> · <span>F</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:43</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Billy Harris</span>
+          <span class="pl lose">Yu Hsiou Hsu</span><span class="sc">3-6 6-1 7-6(6)</span>
+        </td>
+        <td class="n"><span>0.531</span><span>0.469</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.534</span><span>0.466</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sydney Challenger" data-q="anton shepp kokoro isomura sydney challenger">
+      <tr class="ev"><td colspan="5"><span>Sydney Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">20:45</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Anton Shepp</span>
+          <span class="pl win">Kokoro Isomura</span><span class="sc">7-6(4) 0-6 6-3</span>
+        </td>
+        <td class="n"><span>0.745</span><span>0.255</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.788</span><span>0.212</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Sydney Challenger" data-q="jason jung herman hoeyeraal sydney challenger">
+      <tr class="ev"><td colspan="5"><span>Sydney Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">21:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Jason Jung</span>
+          <span class="pl lose">Herman Hoeyeraal</span><span class="sc">6-2 6-7(5) 7-5</span>
+        </td>
+        <td class="n"><span>0.576</span><span>0.424</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.500</span><span>0.500</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Kobe Challenger" data-q="dimitris sakellaridis toya ishikawa kobe challenger">
+      <tr class="ev"><td colspan="5"><span>Kobe Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Dimitris Sakellaridis</span>
+          <span class="pl lose">Toya Ishikawa</span><span class="sc">4-6 6-2 6-3</span>
+        </td>
+        <td class="n"><span>0.895</span><span>0.105</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.910</span><span>0.090</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Kobe Challenger" data-q="renta tokuda yunseong chung kobe challenger">
+      <tr class="ev"><td colspan="5"><span>Kobe Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Renta Tokuda</span>
+          <span class="pl">Yunseong Chung</span>
+        </td>
+        <td class="n"><span>0.424</span><span>0.576</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.376</span><span>0.624</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Kobe Challenger" data-q="yuta kikuchi taisei ichikawa kobe challenger">
+      <tr class="ev"><td colspan="5"><span>Kobe Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:00</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Yuta Kikuchi</span>
+          <span class="pl win">Taisei Ichikawa</span><span class="sc">6-0 6-4</span>
+        </td>
+        <td class="n"><span>0.461</span><span>0.539</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.461</span><span>0.539</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Kobe Challenger" data-q="david poljak yunseong chung kobe challenger">
+      <tr class="ev"><td colspan="5"><span>Kobe Challenger</span> · <span>Q1</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">22:46</span>
+          <span class="d">Sat 14 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">David Poljak</span>
+          <span class="pl win">Yunseong Chung</span><span class="sc">7-6(4) 6-1</span>
+        </td>
+        <td class="n"><span>0.200</span><span>0.800</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.197</span><span>0.803</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <p class="foot">Prices are implied probabilities with the margin removed, first player on top. Open is the
+    opening line; Now is Pinnacle at build time (tap for the American price); Close is the last pre-match price.
+    Times are PST; an asterisk marks a match Pinnacle has moved later.</p>
+</main>
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('tbody.m'));
+  var tour = document.getElementById('tour'), ev = document.getElementById('event'),
+      q = document.getElementById('q'), n = document.getElementById('n');
+  if (!tour) return;
+  function fold(s) { return (s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+  function apply() {
+    var t = tour.value, e = ev.value, terms = fold(q.value).split(/\s+/).filter(Boolean), shown = 0;
+    rows.forEach(function (r) {
+      var ok = (!t || r.getAttribute('data-tour') === t) && (!e || r.getAttribute('data-event') === e);
+      if (ok) { var hay = r.getAttribute('data-q'); ok = terms.every(function (w) { return hay.indexOf(w) >= 0; }); }
+      r.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+    n.textContent = shown;
+  }
+  tour.addEventListener('change', apply); ev.addEventListener('change', apply); q.addEventListener('input', apply);
+})();
+</script>
+</body>
+</html>
