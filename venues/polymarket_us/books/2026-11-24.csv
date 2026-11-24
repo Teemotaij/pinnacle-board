@@ -4411,3 +4411,95 @@ seen_at,market_id,live,outcome1,bids,offers,last,shares_traded,usd_traded
 2026-11-24T10:58:38Z,aec-wta-nadpod-leygor-2026-11-23,0,Nadia Podoroska,0.4500:2567.05|0.4400:3136.67|0.4300:3020|0.4100:700|0.3900:50|0.3800:175,0.4600:832|0.4700:1077|0.4800:5063.01|0.4900:2724.44|0.5000:50|0.5100:50,0.4500,1438.7700,607.5219
 2026-11-24T10:58:38Z,aec-wta-polher-sofcos-2026-11-24,0,Polona Hercog,0.6900:0.07|0.6800:22|0.6700:2500|0.6600:600|0.6500:194|0.5000:50,0.7100:22|0.7200:22|0.7300:49.51|0.7400:236|0.7500:50|0.7600:50,0.7200,1494.7700,1054.7474
 2026-11-24T10:58:38Z,aec-wta-solgui-marcar-2026-11-23,0,Sol Larraya Guidi,0.0500:300|0.0400:200|0.0300:920|0.0200:400|0.0100:824,0.0600:20.05|0.0700:70|0.0800:600|0.4400:20|0.9700:100|0.9800:200,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-johmon-phihen-2026-11-23,1,Johannus Monday,,,0.0400,19884.9800,1687.3746
+2026-11-24T11:13:00Z,aec-atp-olioko-nikbel-2026-11-24,1,Oliver Okonkwo,,,0.7100,30526.1000,14395.8967
+2026-11-24T11:13:00Z,aec-atp-nikmas-anamaz-2026-11-24,1,Nikita Mashtakov,,,0.6500,3518.0200,2416.9419
+2026-11-24T11:13:00Z,aec-atp-meerot-gilbai-2026-11-24,1,Mees Rottgering,,,0.4100,7168.4400,3798.2618
+2026-11-24T11:13:00Z,aec-atp-thofau-joadom-2026-11-23,1,Thomas Faurel,,,0.7400,2618.4100,1679.7189
+2026-11-24T11:13:00Z,aec-atp-svygul-gonmar-2026-11-23,1,Svyatoslav Gulin,,,0.8100,339.1100,263.9261
+2026-11-24T11:13:00Z,aec-atp-rionog-maxjon-2026-11-22,1,Rio Noguchi,,,0.9200,197055.0400,159644.8408
+2026-11-24T11:13:00Z,aec-atp-conkou-yustak-2026-11-23,1,Constantin Bittoun Kouzmine,,,0.0200,54795.6900,8683.1699
+2026-11-24T11:13:00Z,aec-atp-jiecui-benhas-2026-11-22,1,Jie Cui,,,0.4900,313858.7200,116656.7055
+2026-11-24T11:13:00Z,aec-atp-kenmiy-janmau-2026-11-24,0,Kenta Miyoshi,,,0.8900,701.5800,581.4439
+2026-11-24T11:13:00Z,aec-atp-benpie-robbae-2026-11-24,0,Benjamin Pietri,,,0.3000,244.5100,75.0422
+2026-11-24T11:13:00Z,aec-atp-alikac-miljon-2026-11-24,0,Alibek Kachmazov,,,0.7500,4561.8600,2811.7189
+2026-11-24T11:13:00Z,aec-atp-ryapen-olekru-2026-11-23,0,Ryan Peniston,,,0.3500,94.5600,33.3455
+2026-11-24T11:13:00Z,aec-atp-abl-matbob-2026-11-23,0,Alexander Binda,,,0.3400,96.3700,32.9710
+2026-11-24T11:13:00Z,aec-atp-lorgiu-giuper-2026-11-23,0,Lorenzo Giustino,,,0.7600,2471.3700,1751.9955
+2026-11-24T11:13:00Z,aec-atp-bradju-fedian-2026-11-24,0,Branko Djuric,,,0.5300,1221.9800,596.6451
+2026-11-24T11:13:00Z,aec-atp-kimcop-wojmar-2026-11-24,0,Kimmer Coppejans,,,0.8700,972.3600,814.7066
+2026-11-24T11:13:00Z,aec-atp-leoros-danrin-2026-11-23,0,Leonardo Rossi,,,0.1800,1150.4400,330.1584
+2026-11-24T11:13:00Z,aec-atp-robgun-dusobr-2026-11-24,0,Robert Guna,,,0.5700,12981.5700,7478.4401
+2026-11-24T11:13:00Z,aec-atp-oleovc-pavtsi-2026-11-24,0,Oleksandr Ovcharenko,,,0.7900,373.6000,298.7973
+2026-11-24T11:13:00Z,aec-atp-leoraq-yardem-2026-11-24,0,Leo Raquillet,,,0.2500,32.5300,8.1330
+2026-11-24T11:13:00Z,aec-atp-lucrat-joaagu-2026-11-22,0,Lucio Ratti,,,0.2100,219.4300,46.3180
+2026-11-24T11:13:00Z,aec-atp-dansil-fraron-2026-11-24,0,Daniel Dutra da Silva,,,0.2500,2744.2300,764.5579
+2026-11-24T11:13:00Z,aec-atp-elicou-dujajd-2026-11-23,0,Eliakim Coulibaly,,,0.4000,3177.7000,1221.0721
+2026-11-24T11:13:00Z,aec-atp-sempan-nbi-2026-11-23,0,Semen Pankin,,,0.6300,2180.8300,1401.5401
+2026-11-24T11:13:00Z,aec-atp-yassmi-petbir-2026-11-24,0,Yassine Smiej,,,0.0800,41.5900,3.3272
+2026-11-24T11:13:00Z,aec-atp-ioaxil-serfom-2026-11-23,0,Ioannis Xilas,,,0.6800,172.0500,120.4282
+2026-11-24T11:13:00Z,aec-atp-alvmez-genoli-2026-11-22,0,Alvaro Guillen Meza,,,0.3200,982.0500,317.9663
+2026-11-24T11:13:00Z,aec-atp-maxgur-gonvil-2026-11-22,0,Max Alcala Gurri,,,0.7400,22.1600,16.7514
+2026-11-24T11:13:00Z,aec-atp-fedbon-nicpar-2026-11-23,0,Federico Bondioli,,,0.8900,3424.9900,2872.7060
+2026-11-24T11:13:00Z,aec-atp-albcam-giotab-2026-11-24,0,Alberto Barroso Campos,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-matsca-wisabd-2026-11-24,0,Mathieu Scaglia,,,0.2400,17.1700,4.9275
+2026-11-24T11:13:00Z,aec-atp-ryanij-brufer-2026-11-22,0,Ryan Nijboer,,,0.7500,706.5400,530.1811
+2026-11-24T11:13:00Z,aec-atp-andche-edurib-2026-11-22,0,Andrey Chepelev,,,0.2800,1290.7600,493.7792
+2026-11-24T11:13:00Z,aec-atp-willei-javcos-2026-11-24,0,Wilson Leite,,,0.1100,13.8600,1.4982
+2026-11-24T11:13:00Z,aec-atp-pausan-thicig-2026-11-24,0,Paulo Dos Santos,,,0.5300,1.8100,0.9593
+2026-11-24T11:13:00Z,aec-atp-yankel-cartab-2026-11-23,0,Yannik Kelm,,,0.3200,962.3800,260.2640
+2026-11-24T11:13:00Z,aec-atp-niksch-filrom-2026-11-24,0,Niklas Schell,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-igomar-oscgut-2026-11-24,0,Igor Ribeiro Marcondes,,,0.7500,30.0000,22.5000
+2026-11-24T11:13:00Z,aec-atp-juaser-sanfue-2026-11-24,0,Juan Manuel La Serna,,,0.8100,25.6400,20.7684
+2026-11-24T11:13:00Z,aec-atp-juaoso-olibon-2026-11-23,0,Juan Sebastian Osorio,,,0.1900,1760.3800,378.0985
+2026-11-24T11:13:00Z,aec-atp-lucsil-ofeshi-2026-11-24,0,Lucas Da Silva,,,0.7300,169.0600,123.4138
+2026-11-24T11:13:00Z,aec-atp-rafneu-thedea-2026-11-24,0,Rafael Botran Neutze,,,0.2700,748.8400,301.4019
+2026-11-24T11:13:00Z,aec-atp-nickic-elmmoe-2026-11-22,0,Nicolas Kicker,,,0.2900,105.6100,34.3348
+2026-11-24T11:13:00Z,aec-atp-pedsak-guijus-2026-11-22,0,Pedro Sakamoto,,,0.1800,68.0500,31.6887
+2026-11-24T11:13:00Z,aec-atp-johnik-peddia-2026-11-22,0,Johan Nikles,,,0.3000,204.1800,61.2796
+2026-11-24T11:13:00Z,aec-atp-ryotab-felalv-2026-11-24,0,Ryo Tabata,,,0.2900,122.1800,35.4322
+2026-11-24T11:13:00Z,aec-atp-juagom-bengeo-2026-11-23,0,Juan Sebastian Gomez,,,0.4100,3453.4300,1703.1446
+2026-11-24T11:13:00Z,aec-atp-samher-yanale-2026-11-23,0,Samuel Heredia,,,0.4200,328.7300,137.4042
+2026-11-24T11:13:00Z,aec-atp-juabol-lucamb-2026-11-24,0,Juan Miguel Bolivar,,,0.2100,352.0000,73.9200
+2026-11-24T11:13:00Z,aec-atp-chdp-leosto-2026-11-24,0,Connor Huertas Del Pino,,,0.4800,695.4600,320.9108
+2026-11-24T11:13:00Z,aec-atp-patalv-luialv-2026-11-23,0,Patricio Alvarado,,,0.0300,138.4400,11.0744
+2026-11-24T11:13:00Z,aec-atp-juavas-amival-2026-11-24,0,Juan Carlos Fuentes Vasquez,,,0.1700,612.4200,146.0861
+2026-11-24T11:13:00Z,aec-atp-axenef-alarub-2026-11-24,0,Axel Nefve,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-benwil-matalv-2026-11-23,0,Benjamin Willwerth,,,0.5400,3960.5700,2120.0911
+2026-11-24T11:13:00Z,aec-atp-jeffra-karpol-2026-11-24,0,Jeffrey Fradkin,,,0.0900,1241.9000,136.3370
+2026-11-24T11:13:00Z,aec-atp-timleg-lorcla-2026-11-23,0,Timo Legout,,,0.8300,1668.1200,1267.1592
+2026-11-24T11:13:00Z,aec-atp-matalm-carzar-2026-11-22,0,Matheus Pucinelli de Almeida,,,0.8500,1477.6100,1128.4441
+2026-11-24T11:13:00Z,aec-atp-matcov-luimig-2026-11-23,0,Matteo Covato,,,0.0800,168.6900,22.4184
+2026-11-24T11:13:00Z,aec-atp-antshe-moebou-2026-11-24,0,Anton Shepp,,,0.6000,0.2800,0.5016
+2026-11-24T11:13:00Z,aec-atp-hirmor-matdel-2026-11-24,0,Hiroki Moriya,,,0.3100,712.1900,350.0247
+2026-11-24T11:13:00Z,aec-atp-blaell-trisch-2026-11-24,0,Blake Ellis,,,0.2600,298.0500,77.4956
+2026-11-24T11:13:00Z,aec-atp-niemcd-lucsta-2026-11-22,0,Niels McDonald,,,0.5500,7798.9600,4350.3322
+2026-11-24T11:13:00Z,aec-atp-lenjon-davsan-2026-11-24,0,Lennon Roark Jones,,,0.1900,600.0000,114.0000
+2026-11-24T11:13:00Z,aec-atp-kaiuch-mitleo-2026-11-24,0,Kaichi Uchida,,,0.5500,930.0000,502.3200
+2026-11-24T11:13:00Z,aec-atp-kassam-ognmil-2026-11-24,0,Kasidit Samrej,,,0.4300,105.3800,47.6057
+2026-11-24T11:13:00Z,aec-atp-masima-yunchu-2026-11-24,0,Masamichi Imamura,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-akisan-chrlan-2026-11-24,0,Akira Santillan,,,0.4900,605.3900,290.6411
+2026-11-24T11:13:00Z,aec-atp-jelsel-maxwis-2026-11-23,0,Jelle Sels,,,0.3600,26.8200,9.9420
+2026-11-24T11:13:00Z,aec-atp-ergkir-andrma-2026-11-23,0,Ergi Kirkin,,,0.6600,366.1400,229.4356
+2026-11-24T11:13:00Z,aec-atp-matdon-robcat-2026-11-25,0,Matthew William Donald,,,0.6500,2291.6500,1368.2800
+2026-11-24T11:13:00Z,aec-atp-mertur-tundur-2026-11-25,0,Mert Naci Turker,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-menefs-gabghe-2026-11-25,0,Menelaos Efstathiou,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-juamar-andmar-2026-11-25,0,Juan Martin,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-alequi-dimazo-2026-11-25,0,Alejo Sanchez Quilez,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-lbe-dalbla-2026-11-25,0,Leo Borg,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-robstr-gabdeb-2026-11-25,0,Robert Strombachs,,,0.3600,2402.6200,966.5540
+2026-11-24T11:13:00Z,aec-atp-derpha-alebol-2026-11-24,0,Derek Pham,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-danswe-hayjon-2026-11-25,0,Dane Sweeny,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-jaskub-carove-2026-11-25,0,Jason Kubler,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-omajas-litu-2026-11-25,0,Omar Jasika,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-atp-kokiso-haymat-2026-11-24,0,Kokoro Isomura,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-wta-vicbos-lausam-2026-11-23,0,Victoria Bosio,,,0.1400,2018.6700,565.1838
+2026-11-24T11:13:00Z,aec-wta-zhikul-vererj-2026-11-23,0,Zhibek Kulambayeva,,,0.2900,1.0000,0.2900
+2026-11-24T11:13:00Z,aec-wta-guimar-luncin-2026-11-23,0,Guiomar Maristany,,,0.9500,1801.0000,1476.9500
+2026-11-24T11:13:00Z,aec-wta-lucbro-alilin-2026-11-23,0,Lucia Bronzetti,,,0.7100,208.7600,146.4294
+2026-11-24T11:13:00Z,aec-wta-solsie-vickas-2026-11-23,0,Solana Sierra,,,0.7700,3842.8800,2685.0484
+2026-11-24T11:13:00Z,aec-wta-louaya-ireesc-2026-11-23,0,Lourdes Ayala,,,0.0600,45.9900,3.6564
+2026-11-24T11:13:00Z,aec-wta-nadpod-leygor-2026-11-23,0,Nadia Podoroska,,,0.4500,1438.7700,607.5219
+2026-11-24T11:13:00Z,aec-wta-polher-sofcos-2026-11-24,0,Polona Hercog,,,0.7200,1494.7700,1054.7474
+2026-11-24T11:13:00Z,aec-wta-solgui-marcar-2026-11-23,0,Sol Larraya Guidi,,,,0.0000,0.0000
+2026-11-24T11:13:00Z,aec-wta-ipeoz-julrie-2026-11-25,0,Ipek Oz,,,,0.0000,0.0000
