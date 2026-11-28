@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+<title>Tennis board</title>
+<style>
+:root {
+  --bg: #151a21; --surface: #1d242e; --line: #2b3441; --line-soft: #232b36;
+  --ink: #e4e9ef; --ink-dim: #9aa7b8; --ink-faint: #6b7889; --live: #e0a458;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px;
+       line-height: 1.45; font-feature-settings: "tnum" 1; }
+header { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding: .8rem 16px;
+         border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 2; }
+header h1 { margin: 0; font-size: 1rem; font-weight: 600; }
+header .built { margin-left: auto; font: .78rem var(--mono); color: var(--ink-faint); }
+main { padding: 12px 16px 32px; max-width: 900px; }
+.bar { display: flex; flex-wrap: wrap; gap: .5rem .9rem; align-items: end; margin-bottom: .8rem; }
+.bar label { display: flex; flex-direction: column; font-size: .72rem; color: var(--ink-dim); gap: .15rem; }
+.bar select, .bar input { font: inherit; font-size: .86rem; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 4px; padding: .3rem .4rem; max-width: 100%; }
+.bar input { width: 11rem; }
+.bar a { font-size: .86rem; color: var(--ink-dim); padding-bottom: .35rem; }
+.count { font-size: .78rem; color: var(--ink-faint); margin: 0 0 .4rem; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th { font-size: .7rem; font-weight: 500; color: var(--ink-faint); text-align: left; padding: .3rem .3rem;
+     border-bottom: 1px solid var(--line); }
+td { padding: .1rem .3rem .45rem; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+tr.ev td { padding: .5rem .3rem 0; border-bottom: 0; font-size: .72rem; color: var(--ink-faint); }
+th.n, td.n { text-align: right; font-family: var(--mono); font-size: .82rem; width: 3.6rem; }
+th.when, td.when { width: 4.4rem; }
+td.when .t { font-family: var(--mono); font-size: .86rem; }
+td.when .d, .sc { display: block; font-size: .72rem; color: var(--ink-faint); }
+.win { font-weight: 600; }
+.lose { color: var(--ink-dim); }
+td.n span, td.match .pl { display: block; line-height: 1.45rem; }
+/* One line per player, always, or the prices beside a long name stop sitting level with it. */
+td.match .pl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st { display: inline-block; font-size: .66rem; padding: 0 .3rem; border-radius: 3px; margin-top: .15rem;
+      border: 1px solid var(--line); color: var(--ink-dim); }
+.st.live { color: var(--live); border-color: var(--live); }
+.mv { color: var(--live); }
+.dash { color: var(--ink-faint); }
+.foot { margin-top: 1.2rem; font-size: .74rem; color: var(--ink-faint); max-width: 40rem; }
+@media (max-width: 520px) {
+  body { font-size: 14px; }
+  th.n, td.n { width: 3.1rem; font-size: .76rem; }
+  th.when, td.when { width: 3.6rem; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tennis board</h1>
+  <span class="built">28 Nov 13:21 PST · built</span>
+</header>
+<main>
+  <div class="bar">
+    <label>Day
+      <select id="day" onchange="location.href = this.value + '.html'"><option value="2026-11-29">2026-11-29</option><option value="2026-11-28" selected>2026-11-28</option><option value="2026-11-27">2026-11-27</option><option value="2026-11-26">2026-11-26</option><option value="2026-11-25">2026-11-25</option><option value="2026-11-24">2026-11-24</option><option value="2026-11-23">2026-11-23</option><option value="2026-11-22">2026-11-22</option><option value="2026-11-21">2026-11-21</option><option value="2026-11-20">2026-11-20</option><option value="2026-11-19">2026-11-19</option><option value="2026-11-18">2026-11-18</option><option value="2026-11-17">2026-11-17</option><option value="2026-11-16">2026-11-16</option><option value="2026-11-15">2026-11-15</option><option value="2026-11-14">2026-11-14</option><option value="2026-11-13">2026-11-13</option><option value="2026-11-12">2026-11-12</option><option value="2026-11-11">2026-11-11</option><option value="2026-11-10">2026-11-10</option><option value="2026-11-09">2026-11-09</option><option value="2026-11-08">2026-11-08</option><option value="2026-11-07">2026-11-07</option><option value="2026-11-06">2026-11-06</option><option value="2026-11-05">2026-11-05</option><option value="2026-11-04">2026-11-04</option><option value="2026-11-03">2026-11-03</option><option value="2026-11-02">2026-11-02</option><option value="2026-11-01">2026-11-01</option><option value="2026-10-31">2026-10-31</option></select>
+    </label>
+    
+    <label>Tour
+      <select id="tour">
+        <option value="">Men &amp; women</option><option value="ATP">ATP</option><option value="WTA">WTA</option></select>
+    </label>
+    <label>Tournament
+      <select id="event">
+        <option value="">All</option><option value="Ankara Challenger">Ankara Challenger</option><option value="Argentina Open - Buenos Aires">Argentina Open - Buenos Aires</option><option value="Florianopolis Challenger">Florianopolis Challenger</option><option value="Hersonissos 4 Challenger">Hersonissos 4 Challenger</option><option value="Monastir 2 Challenger">Monastir 2 Challenger</option><option value="Playford Challenger">Playford Challenger</option><option value="San Salvador Challenger">San Salvador Challenger</option></select>
+    </label>
+    <label>Search
+      <input id="q" type="search" placeholder="player or event" autocomplete="off">
+    </label>
+  </div>
+  <p class="count"><span id="n">13</span> matches</p>
+  
+  <table>
+    <thead><tr>
+      <th class="when">Time</th><th>Match</th>
+      <th class="n">Open</th><th class="n">Now</th><th class="n">Close</th>
+    </tr></thead>
+    <tbody class="m" data-tour="ATP" data-event="Ankara Challenger" data-q="tuncay duran matthew william donald ankara challenger">
+      <tr class="ev"><td colspan="5"><span>Ankara Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">00:00</span>
+          <span class="d">Sat 28 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Tuncay Duran</span>
+          <span class="pl lose">Matthew William Donald</span><span class="sc">7-6(3) 6-3</span>
+        </td>
+        <td class="n"><span>0.381</span><span>0.619</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.382</span><span>0.618</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Hersonissos 4 Challenger" data-q="andres martin oleksandr ovcharenko hersonissos 4 challenger">
+      <tr class="ev"><td colspan="5"><span>Hersonissos 4 Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">00:11</span><span class="mv">*</span>
+          <span class="d">Sat 28 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Andres Martin</span>
+          <span class="pl win">Oleksandr Ovcharenko</span><span class="sc">6-3 6-3</span>
+        </td>
+        <td class="n"><span>0.612</span><span>0.388</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.629</span><span>0.371</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Ankara Challenger" data-q="diego dedura thomas faurel ankara challenger">
+      <tr class="ev"><td colspan="5"><span>Ankara Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">01:50</span>
+          <span class="d">Sat 28 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Diego Dedura</span>
+          <span class="pl win">Thomas Faurel</span><span class="sc">6-4 7-6(9)</span>
+        </td>
+        <td class="n"><span>0.529</span><span>0.471</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.517</span><span>0.483</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Hersonissos 4 Challenger" data-q="gilles arnaud bailly philip henning hersonissos 4 challenger">
+      <tr class="ev"><td colspan="5"><span>Hersonissos 4 Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">02:00</span>
+          <span class="d">Sat 28 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Gilles Arnaud Bailly</span>
+          <span class="pl win">Philip Henning</span><span class="sc">6-3 6-4</span>
+        </td>
+        <td class="n"><span>0.421</span><span>0.579</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.433</span><span>0.567</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Monastir 2 Challenger" data-q="kimmer coppejans gabriel debru monastir 2 challenger">
+      <tr class="ev"><td colspan="5"><span>Monastir 2 Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">03:00</span>
+          <span class="d">Sat 28 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Kimmer Coppejans</span>
+          <span class="pl win">Gabriel Debru</span><span class="sc">5-7 7-6(3) 2-0 ret.</span>
+        </td>
+        <td class="n"><span>0.507</span><span>0.493</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.507</span><span>0.493</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Monastir 2 Challenger" data-q="semen pankin giorgio tabacco monastir 2 challenger">
+      <tr class="ev"><td colspan="5"><span>Monastir 2 Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">05:15</span>
+          <span class="d">Sat 28 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Semen Pankin</span>
+          <span class="pl win">Giorgio Tabacco</span><span class="sc">6-3 6-3</span>
+        </td>
+        <td class="n"><span>0.366</span><span>0.634</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.367</span><span>0.633</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Florianopolis Challenger" data-q="igor ribeiro marcondes felipe meligeni alves florianopolis challenger">
+      <tr class="ev"><td colspan="5"><span>Florianopolis Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:00</span>
+          <span class="d">Sat 28 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl lose">Igor Ribeiro Marcondes</span>
+          <span class="pl win">Felipe Meligeni Alves</span><span class="sc">6-3 6-2</span>
+        </td>
+        <td class="n"><span>0.354</span><span>0.646</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.332</span><span>0.668</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Argentina Open - Buenos Aires" data-q="guiomar zuleta de reales varvara lepchenko argentina open - buenos aires">
+      <tr class="ev"><td colspan="5"><span>Argentina Open - Buenos Aires</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">07:15</span>
+          <span class="d">Sat 28 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Guiomar Zuleta De Reales</span>
+          <span class="pl lose">Varvara Lepchenko</span><span class="sc">6-0 6-2</span>
+        </td>
+        <td class="n"><span>0.696</span><span>0.304</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.770</span><span>0.230</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="WTA" data-event="Argentina Open - Buenos Aires" data-q="veronika erjavec julia riera argentina open - buenos aires">
+      <tr class="ev"><td colspan="5"><span>Argentina Open - Buenos Aires</span> · <span>SF</span> · <span>WTA</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">09:08</span><span class="mv">*</span>
+          <span class="d">Sat 28 Nov</span><span class="st">final</span></td>
+        <td class="match">
+          <span class="pl win">Veronika Erjavec</span>
+          <span class="pl lose">Julia Riera</span><span class="sc">7-6(4) 6-1</span>
+        </td>
+        <td class="n"><span>0.357</span><span>0.643</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.362</span><span>0.638</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Florianopolis Challenger" data-q="eduardo ribeiro juan manuel la serna florianopolis challenger">
+      <tr class="ev"><td colspan="5"><span>Florianopolis Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">10:36</span>
+          <span class="d">Sat 28 Nov</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Eduardo Ribeiro</span>
+          <span class="pl">Juan Manuel La Serna</span>
+        </td>
+        <td class="n"><span>0.468</span><span>0.532</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.362</span><span>0.638</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="San Salvador Challenger" data-q="luis carlos alvarez lucas andrade da silva san salvador challenger">
+      <tr class="ev"><td colspan="5"><span>San Salvador Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">13:00</span>
+          <span class="d">Sat 28 Nov</span><span class="st live">started</span></td>
+        <td class="match">
+          <span class="pl">Luis Carlos Alvarez</span>
+          <span class="pl">Lucas Andrade Da Silva</span>
+        </td>
+        <td class="n"><span>0.678</span><span>0.322</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+        <td class="n"><span>0.662</span><span>0.338</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="San Salvador Challenger" data-q="timo legout luis queiroz miguel san salvador challenger">
+      <tr class="ev"><td colspan="5"><span>San Salvador Challenger</span> · <span>SF</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">14:00</span>
+          <span class="d">Sat 28 Nov</span></td>
+        <td class="match">
+          <span class="pl">Timo Legout</span>
+          <span class="pl">Luis Queiroz Miguel</span>
+        </td>
+        <td class="n"><span>0.615</span><span>0.385</span>
+        </td>
+        <td class="n"><span title="-183">0.630</span><span title="+158">0.370</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class="m" data-tour="ATP" data-event="Playford Challenger" data-q="dane sweeny tristan schoolkate playford challenger">
+      <tr class="ev"><td colspan="5"><span>Playford Challenger</span> · <span>F</span> · <span>ATP</span></td></tr>
+      <tr>
+        <td class="when"><span class="t">16:30</span>
+          <span class="d">Sat 28 Nov</span></td>
+        <td class="match">
+          <span class="pl">Dane Sweeny</span>
+          <span class="pl">Tristan Schoolkate</span>
+        </td>
+        <td class="n"><span>0.464</span><span>0.536</span>
+        </td>
+        <td class="n"><span title="+111">0.457</span><span title="-127">0.543</span>
+        </td>
+        <td class="n"><span class="dash">—</span><span class="dash">—</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <p class="foot">Prices are implied probabilities with the margin removed, first player on top. Open is the
+    opening line; Now is Pinnacle at build time (tap for the American price); Close is the last pre-match price.
+    Times are PST; an asterisk marks a match Pinnacle has moved later.</p>
+</main>
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('tbody.m'));
+  var tour = document.getElementById('tour'), ev = document.getElementById('event'),
+      q = document.getElementById('q'), n = document.getElementById('n');
+  if (!tour) return;
+  function fold(s) { return (s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+  function apply() {
+    var t = tour.value, e = ev.value, terms = fold(q.value).split(/\s+/).filter(Boolean), shown = 0;
+    rows.forEach(function (r) {
+      var ok = (!t || r.getAttribute('data-tour') === t) && (!e || r.getAttribute('data-event') === e);
+      if (ok) { var hay = r.getAttribute('data-q'); ok = terms.every(function (w) { return hay.indexOf(w) >= 0; }); }
+      r.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+    n.textContent = shown;
+  }
+  tour.addEventListener('change', apply); ev.addEventListener('change', apply); q.addEventListener('input', apply);
+})();
+</script>
+</body>
+</html>
